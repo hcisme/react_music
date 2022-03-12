@@ -1,0 +1,103 @@
+.discovery .banner {
+  text-align: center;
+}
+
+.discovery .banner .disbanner {
+  width: 1250px !important;
+  height: 400px;
+}
+
+.discovery .banner .disbanner img {
+  width: 100%;
+  height: 100%;
+}
+
+.discovery .recommandplaylists {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.discovery .recommandplaylists .item {
+  position: relative;
+  padding: 24px;
+}
+
+.discovery .recommandplaylists .item .playcount,
+.discovery .recommandmvs .item .playcount  {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: white;
+  width: 100%;
+  height: 0;
+  text-align: right;
+  opacity: 0;
+}
+
+.discovery .recommandplaylists .item .playcount i,
+.discovery .recommandmvs .item .playcount i {
+  margin-right: 2px;
+}
+
+.discovery .recommandplaylists .item:hover .playcount,
+.discovery .recommandmvs .item:hover .playcount {
+  height: 20px;
+  background-color: #7b777b;
+  opacity: 0.6;
+}
+
+.discovery .recommandplaylists .item .PlayCircleTwoTone {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  opacity: 0;
+}
+
+.discovery .recommandplaylists .item:hover .PlayCircleTwoTone {
+  opacity: 0.5;
+}
+
+.discovery .recommandmvs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.discovery .recommandmvs .item {
+  position: relative;
+  padding: 18px;
+}
+
+.discovery .recommandmvs .item .iconfont {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  opacity: 0;
+}
+
+.discovery .recommandmvs .item:hover .iconfont {
+  opacity: 0.6;
+}
+
+.discovery .recommandmusic .coverImg {
+  position: relative;
+}
+
+.discovery .recommandmusic .coverImg .PlayCircleTwoTone {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 15px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.discovery .recommandmusic .ant-table-row:hover .coverImg .PlayCircleTwoTone {
+  opacity: 1;
+}

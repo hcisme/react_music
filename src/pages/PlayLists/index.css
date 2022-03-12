@@ -1,0 +1,67 @@
+.playlists .ant-card-meta-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+}
+
+.playlists .header .card {
+  width: 200px;
+  height: 200px;
+}
+
+.playlists .items {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 15px;
+}
+
+.playlists .items .item {
+  position: relative;
+  margin: 28px;
+}
+
+.playlists .items .item .ant-card-meta-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.playlists .items .item .playcount {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: white;
+  text-align: right;
+  opacity: 0;
+}
+
+.playlists .items .item .playcount i {
+  margin-right: 5px;
+}
+
+.playlists .items .item:hover .playcount {
+  opacity: 0.6;
+  width: 100%;
+  height: 23px;
+  background-color: #8f879c;
+}
+
+.playlists .page {
+  text-align: center;
+}
+
+.playlists .items .item .play {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  opacity: 0;
+}
+
+.playlists .items .item:hover .play {
+  opacity: 0.6;
+}
