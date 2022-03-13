@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Menu, Card, Skeleton, Pagination } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
-import time from '../../utils/js/timeTool.js'
+import {time} from '../../utils/js/timeTool.js'
 import './index.css'
 
 const { Meta } = Card
 
 export default function Mvs() {
+  let navigate = useNavigate()
+
   const [area, setArea] = useState('全部')
   const [type, setType] = useState('全部')
   const [order, setOrder] = useState('上升最快')
@@ -89,11 +92,19 @@ export default function Mvs() {
         {source.map((item) => {
           return (
             <Skeleton style={{ width: 300 }} loading={loading} avatar active key={item.id}>
-              <div style={{overflow: 'hidden'}}>
-                <Card className="mvCard" style={{ width: 300, position: 'relative' }} cover={<img alt="加载失败请刷新尝试" src={item.cover} />}>
+              <div
+                style={{ overflow: 'hidden' }}
+                onClick={() => {
+                  navigate(`/home/mv/${item.id}`)
+                }}
+              >
+                <Card className="mvCard" style={{ width: 300, position: 'relative', marginBottom: 25 }} cover={<img alt="加载失败请刷新尝试" src={item.cover} />}>
                   <Meta title={item.name} description={item.artistName} />
                   <PlayCircleTwoTone className="PlayCircleTwoTone" />
-                  <div className="playcount">{item.playCount}</div>
+                  <div className="playcount">
+                    <i style={{ paddingRight: 2 }} className="iconfont icon-bofang"></i>
+                    <i>{item.playCount}</i>
+                  </div>
                   <div className="duration">{time(item.duration)}</div>
                 </Card>
               </div>

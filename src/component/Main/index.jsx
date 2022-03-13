@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, BackTop } from 'antd'
 import { SendOutlined, BgColorsOutlined } from '@ant-design/icons'
 import PubSub from 'pubsub-js'
-import ReactAplayer from 'react-aplayer'
+// import ReactAplayer from 'react-aplayer'
 import './index.css'
 
 const style = {
@@ -22,42 +22,42 @@ export default function Main() {
   let location = useLocation()
   let navigate = useNavigate()
 
-  const [standardType, setStandardType] = useState({})
   const [musicUrl, setMusicUrl] = useState('')
-  const [posterUrl, setPosterUrl] = useState('')
-  const [artistName, setArtistName] = useState('')
-  const [name, setName] = useState('')
-
-  const source = {
-    theme: '#F57F17',
-    lrcType: 3,
-    audio: [
-      {
-        name: name,
-        artist: artistName,
-        url: musicUrl,
-        cover: posterUrl,
-        lrc: '',
-        theme: '#ebd0c2',
-      },
-    ],
-  }
+  // const [posterUrl, setPosterUrl] = useState('')
+  // const [artistName, setArtistName] = useState('')
+  // const [name, setName] = useState('')
 
   useEffect(() => {
-    PubSub.subscribe('ids', (msg, data) => {
-      setStandardType(data)
+    PubSub.subscribe('ids', async (msg, data) => {
+      // const { posterUrl, artistName, name } = data
       React.$apis.getMusicUrl(data.id).then((val) => {
         setMusicUrl(val[0].url)
-        setPosterUrl(standardType.posterUrl)
-        setArtistName(standardType.artistName)
-        setName(standardType.name)
       })
+      // setPosterUrl(posterUrl)
+      // setArtistName(artistName)
+      // setName(name)
+      PubSub.unsubscribe('ids')
     })
-  }, [standardType])
+  }, [musicUrl])
 
   const handleClick = (e) => {
     navigate(e.key)
   }
+
+  // const source = {
+  //   theme: '#F57F17',
+  //   lrcType: 3,
+  //   audio: [
+  //     {
+  //       name,
+  //       artist: artistName,
+  //       url: musicUrl,
+  //       cover: posterUrl,
+  //       lrc: '',
+  //       theme: '#ebd0c2',
+  //     },
+  //   ],
+  // }
 
   return (
     <div className="main">
@@ -87,10 +87,10 @@ export default function Main() {
         <Outlet />
       </div>
 
-      <ReactAplayer className="aplayer" {...source} />
-      {/* <audio className='aplayer' src={musicUrl} controls></audio> */}
+      {/* <ReactAplayer className="aplayer" {...source} /> */}
+      <audio className='aplayer' style={{display: 'none'}} src={musicUrl} controls autoPlay></audio>
 
-      <BackTop style={{marginBottom: 20}}>
+      <BackTop style={{ marginBottom: 20 }}>
         <div style={style}>UP</div>
       </BackTop>
     </div>

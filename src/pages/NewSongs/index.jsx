@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Menu, Table } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
+import PubSub from 'pubsub-js'
 // 导入处理时间的函数
-import time from '../../utils/js/timeTool.js'
+import { time } from '../../utils/js/timeTool.js'
 import './index.css'
 
 export default function NewSongs() {
@@ -20,6 +21,12 @@ export default function NewSongs() {
       setDataSource(val)
       setIsHid(false)
     })
+  }
+
+  const handlePlayMusic = (record) => {
+    // console.log(record);
+    const Info = { id: record.id, posterUrl: record.picUrl, name: record.name, artistName: record.artists[0].name }
+    PubSub.publish('ids', Info)
   }
 
   const columns = [
@@ -78,11 +85,11 @@ export default function NewSongs() {
           }}
           selectedKeys={cat}
         >
-          <Menu.Item key='0'>全部</Menu.Item>
-          <Menu.Item key='7'>华语</Menu.Item>
-          <Menu.Item key='96'>欧美</Menu.Item>
-          <Menu.Item key='8'>日本</Menu.Item>
-          <Menu.Item key='16'>韩国</Menu.Item>
+          <Menu.Item key="0">全部</Menu.Item>
+          <Menu.Item key="7">华语</Menu.Item>
+          <Menu.Item key="96">欧美</Menu.Item>
+          <Menu.Item key="8">日本</Menu.Item>
+          <Menu.Item key="16">韩国</Menu.Item>
         </Menu>
       </div>
       <Table
@@ -92,6 +99,13 @@ export default function NewSongs() {
         loading={isHid}
         pagination={{
           pageSize: 25,
+        }}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              handlePlayMusic(record)
+            }, // 点击行
+          }
         }}
       />
     </div>

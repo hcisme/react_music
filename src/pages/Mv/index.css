@@ -1,0 +1,14 @@
+.mv-container .mvbox {
+  width: 60%;
+  padding: 10px;
+}
+
+.mv-container .mvbox video {
+  width: 100% !important;
+  border-radius: 5px;
+  object-fit: fill;
+}
+
+.mv-container .mvbox .ant-card-body {
+  padding: 12px;
+}

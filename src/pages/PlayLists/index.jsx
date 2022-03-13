@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Menu, Card, Image, Skeleton, Pagination } from 'antd'
 import { PlayCircleTwoTone, PlayCircleOutlined } from '@ant-design/icons'
 import './index.css'
@@ -6,6 +7,8 @@ import './index.css'
 const { Meta } = Card
 
 export default function PlayLists() {
+  let navigate = useNavigate()
+
   const [loading, setLoading] = useState(true)
   const [cat, setCat] = useState('全部')
   const [topData, setTopData] = useState({})
@@ -26,15 +29,6 @@ export default function PlayLists() {
       setTotal(val.total)
       setLoading(false)
     })
-  }
-
-  // 改变页码改变的回调
-  const handleTogglePage = (current) => {
-    setPage(current)
-  }
-
-  const handleClickToggle = (e) => {
-    setCat(e.key)
   }
 
   useEffect(() => {
@@ -73,7 +67,7 @@ export default function PlayLists() {
           mode="horizontal"
           selectedKeys={cat}
           onSelect={(e) => {
-            handleClickToggle(e)
+            setCat(e.key)
           }}
         >
           <Menu.Item key="全部">全部</Menu.Item>
@@ -95,7 +89,13 @@ export default function PlayLists() {
       <div className="items">
         {listData.map((item) => {
           return (
-            <div className="item" key={item.id}>
+            <div
+              className="item"
+              key={item.id}
+              onClick={() => {
+                navigate(`/home/playlist/${item.id}`)
+              }}
+            >
               <Card hoverable style={{ width: 200, height: 300 }} cover={<img style={{ height: 180, borderRadius: '5px' }} alt="example" src={item.coverImgUrl} />}>
                 <Meta title={item.name} description={item.description} />
                 <div className="playcount">
@@ -115,7 +115,7 @@ export default function PlayLists() {
           total={total}
           showSizeChanger={false}
           onChange={(current) => {
-            handleTogglePage(current)
+            setPage(current)
           }}
         />
       </div>

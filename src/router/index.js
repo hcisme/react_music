@@ -1,35 +1,37 @@
-import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { LoadingOutlined } from '@ant-design/icons'
+import { lazy } from 'react'
+import { Navigate } from 'react-router-dom'
 
-const App = lazy(() => import('../App'))
+const Login = lazy(() => import('../component/Login'))
 const Home = lazy(() => import('../component/Home'))
 const Discovery = lazy(() => import('../pages/Discovery'))
 const PlayLists = lazy(() => import('../pages/PlayLists'))
-const NewSongs = lazy(()=> import('../pages/NewSongs'))
-const Mvs = lazy(()=> import('../pages/Mvs'))
-const Login = lazy(() => import('../component/Login'))
+const NewSongs = lazy(() => import('../pages/NewSongs'))
+const Mvs = lazy(() => import('../pages/Mvs'))
+const PlayList = lazy(() => import('../pages/Playlist'))
+const Mv = lazy(() => import('../pages/Mv'))
 
-const router = () => {
-  return (
-    <BrowserRouter>
-      <Suspense fallback={<LoadingOutlined />}>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route path="/" element={<Navigate to="home" />} />
-            <Route path="home/*" element={<Home />}>
-              <Route path="" element={<Navigate to="discovery" />} />
-              <Route path="discovery" element={<Discovery />} />
-              <Route path="playlists" element={<PlayLists />} />
-              <Route path="newsongs" element={<NewSongs />} />
-              <Route path="mvs" element={<Mvs />} />
-            </Route>
-          </Route>
-          <Route path="/login" element={<Login />}></Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
-  )
-}
+const router = [
+  {
+    path: '/',
+    element: <Navigate to="home" />,
+  },
+  {
+    path: 'home/*',
+    element: <Home />,
+    children: [
+      { path: '', element: <Navigate to="discovery" /> },
+      { path: 'discovery', element: <Discovery /> },
+      { path: 'playlists', element: <PlayLists /> },
+      { path: 'newsongs', element: <NewSongs /> },
+      { path: 'mvs', element: <Mvs /> },
+      { path: 'playlist/:id', element: <PlayList /> },
+      { path: 'mv/:id', element: <Mv /> },
+    ],
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+]
 
 export default router

@@ -1,0 +1,49 @@
+.playlist .ant-card-body {
+  display: flex;
+  height: 100%;
+  padding: 0px 24px !important;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.playlist .ant-table-tbody > tr > td {
+  padding: 13px;
+}
+
+.playlist .overflow {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.playlist .ant-tabs-nav-wrap {
+  margin-left: 20px;
+}
+
+.playlist .PlayCircleTwoTone {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 15px;
+  opacity: 0;
+}
+
+.playlist .ant-table .ant-table-row:hover .PlayCircleTwoTone {
+  opacity: 0.8;
+}
+
+/* tile uploaded pictures */
+.playlist .comment-action {
+  padding-left: 8px;
+  cursor: 'auto';
+}
+
+.playlist [class*='-col-rtl'] .comment-action {
+  padding-right: 8px;
+  padding-left: 0;
+}

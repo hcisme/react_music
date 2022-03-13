@@ -1,11 +1,8 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { useRoutes } from 'react-router-dom'
+import Router from './router/index.js'
 import './App.css'
 
 export default function App() {
-  return (
-    <div>
-      <Outlet />
-    </div>
-  )
+  const elements = useRoutes(Router)
+  return elements
 }

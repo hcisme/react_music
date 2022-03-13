@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Carousel, Divider, Card, Table } from 'antd'
 import { PlayCircleTwoTone, PlayCircleOutlined } from '@ant-design/icons'
 import PubSub from 'pubsub-js'
 import './index.css'
 // 导入处理时间的函数
-import time from '../../utils/js/timeTool.js'
+import { time } from '../../utils/js/timeTool.js'
 
 const { Meta } = Card
 
 export default function Discovery() {
+  let navigate = useNavigate()
+
   const [banners, setBanners] = useState([])
   const [playLists, setPlayLists] = useState([])
   const [musics, setMusics] = useState([])
@@ -98,7 +101,13 @@ export default function Discovery() {
       <div className="recommandplaylists">
         {playLists.map((item) => {
           return (
-            <div className="item" key={item.id}>
+            <div
+              className="item"
+              key={item.id}
+              onClick={() => {
+                navigate(`/home/playlist/${item.id}`)
+              }}
+            >
               <Card hoverable style={{ width: 200, height: 295 }} cover={<img style={{ height: 200, borderRadius: '5px' }} alt="example" src={item.picUrl} />}>
                 <Meta title={item.name} description={item.copywriter} />
                 <div className="playcount">
@@ -136,7 +145,13 @@ export default function Discovery() {
       <div className="recommandmvs">
         {mvs.map((item) => {
           return (
-            <div className="item" key={item.id}>
+            <div
+              className="item"
+              key={item.id}
+              onClick={() => {
+                navigate(`/home/mv/${item.id}`)
+              }}
+            >
               <Card hoverable style={{ width: 300 }} cover={<img style={{ height: 180, borderRadius: '5px' }} alt="example" src={item.picUrl} />}>
                 <Meta title={item.name} description={item.artists[0].name} />
                 <PlayCircleTwoTone className="iconfont" />
