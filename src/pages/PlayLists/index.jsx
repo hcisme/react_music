@@ -96,8 +96,8 @@ export default function PlayLists() {
                 navigate(`/home/playlist/${item.id}`)
               }}
             >
-              <Card hoverable style={{ width: 200, height: 300 }} cover={<img style={{ height: 180, borderRadius: '5px' }} alt="example" src={item.coverImgUrl} />}>
-                <Meta title={item.name} description={item.description} />
+              <Card hoverable className="chc-card" style={{ width: 200, height: 300 }} cover={<Image height={180} src={item.coverImgUrl} fallback="http://chcmusic.cloud/images/error.png" />}>
+                <Meta className="chc-meta" title={item.name} description={item.description} />
                 <div className="playcount">
                   <i>
                     <PlayCircleOutlined /> {item.playCount}

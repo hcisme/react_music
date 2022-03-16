@@ -9,6 +9,9 @@ const NewSongs = lazy(() => import('../pages/NewSongs'))
 const Mvs = lazy(() => import('../pages/Mvs'))
 const PlayList = lazy(() => import('../pages/Playlist'))
 const Mv = lazy(() => import('../pages/Mv'))
+const Result = lazy(() => import('../pages/Result'))
+
+const NotFound = lazy(() => import('../pages/NotFound'))
 
 const router = [
   {
@@ -26,6 +29,8 @@ const router = [
       { path: 'mvs', element: <Mvs /> },
       { path: 'playlist/:id', element: <PlayList /> },
       { path: 'mv/:id', element: <Mv /> },
+      { path: 'result/:searchword', element: <Result /> },
+      { path: '*', element: <NotFound /> },
     ],
   },
   {

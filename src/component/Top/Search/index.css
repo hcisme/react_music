@@ -1,0 +1,7 @@
+.search .ant-input-search > .ant-input-group > .ant-input-group-addon:last-child {
+  display: none;
+}
+
+/* .search .chc-popover .chc-list span.chc-span:nth-child(4) {
+  color: red;
+} */

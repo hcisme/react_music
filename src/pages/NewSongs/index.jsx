@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Menu, Table } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
 import PubSub from 'pubsub-js'
@@ -7,6 +8,8 @@ import { time } from '../../utils/js/timeTool.js'
 import './index.css'
 
 export default function NewSongs() {
+  let navigate = useNavigate()
+
   const [cat, setCat] = useState('0')
   const [isHid, setIsHid] = useState(true)
   const [dataSource, setDataSource] = useState([])
@@ -45,7 +48,26 @@ export default function NewSongs() {
     {
       title: '音乐标题',
       align: 'center',
-      dataIndex: 'name',
+      render: (item) => {
+        return (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span>{item.name}</span>
+            {item.mvid && (
+              <span
+                className="iconfont icon-movie-line"
+                style={{ color: 'red', padding: 3, cursor: 'pointer' }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.nativeEvent.stopImmediatePropagation()
+                  navigate(`/home/mv/${item.mvid}`)
+                }}
+              ></span>
+            )}
+            {item.privilege.maxbr === 999000 ? <span className="iconfont icon-wusunyinzhi" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
+            {item.fee === 1 ? <span className="iconfont icon-VIP" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
+          </div>
+        )
+      },
     },
     {
       title: '歌手',

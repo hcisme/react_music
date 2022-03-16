@@ -47,3 +47,21 @@
   padding-right: 8px;
   padding-left: 0;
 }
+
+
+@media screen and (max-width: 450px) {
+  .playlist .ant-card .ant-card-cover {
+    /* width: 50% !important;
+    height: 150px !important; */
+    display: none;
+  }
+
+  .playlist .ant-card .ant-card-body .ant-card-meta-detail .ant-card-meta-description .overflow{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

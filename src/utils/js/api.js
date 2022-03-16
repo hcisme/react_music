@@ -109,22 +109,26 @@ export const getAllMusic = async (id) => {
   return res.songs
 }
 // 歌单热门评论
-export const gethotcomment = async (id) => {
+export const gethotcomment = async (id, page, time) => {
   const { data: res } = await React.$axios.get('/api/comment/hot', {
     params: {
       id,
       type: 2,
+      limit: 20,
+      offset: (page - 1) * 20,
+      before: time,
     },
   })
   return res
 }
 // 最新评论
-export const getNewComment = async (id, page) => {
+export const getNewComment = async (id, page, time) => {
   const { data: res } = await React.$axios.get('/api/comment/playlist', {
     params: {
       id,
       limit: 15,
-      offset: (page - 1) * 10,
+      offset: (page - 1) * 15,
+      before: time,
     },
   })
   return res
@@ -140,15 +144,6 @@ export const mvurl = async (id) => {
   })
   return res.data.url
 }
-// 获取相关的mv
-export const simiMvs = async (mvid) => {
-  const { data: res } = await React.$axios.get('/api/simi/mv', {
-    params: {
-      mvid,
-    },
-  })
-  return res.mvs
-}
 // 获取 mv 的信息
 export const mvsInfo = async (mvid) => {
   const { data: res } = await React.$axios.get('/api/mv/detail', {
@@ -159,13 +154,56 @@ export const mvsInfo = async (mvid) => {
   return res.data
 }
 // 获取评论
-export const getMvNewComment = async (id) => {
+export const getMvNewComment = async (id, page, time) => {
   const { data: res } = await React.$axios.get('/api/comment/mv', {
     params: {
       id,
-      limit: 50,
-      // offset: (page - 1) * 10,
+      limit: 15,
+      offset: (page - 1) * 15,
+      before: time,
     },
   })
   return res
+}
+// 获取相关的mv
+export const simiMvs = async (mvid) => {
+  const { data: res } = await React.$axios.get('/api/simi/mv', {
+    params: {
+      mvid,
+    },
+  })
+  return res.mvs
+}
+
+// 搜索相关
+export const defaultWord = async () => {
+  const {data: res} = await React.$axios.get('/api/search/default')
+  return res.data
+}
+
+export const hotSearch = async () => {
+  const { data: res } = await React.$axios.get('/api/search/hot/detail')
+  return res.data
+}
+
+export const searchSuggest = async (keywords) => {
+  const { data: res } = await React.$axios.get('/api/search/suggest', {
+    params: {
+      keywords,
+    },
+  })
+  return res.result
+}
+// 搜索结果api
+export const searchres = async (keywords, page) => {
+  const { data: res } = await React.$axios.get('/api/cloudsearch', {
+    params: {
+      keywords,
+      type: 1,
+      // 获取的数据量
+      limit: 25,
+      offset: (page - 1) * 25
+    }
+  })
+  return res.result
 }

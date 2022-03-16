@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Carousel, Divider, Card, Table } from 'antd'
+import { Carousel, Divider, Card, Table, Image } from 'antd'
 import { PlayCircleTwoTone, PlayCircleOutlined } from '@ant-design/icons'
 import PubSub from 'pubsub-js'
 import './index.css'
@@ -85,7 +85,7 @@ export default function Discovery() {
   return (
     <div className="discovery">
       <div className="banner">
-        <Carousel autoplay>
+        <Carousel autoplay effect="fade">
           {banners.map((item) => {
             return (
               <div key={item.targetId} className="disbanner">
@@ -108,8 +108,8 @@ export default function Discovery() {
                 navigate(`/home/playlist/${item.id}`)
               }}
             >
-              <Card hoverable style={{ width: 200, height: 295 }} cover={<img style={{ height: 200, borderRadius: '5px' }} alt="example" src={item.picUrl} />}>
-                <Meta title={item.name} description={item.copywriter} />
+              <Card hoverable className="chc-card" style={{ width: 200, height: 320 }} cover={<Image height={'100%'} src={item.picUrl} fallback="http://chcmusic.cloud/images/error.png" />}>
+                <Meta className="chc-meta" title={item.name} description={item.copywriter} />
                 <div className="playcount">
                   <i>
                     <PlayCircleOutlined /> {item.playCount}

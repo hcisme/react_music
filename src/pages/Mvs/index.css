@@ -1,10 +1,15 @@
-.mvCard:hover .PlayCircleTwoTone {
+.mvs .items .ant-card {
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.mvs .mvCard:hover .PlayCircleTwoTone {
   opacity: 0.7;
 }
 
-.PlayCircleTwoTone {
+.mvs .PlayCircleTwoTone {
   position: absolute;
-  top: 35%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: xx-large;
@@ -12,7 +17,11 @@
   cursor: pointer;
 }
 
-.playcount {
+.mvs .ant-card-cover {
+  position: relative;
+}
+
+.mvs .playcount {
   position: absolute;
   right: 0;
   top: -25px;
@@ -24,17 +33,27 @@
   color: white;
 }
 
-.mvCard:hover .playcount {
+.mvs .mvCard:hover .playcount {
   top: 0;
 }
 
-.duration {
+.mvs .duration {
   position: absolute;
   right: 0;
-  bottom: 35%;
+  bottom: 0;
   width: 100%;
   text-align: right;
   padding-right: 5px;
   color: white;
   font-size: 16px;
+}
+
+@media screen and (max-width: 450px) {
+  .mvs .mvCard .playcount {
+    top: 0;
+  }
+
+  .mvs .mvCard .PlayCircleTwoTone {
+    opacity: 0.4;
+  }
 }

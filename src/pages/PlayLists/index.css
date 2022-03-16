@@ -65,3 +65,49 @@
 .playlists .items .item:hover .play {
   opacity: 0.6;
 }
+
+@media screen and (max-width: 450px) {
+  .playlists .navigate {
+    margin-bottom: 20px;
+  }
+
+   .playlists .items {
+    justify-content: space-around;
+    padding: 0;
+  }
+
+  .playlists .items .item {
+    width: 130px !important;
+    height: 250px !important;
+    margin: 0 !important;
+  }
+
+  .playlists .items .item img {
+    height: 130px !important;
+  }
+
+  .playlists .items .item .chc-card {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .playlists .items .item .ant-card-body {
+    padding: 5px 0;
+  }
+
+  .playlists .items .item .chc-meta .ant-card-meta-title {
+    font-size: 13px !important;
+  }
+
+  .playlists .items .item .ant-card-meta-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .playlists .page {
+    margin-top: 50px;
+  }
+}

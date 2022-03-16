@@ -3,8 +3,8 @@
 }
 
 .discovery .banner .disbanner {
-  width: 1250px !important;
-  height: 400px;
+  width: 90% !important;
+  height: 30% !important;
 }
 
 .discovery .banner .disbanner img {
@@ -20,7 +20,7 @@
 
 .discovery .recommandplaylists .item {
   position: relative;
-  padding: 26px;
+  padding: 20px;
 }
 
 .discovery .recommandplaylists .item .playcount,
@@ -59,6 +59,15 @@
 .discovery .recommandplaylists .item:hover .PlayCircleTwoTone {
   opacity: 0.5;
 }
+
+.discovery .recommandplaylists .item .ant-card-meta-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
 .discovery .recommandmvs {
   display: flex;
@@ -100,4 +109,40 @@
 
 .discovery .recommandmusic .ant-table-row:hover .coverImg .PlayCircleTwoTone {
   opacity: 1;
+}
+
+@media screen and (max-width: 450px) {
+  .discovery .recommandplaylists .item {
+    padding: 10px 30px;
+  }
+
+  .discovery .recommandplaylists .chc-card {
+    width: 100px !important;
+    height: 170px !important;
+  }
+
+  .discovery .recommandplaylists .item .ant-card-body {
+    padding: 5px;
+  }
+
+  .discovery .recommandplaylists .item .ant-card-meta-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .discovery .recommandplaylists .chc-card .chc-meta .ant-card-meta-title {
+    font-size: 10px !important;
+  }
+
+  .discovery .recommandplaylists .item .playcount {
+    opacity: 1;
+  }
+
+  .discovery .recommandplaylists .item:hover .PlayCircleTwoTone {
+    opacity: 0;
+  }
 }

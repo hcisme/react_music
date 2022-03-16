@@ -88,7 +88,7 @@ export default function Main() {
       </div>
 
       {/* <ReactAplayer className="aplayer" {...source} /> */}
-      <audio className='aplayer' style={{display: 'none'}} src={musicUrl} controls autoPlay></audio>
+      <audio className='aplayer' src={musicUrl} controls autoPlay></audio>
 
       <BackTop style={{ marginBottom: 20 }}>
         <div style={style}>UP</div>

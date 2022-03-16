@@ -59,4 +59,9 @@ body {
   height: 100%;
 }
 
+@media screen and (max-width: 450px) {
+  html {
+    width: 100%;
+  }
+}
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Card, Avatar, Table, Tabs, Pagination } from 'antd'
+import { useParams, useNavigate } from 'react-router-dom'
+import { Card, Avatar, Table, Tabs, Pagination, Image } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
 import PubSub from 'pubsub-js'
 import './index.css'
@@ -12,6 +12,8 @@ const { TabPane } = Tabs
 
 export default function PlayList() {
   let params = useParams()
+  let navigate = useNavigate()
+
   const [topPoster, setTopPoster] = useState({})
   const [key, setKey] = useState('hot')
   const [dataSource, setDataSource] = useState([])
@@ -20,6 +22,7 @@ export default function PlayList() {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [isHid, setIsHid] = useState(true)
+  const [pagetime, setTime] = useState(null)
 
   const getTopPoster = () => {
     React.$apis.getPlayListsTopInfo(params.id).then((val) => {
@@ -35,15 +38,18 @@ export default function PlayList() {
   }
 
   const getHotComment = () => {
-    React.$apis.gethotcomment(params.id).then((val) => {
+    React.$apis.gethotcomment(params.id, page, pagetime).then((val) => {
       setHotComment(val.hotComments)
+      setTotal(val.total)
+      setTime(val.hotComments[14]?.time)
     })
   }
 
   const getNewComments = () => {
-    React.$apis.getNewComment(params.id, page).then((val) => {
+    React.$apis.getNewComment(params.id, page, pagetime).then((val) => {
       setNewComment(val.comments)
       setTotal(val.total)
+      setTime(val.comments[14]?.time)
     })
   }
 
@@ -61,7 +67,25 @@ export default function PlayList() {
     },
     {
       title: '标题',
-      dataIndex: 'name',
+      render: (item) => {
+        return (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span>{item.name}</span>
+            {item.mv && (
+              <span
+                className="iconfont icon-movie-line"
+                style={{ color: 'red', padding: 3, cursor: 'pointer' }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.nativeEvent.stopImmediatePropagation()
+                  navigate(`/home/mv/${item.mv}`)
+                }}
+              ></span>
+            )}
+            {item.fee === 1 ? <span className="iconfont icon-VIP" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
+          </div>
+        )
+      },
     },
     {
       title: '歌手',
@@ -89,7 +113,11 @@ export default function PlayList() {
   }
 
   useEffect(() => {
-    getNewComments()
+    if (key === 'hot') {
+      getHotComment()
+    } else if (key === 'new') {
+      getNewComments()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page])
 
@@ -104,12 +132,22 @@ export default function PlayList() {
 
   return (
     <div className="playlist">
-      <Card style={{ display: 'flex', alignItems: 'center', width: '100%', height: '240px', marginBottom: 20 }} cover={<img style={{ width: '240px', height: '240px' }} alt="加载失败 请刷新重试" src={topPoster.coverImgUrl} />}>
+      <Card
+        style={{ display: 'flex', alignItems: 'center', width: '100%', height: '240px' }}
+        cover={
+          <Image
+            width={240}
+            height={240}
+            src={topPoster.coverImgUrl}
+            fallback="http://chcmusic.cloud/images/error.png"
+          />
+        }
+      >
         <div>{topPoster.name}</div>
         <Meta avatar={<Avatar src={topPoster.creator?.avatarUrl} />} title={topPoster.creator?.nickname} description={`创建时间：${dayjs(topPoster.createTime)}`} />
         <Meta title={`标签：${topPoster.tags?.join(' / ')}`} description={<div className="overflow">{`简介：${topPoster.description}`}</div>} />
       </Card>
-      <Tabs defaultActiveKey="1">
+      <Tabs defaultActiveKey="1" style={{ marginTop: 20 }}>
         <TabPane tab="音乐" key="music">
           <Table
             dataSource={dataSource}
@@ -133,6 +171,7 @@ export default function PlayList() {
             activeKey={key}
             onChange={(key) => {
               setKey(key)
+              setPage(1)
             }}
           >
             <TabPane
@@ -156,18 +195,19 @@ export default function PlayList() {
               key="new"
             >
               <Commmnt comment={newComment}></Commmnt>
-              <div className="page" style={{ width: '100%', textAlign: 'center', marginTop: 20 }}>
-                <Pagination
-                  current={page}
-                  total={total}
-                  showSizeChanger={false}
-                  onChange={(current) => {
-                    setPage(current)
-                  }}
-                />
-              </div>
             </TabPane>
           </Tabs>
+
+          <div className="page" style={{ width: '100%', textAlign: 'center', marginTop: 20, display: hotComment.length === 0 ? 'none' : 'block' }}>
+            <Pagination
+              current={page}
+              total={total}
+              showSizeChanger={false}
+              onChange={(current) => {
+                setPage(current)
+              }}
+            />
+          </div>
         </TabPane>
       </Tabs>
     </div>
