@@ -16,6 +16,7 @@ export default function Discovery() {
   const [playLists, setPlayLists] = useState([])
   const [musics, setMusics] = useState([])
   const [mvs, setMvs] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const getbanner = () => {
     React.$apis.getBanners().then((val) => {
@@ -32,6 +33,7 @@ export default function Discovery() {
   const getRecommandMusic = () => {
     React.$apis.recommandMusic().then((val) => {
       setMusics(val)
+      setLoading(false)
     })
   }
 
@@ -42,9 +44,10 @@ export default function Discovery() {
   }
 
   const handlePlayMusic = (record) => {
-    // console.log(record);
-    const Info = { id: record.id, posterUrl: record.picUrl, name: record.name, artistName: record.song.artists[0].name }
-    PubSub.publish('ids', Info)
+    React.$apis.getlyrc(record.id).then(lyrc=> {
+      const Info = { id: record.id, posterUrl: record.picUrl, name: record.name, artistName: record.song?.artists[0]?.name, lyrc: lyrc.lyric }
+      PubSub.publish('ids', Info)
+    })
   }
 
   const columns = [
@@ -89,7 +92,7 @@ export default function Discovery() {
           {banners.map((item) => {
             return (
               <div key={item.targetId} className="disbanner">
-                <img src={item.imageUrl} alt="加载失败请重试!" />
+                <Image src={item.imageUrl} fallback="http://chcmusic.cloud/images/error.png" />
               </div>
             )
           })}
@@ -130,6 +133,7 @@ export default function Discovery() {
           columns={columns}
           pagination={false}
           rowKey={(record) => record.id}
+          loading={loading}
           onRow={(record) => {
             return {
               onClick: () => {

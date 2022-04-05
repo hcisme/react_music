@@ -23,6 +23,7 @@ export default function PlayList() {
   const [total, setTotal] = useState(0)
   const [isHid, setIsHid] = useState(true)
   const [pagetime, setTime] = useState(null)
+  const [tabsPage, setTabsPage] = useState('music')
 
   const getTopPoster = () => {
     React.$apis.getPlayListsTopInfo(params.id).then((val) => {
@@ -108,8 +109,10 @@ export default function PlayList() {
   ]
 
   const handlePlayMusic = (record) => {
-    const Info = { id: record.id }
-    PubSub.publish('ids', Info)
+    React.$apis.getlyrc(record.id).then(lyrc=>{
+      const Info = { id: record.id, posterUrl: record.al?.picUrl, name: record.name, artistName: record.ar[0]?.name, lyrc: lyrc.lyric }
+      PubSub.publish('ids', Info)
+    })
   }
 
   useEffect(() => {
@@ -132,22 +135,18 @@ export default function PlayList() {
 
   return (
     <div className="playlist">
-      <Card
-        style={{ display: 'flex', alignItems: 'center', width: '100%', height: '240px' }}
-        cover={
-          <Image
-            width={240}
-            height={240}
-            src={topPoster.coverImgUrl}
-            fallback="http://chcmusic.cloud/images/error.png"
-          />
-        }
-      >
+      <Card style={{ display: 'flex', alignItems: 'center', width: '100%', height: '240px' }} cover={<Image width={240} height={240} src={topPoster.coverImgUrl} fallback="http://chcmusic.cloud/images/error.png" />}>
         <div>{topPoster.name}</div>
         <Meta avatar={<Avatar src={topPoster.creator?.avatarUrl} />} title={topPoster.creator?.nickname} description={`创建时间：${dayjs(topPoster.createTime)}`} />
         <Meta title={`标签：${topPoster.tags?.join(' / ')}`} description={<div className="overflow">{`简介：${topPoster.description}`}</div>} />
       </Card>
-      <Tabs defaultActiveKey="1" style={{ marginTop: 20 }}>
+      <Tabs
+        activeKey={tabsPage}
+        style={{ marginTop: 20 }}
+        onChange={(e) => {
+          setTabsPage(e)
+        }}
+      >
         <TabPane tab="音乐" key="music">
           <Table
             dataSource={dataSource}
@@ -189,7 +188,7 @@ export default function PlayList() {
               tab={
                 <span>
                   <i className="iconfont icon-zuixinhuodong" style={{ padding: 5 }}></i>
-                  最新评论{`(${total})`}
+                  最新评论 {`(${total})`}
                 </span>
               }
               key="new"

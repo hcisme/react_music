@@ -7,15 +7,15 @@
   height: 30% !important;
 }
 
-.discovery .banner .disbanner img {
+/* .discovery .banner .disbanner img {
   width: 100%;
   height: 100%;
-}
+} */
 
 .discovery .recommandplaylists {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .discovery .recommandplaylists .item {
@@ -72,7 +72,7 @@
 .discovery .recommandmvs {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .discovery .recommandmvs .item {
@@ -110,6 +110,8 @@
 .discovery .recommandmusic .ant-table-row:hover .coverImg .PlayCircleTwoTone {
   opacity: 1;
 }
+
+
 
 @media screen and (max-width: 450px) {
   .discovery .recommandplaylists .item {

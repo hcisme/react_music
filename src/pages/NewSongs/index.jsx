@@ -27,9 +27,10 @@ export default function NewSongs() {
   }
 
   const handlePlayMusic = (record) => {
-    // console.log(record);
-    const Info = { id: record.id, posterUrl: record.picUrl, name: record.name, artistName: record.artists[0].name }
-    PubSub.publish('ids', Info)
+    React.$apis.getlyrc(record.id).then(lyrc=> {
+      const Info = { id: record.id, posterUrl: record.album.picUrl, name: record.name, artistName: record.artists[0].name, lyrc: lyrc.lyric }
+      PubSub.publish('ids', Info)
+    })
   }
 
   const columns = [

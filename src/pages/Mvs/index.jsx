@@ -13,7 +13,7 @@ export default function Mvs() {
   const [area, setArea] = useState('全部')
   const [type, setType] = useState('全部')
   const [order, setOrder] = useState('上升最快')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(null)
   const [source, setSource] = useState([])

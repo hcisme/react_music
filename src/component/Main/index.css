@@ -13,7 +13,7 @@
 .mainArticle {
   margin-top: 100px;
   padding: 20px;
-  padding-bottom: 150px;
+  padding-bottom: 100px;
 }
 
 .main .aplayer {
@@ -22,4 +22,15 @@
   left: 0;
   right: 0;
   width: 100%;
+}
+
+@media screen and (max-width: 450px) {
+  .main .mainArticle .thanks {
+    display: block !important;
+    text-align: center;
+  }
+
+  .main .mainArticle .thanks > div {
+    padding: 5px;
+  }
 }

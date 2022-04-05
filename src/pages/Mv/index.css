@@ -99,4 +99,8 @@
   /* .mv-container .simimv .items img {
     display: none;
   } */
+
+  /* .mv-container .hidden {
+    display: none !important;
+  }   */
 }

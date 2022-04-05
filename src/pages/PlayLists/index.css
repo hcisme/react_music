@@ -18,8 +18,7 @@
 }
 
 .playlists .items .item {
-  position: relative;
-  margin: 28px;
+  margin: 20px;
 }
 
 .playlists .items .item .ant-card-meta-description {
@@ -55,7 +54,7 @@
 
 .playlists .items .item .play {
   position: absolute;
-  top: 35%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 50px;
@@ -78,8 +77,8 @@
 
   .playlists .items .item {
     width: 130px !important;
-    height: 250px !important;
-    margin: 0 !important;
+    height: 210px !important;
+    margin: 5px 0 !important;
   }
 
   .playlists .items .item img {
@@ -88,11 +87,20 @@
 
   .playlists .items .item .chc-card {
     width: 100% !important;
-    height: auto !important;
+    height: 210px !important;
+  }
+
+  .playlists .items .item .chc-card .ant-card-cover {
+    height: 130px;
+  }
+
+  .playlists .ant-image {
+    height: 130px !important;
   }
 
   .playlists .items .item .ant-card-body {
-    padding: 5px 0;
+    padding: 5px 2px;
+    height: 130px;
   }
 
   .playlists .items .item .chc-meta .ant-card-meta-title {

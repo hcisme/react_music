@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Card, Avatar, Descriptions, Tabs, Pagination } from 'antd'
+import { Card, Avatar, Descriptions, Tabs, Pagination, Drawer, Badge } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
 import './index.css'
 import Commmnt from '../../hooks/Comment'
 import { time } from '../../utils/js/timeTool.js'
+import { isAndroid, isIOS } from '../../utils/js/equipment.js'
 
 const { Meta } = Card
 const { TabPane } = Tabs
@@ -22,6 +23,8 @@ export default function Mv() {
   const [total, setTotal] = useState(0)
   const [key, setKey] = useState('hot')
   const [pagetime, setTime] = useState(null)
+  const [visible, setVisible] = useState(false)
+  const [qwe, setQwe] = useState(false)
 
   const getMvUrl = () => {
     React.$apis.mvurl(params.id).then((val) => {
@@ -63,10 +66,19 @@ export default function Mv() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id])
 
+  const isVisible = () => {
+    setVisible(true)
+    const isios = isIOS()
+    const isandroid = isAndroid()
+    if (isios === true || isandroid === true) {
+      setQwe(true)
+    }
+  }
+
   return (
     <div className="mv-container">
       <div className="mvbox">
-        <video src={mvUrl} controls autoPlay></video>
+        <video src={mvUrl} controls></video>
         <Card style={{ width: '100%' }}>
           <Meta avatar={<Avatar src={mvInfo.cover} size={65} />} title={mvInfo.artistName} description={`作品：${mvInfo.name}`} />
           <Descriptions title="" style={{ marginTop: 20 }}>
@@ -75,47 +87,65 @@ export default function Mv() {
           </Descriptions>
         </Card>
 
-        <Tabs
-          activeKey={key}
-          onChange={(key) => {
-            setKey(key)
-            setPage(1)
-          }}
-        >
-          <TabPane
-            tab={
-              <span>
-                <i className="iconfont icon-jingcaishike" style={{ padding: 5 }}></i>
-                精彩评论
-              </span>
-            }
-            key="hot"
-          >
-            <Commmnt comment={hotComments}></Commmnt>
-          </TabPane>
-          <TabPane
-            tab={
-              <span>
-                <i className="iconfont icon-zuixinhuodong" style={{ padding: 5 }}></i>
-                最新评论{`(${total})`}
-              </span>
-            }
-            key="new"
-          >
-            <Commmnt comment={comments}></Commmnt>
+        <div style={{ display: 'inline-block', marginTop: 10 }} onClick={() => isVisible()}>
+          <Badge count={total} size={'small'}>
+            <i className="iconfont icon-pinglun" style={{ fontSize: 25, cursor: 'pointer' }}></i>
+          </Badge>
+        </div>
 
-            <div className="page" style={{ width: '100%', textAlign: 'center', marginTop: 20 }}>
-              <Pagination
-                current={page}
-                total={total}
-                showSizeChanger={false}
-                onChange={(current) => {
-                  setPage(current)
-                }}
-              />
-            </div>
-          </TabPane>
-        </Tabs>
+        <Drawer
+          className="hidden"
+          title={`${mvInfo.name}(评论)`}
+          placement={qwe === true ? 'bottom' : 'right'}
+          onClose={() => {
+            setVisible(false)
+          }}
+          visible={visible}
+          width={qwe === true ? '100%' : '50%'}
+          height={qwe === true ? '70%' : '100%'}
+        >
+          <Tabs
+            activeKey={key}
+            onChange={(key) => {
+              setKey(key)
+              setPage(1)
+            }}
+          >
+            <TabPane
+              tab={
+                <span>
+                  <i className="iconfont icon-jingcaishike" style={{ padding: 5 }}></i>
+                  精彩评论
+                </span>
+              }
+              key="hot"
+            >
+              <Commmnt comment={hotComments}></Commmnt>
+            </TabPane>
+            <TabPane
+              tab={
+                <span>
+                  <i className="iconfont icon-zuixinhuodong" style={{ padding: 5 }}></i>
+                  最新评论{`(${total})`}
+                </span>
+              }
+              key="new"
+            >
+              <Commmnt comment={comments}></Commmnt>
+
+              <div className="page" style={{ width: '100%', textAlign: 'center', marginTop: 20 }}>
+                <Pagination
+                  current={page}
+                  total={total}
+                  showSizeChanger={false}
+                  onChange={(current) => {
+                    setPage(current)
+                  }}
+                />
+              </div>
+            </TabPane>
+          </Tabs>
+        </Drawer>
       </div>
 
       <div className="simimv">
@@ -132,7 +162,7 @@ export default function Mv() {
                 key={item.id}
                 style={{ display: 'flex', width: '100%', marginBottom: 10, overflow: 'hidden' }}
                 cover={
-                  <div className='imges' style={{width: 265}}>
+                  <div className="imges" style={{ width: 265 }}>
                     <img alt="example" src={item.cover} style={{ cursor: 'pointer', width: '100%', height: '100%' }} />
                     <PlayCircleTwoTone className="PlayCircleTwoTone" style={{ cursor: 'pointer' }} />
                   </div>

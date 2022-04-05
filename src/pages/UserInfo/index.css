@@ -1,0 +1,18 @@
+.userinfo {
+  padding: 10px 25px;
+}
+
+.userinfo .direction i {
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 20px;
+  padding: 3px;
+}
+
+.userinfo .direction i:hover {
+  background-color: #59adea;
+}
+
+.userinfo .info {
+  margin-top: 20px;
+}

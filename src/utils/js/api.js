@@ -9,6 +9,15 @@ export const getMusicUrl = async (id) => {
   return res.data
 }
 
+export const getlyrc = async (id) => {
+  const { data: res } = await React.$axios.get('/api/lyric', {
+    params: {
+      id,
+    },
+  })
+  return res.lrc
+}
+
 // discovery页面--------------------------------------------------------------------------------------------------------------
 // 轮播图
 export const getBanners = async () => {
@@ -53,9 +62,9 @@ export const topDatas = async (tag) => {
 export const listDatas = async (page, tag) => {
   const { data: res } = await React.$axios.get('/api/top/playlist', {
     params: {
-      limit: 10,
+      limit: 12,
       // 起始的值 （页码-1）*每页多少条数据
-      offset: (page - 1) * 10,
+      offset: (page - 1) * 12,
       cat: tag,
     },
   })
@@ -177,7 +186,7 @@ export const simiMvs = async (mvid) => {
 
 // 搜索相关
 export const defaultWord = async () => {
-  const {data: res} = await React.$axios.get('/api/search/default')
+  const { data: res } = await React.$axios.get('/api/search/default')
   return res.data
 }
 
@@ -195,15 +204,40 @@ export const searchSuggest = async (keywords) => {
   return res.result
 }
 // 搜索结果api
-export const searchres = async (keywords, page) => {
+export const searchres = async (keywords, type, page) => {
   const { data: res } = await React.$axios.get('/api/cloudsearch', {
     params: {
       keywords,
-      type: 1,
+      type,
       // 获取的数据量
       limit: 25,
       offset: (page - 1) * 25
     }
   })
   return res.result
+}
+
+// 登录
+export const Login = async (phone, password) => {
+  const { data: res } = await React.$axios.post('/api/login/cellphone', {
+    phone,
+    password
+  })
+  return res
+}
+
+// 登录状态
+export const loginStatus = async () => {
+  const { data: res } = await React.$axios.get('/api/login/status')
+  return res.data
+}
+
+// 用户歌单
+export const getPlaylists = async (id) => {
+  const { data: res } = await React.$axios.get('/api/user/playlist', {
+    params: {
+      uid: id
+    }
+  })
+  return res
 }
