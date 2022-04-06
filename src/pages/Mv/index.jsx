@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Card, Avatar, Descriptions, Tabs, Pagination, Drawer, Badge } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
 import './index.css'
-import Commmnt from '../../hooks/Comment'
+import Commmnt from '../../hooks/UseComment'
 import { time } from '../../utils/js/timeTool.js'
 import { isAndroid, isIOS } from '../../utils/js/equipment.js'
 
@@ -78,7 +78,7 @@ export default function Mv() {
   return (
     <div className="mv-container">
       <div className="mvbox">
-        <video src={mvUrl} controls></video>
+        <video src={mvUrl} controls autoPlay></video>
         <Card style={{ width: '100%' }}>
           <Meta avatar={<Avatar src={mvInfo.cover} size={65} />} title={mvInfo.artistName} description={`作品：${mvInfo.name}`} />
           <Descriptions title="" style={{ marginTop: 20 }}>

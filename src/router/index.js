@@ -11,6 +11,9 @@ const Mv = lazy(() => import('../pages/Mv'))
 const Result = lazy(() => import('../pages/Result'))
 const UserInfo = lazy(() => import('../pages/UserInfo'))
 
+const UserPlayLists = lazy(()=> import('../pages/UserInfo/UserPlaylists'))
+const NearListen = lazy(() => import('../pages/UserInfo/NearListen'))
+
 const NotFound = lazy(() => import('../pages/NotFound'))
 
 const router = [
@@ -33,7 +36,13 @@ const router = [
       { path: '*', element: <NotFound /> },
     ],
   },
-  { path: '/userinfo', element: <UserInfo /> },
+  {
+    path: 'userinfo/*', element: <UserInfo />, children: [
+      { path: '', element: <Navigate to="playlists" /> },
+      { path: 'playlists', element: <UserPlayLists /> },
+      { path: 'recent', element: <NearListen /> }
+    ]
+  }
 ]
 
 export default router

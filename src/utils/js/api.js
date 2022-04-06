@@ -239,5 +239,35 @@ export const getPlaylists = async (id) => {
       uid: id
     }
   })
-  return res
+  return res.playlist
+}
+
+// 用户最近播放音乐
+export const nearMusic = async () => {
+  const { data: res } = await React.$axios.get('/api/record/recent/song', {
+    params: {
+      limit: 13
+    }
+  })
+  return res.data
+}
+
+// 最近播放-视频
+export const nearMV = async () => {
+  const { data: res } = await React.$axios.get('/api/record/recent/video', {
+    params: {
+      limit: 8
+    }
+  })
+  return res.data
+}
+
+// 最近播放-歌单
+export const nearPlayLists = async () => {
+  const { data: res } = await React.$axios.get('/api/record/recent/playlist', {
+    params: {
+      limit: 8
+    }
+  })
+  return res.data?.list
 }

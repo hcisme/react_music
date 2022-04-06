@@ -31,3 +31,13 @@ export const dayjs = (timestamp = Date.now()) => {
   const timeStr = y + '-' + m + '-' + d + ' ' + h + ':' + mm + ':' + s
   return timeStr
 }
+
+// 播放次数格式化
+export const playCount = (playcount = 12312312313) => {
+  let pc = Number(playcount)
+  if (pc > 100000000) {
+    return parseInt(pc / 100000000) + '亿'
+  } else if (pc > 10000) {
+    return parseInt(pc / 10000) + '万'
+  }
+}

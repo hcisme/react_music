@@ -5,7 +5,7 @@ import { PlayCircleTwoTone } from '@ant-design/icons'
 import PubSub from 'pubsub-js'
 import './index.css'
 import { dayjs, time } from '../../utils/js/timeTool.js'
-import Commmnt from '../../hooks/Comment'
+import Commmnt from '../../hooks/UseComment'
 
 const { Meta } = Card
 const { TabPane } = Tabs
@@ -109,7 +109,7 @@ export default function PlayList() {
   ]
 
   const handlePlayMusic = (record) => {
-    React.$apis.getlyrc(record.id).then(lyrc=>{
+    React.$apis.getlyrc(record.id).then((lyrc) => {
       const Info = { id: record.id, posterUrl: record.al?.picUrl, name: record.name, artistName: record.ar[0]?.name, lyrc: lyrc.lyric }
       PubSub.publish('ids', Info)
     })
@@ -138,7 +138,7 @@ export default function PlayList() {
       <Card style={{ display: 'flex', alignItems: 'center', width: '100%', height: '240px' }} cover={<Image width={240} height={240} src={topPoster.coverImgUrl} fallback="http://chcmusic.cloud/images/error.png" />}>
         <div>{topPoster.name}</div>
         <Meta avatar={<Avatar src={topPoster.creator?.avatarUrl} />} title={topPoster.creator?.nickname} description={`创建时间：${dayjs(topPoster.createTime)}`} />
-        <Meta title={`标签：${topPoster.tags?.join(' / ')}`} description={<div className="overflow">{`简介：${topPoster.description}`}</div>} />
+        <Meta title={`标签：${topPoster.tags ? '这个人很懒 什么也没留下' : topPoster.tags?.join(' / ')}`} description={<div className="overflow">{`简介：${topPoster.description ? topPoster.description : '这个人很懒 什么也没留下'}`}</div>} />
       </Card>
       <Tabs
         activeKey={tabsPage}

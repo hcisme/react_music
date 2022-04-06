@@ -50,7 +50,7 @@ export default function Top() {
   const handleCheck = ({ key }) => {
     switch (key) {
       case 'userInfo':
-        navigate(`/userinfo?id=${userInfo.account?.id}`)
+        navigate(`/userinfo`)
         break
       case 'logout':
         React.$axios.get('/api/logout')
@@ -58,7 +58,7 @@ export default function Top() {
         message.success('已退出登录')
         setTimeout(() => {
           window.top.location.reload(true)
-        }, 1000)
+        }, 1500)
         break
       default:
         break
