@@ -246,7 +246,7 @@ export const getPlaylists = async (id) => {
 export const nearMusic = async () => {
   const { data: res } = await React.$axios.get('/api/record/recent/song', {
     params: {
-      limit: 13
+      limit: 12
     }
   })
   return res.data
@@ -270,4 +270,20 @@ export const nearPlayLists = async () => {
     }
   })
   return res.data?.list
+}
+
+// 获取账号信息
+export const accountDetail = async () => {
+  const { data: res } = await React.$axios.get('/api/user/account')
+  return res
+}
+
+// 获取账号信息
+export const vip = async () => {
+  const { data: res } = await React.$axios.get('/api/user/detail', {
+    params: {
+      uid: localStorage.getItem('id')
+    }
+  })
+  return res
 }

@@ -37,7 +37,7 @@ export default function NearListen() {
             return (
               <Card
                 style={{ width: 300, position: 'relative', cursor: 'pointer' }}
-                cover={<img alt="example" src={item.data?.coverUrl} style={{ width: 300, height: 170, objectFit: 'cover' }} />}
+                cover={<img alt="example" src={item.data?.coverUrl} style={{ width: '100%', maxHeight: 170, objectFit: 'cover' }} />}
                 key={item.data?.id}
                 onClick={() => {
                   typeof item.data?.id === 'string' ? message.info('暂缺资源 请到移动端查看') : navigate(`/home/mv/${item.data?.id}`)
@@ -57,13 +57,13 @@ export default function NearListen() {
         </div>
       </div>
 
-      <div className="">
+      <div>
         <Divider orientation="left">最近播放-歌单</Divider>
-        <div className="items" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '20px 0' }}>
+        <div className="items" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 20 }}>
           {recentPlaylists.map((item) => {
             return (
               <Card
-                style={{ width: 300, cursor: 'pointer' }}
+                style={{ width: 220, cursor: 'pointer' }}
                 cover={<img alt="example" src={item.data?.coverImgUrl} />}
                 key={item.data?.id}
                 onClick={() => {

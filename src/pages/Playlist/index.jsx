@@ -91,7 +91,7 @@ export default function PlayList() {
     {
       title: '歌手',
       render: (item) => {
-        return item.ar.map((record) => item.name)
+        return item.ar.map((record) => record.name)
       },
     },
     {

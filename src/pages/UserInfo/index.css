@@ -33,3 +33,7 @@
 .userinfo .own {
   padding-bottom: 100px;
 }
+
+.pop {
+  width: 50% !important;
+}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
-import { Avatar, Card, Comment, Menu, Divider, BackTop, Spin } from 'antd'
+import { Avatar, Card, Comment, Menu, Divider, BackTop, Spin, Popover, Descriptions } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
-import { time } from '../../utils/js/timeTool'
+import { time, dayjs } from '../../utils/js/timeTool'
 import PubSub from 'pubsub-js'
 import './index.css'
 import UseMusic from '../../hooks/UseMusic'
@@ -25,8 +25,10 @@ export default function UserInfo() {
   let navigate = useNavigate()
   const [userInfo, setUserInfo] = useState({})
   const [lovePlaylistsInfo, setLovePlaylistsInfo] = useState({})
+  const [accountInfo, setAccountInfo] = useState({})
   const [nearMusic, setNearMusic] = useState([])
   const [isshow, setIsShow] = useState(true)
+  const [userDetail, setUserDetail] = useState({})
 
   const getStatus = () => {
     React.$apis.loginStatus().then((val) => {
@@ -59,12 +61,39 @@ export default function UserInfo() {
     navigate(e.key)
   }
 
+  const getDetailInfo = async () => {
+    const val = await React.$apis.accountDetail()
+    setAccountInfo(val)
+  }
+
+  const getUserDetail = async () => {
+    const val = await React.$apis.vip()
+    setUserDetail(val)
+  }
+
   useEffect(() => {
     getStatus()
     getPlaylists()
     nearMusics()
+    getDetailInfo()
+    getUserDetail()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const personInfo = (
+    <Descriptions>
+      <Descriptions.Item label="昵称">{accountInfo.profile?.nickname}</Descriptions.Item>
+      <Descriptions.Item label="性别">{accountInfo.profile?.gender === 1 ? '男' : accountInfo.profile?.gender === 2 ? '女' : '保密'}</Descriptions.Item>
+      <Descriptions.Item label="生日">{dayjs(accountInfo.profile?.birthday)}</Descriptions.Item>
+      <Descriptions.Item label="等级">{userDetail.level}</Descriptions.Item>
+      <Descriptions.Item label="UID">{accountInfo.profile?.userId}</Descriptions.Item>
+      <Descriptions.Item label="网龄">{userDetail.createDays}&nbsp;天</Descriptions.Item>
+      <Descriptions.Item label="累计听歌">{userDetail.listenSongs}&nbsp;首</Descriptions.Item>
+      <Descriptions.Item label="注册时间">{dayjs(accountInfo.profile?.createTime)}</Descriptions.Item>
+      <Descriptions.Item label="LastLoginTime">{dayjs(accountInfo.profile?.lastLoginTime)}</Descriptions.Item>
+      <Descriptions.Item label="个性签名">{accountInfo.profile?.signature}</Descriptions.Item>
+    </Descriptions>
+  )
 
   return (
     <div className="userinfo">
@@ -90,7 +119,9 @@ export default function UserInfo() {
         ></i>
       </div>
       <div className="info" style={{ marginBottom: 20 }}>
-        <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }} src={userInfo.profile?.avatarUrl} style={{ marginRight: 20 }} />
+        <Popover placement="bottomLeft" title="详细信息" content={personInfo} trigger="hover" overlayClassName={'pop'}>
+          <Avatar size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }} src={userInfo.profile?.avatarUrl} style={{ marginRight: 20, cursor: 'pointer' }} />
+        </Popover>
         <span style={{ fontSize: 25 }}>{userInfo.profile?.nickname}</span>
       </div>
       <div className="user-playlists" style={{ display: 'flex', justifyContent: 'flex-start' }}>

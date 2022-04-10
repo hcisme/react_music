@@ -26,7 +26,7 @@ export default function UserPlaylists() {
       {userPlaylistsInfo.map((item) => {
         return (
           <Card
-            style={{ width: 300, position: 'relative' }}
+            style={{ width: 200, position: 'relative' }}
             cover={<img alt="example" src={item.coverImgUrl} style={{ objectFit: 'cover' }} />}
             key={item.id}
             onClick={() => {
@@ -34,7 +34,7 @@ export default function UserPlaylists() {
             }}
           >
             <Meta avatar={<Avatar src={item.creator?.avatarUrl} />} title={item.name} description={item.description ? item.description : '这个人很懒 什么也没留下'} />
-            <Meta className="createTime" description={`创建时间：${dayjs(item.createTime)}`} />
+            <span className="createTime">{`创建时间：${dayjs(item.createTime)}`}</span>
           </Card>
         )
       })}

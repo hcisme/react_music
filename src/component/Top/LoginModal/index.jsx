@@ -14,9 +14,6 @@ export default function LoginModal(props) {
         props.getBool(false)
         localStorage.setItem('token', val.token)
         localStorage.setItem('id', val.account?.id)
-        setTimeout(() => {
-          window.top.location.reload(true)
-        }, 1000)
       } else if (val.code === 509) {
         setIsLoading(false)
         return message.error('密码次数超过限制, 请到移动端查看')

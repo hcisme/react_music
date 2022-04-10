@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Modal, Avatar, Dropdown, Menu, message } from 'antd'
-import { ImportOutlined } from '@ant-design/icons'
+import { Modal, Avatar, Dropdown, Menu, message, Tooltip } from 'antd'
+import { ImportOutlined, GithubOutlined } from '@ant-design/icons'
 import './index.css'
 import Search from './Search'
 import LoginModal from './LoginModal'
@@ -34,7 +34,7 @@ export default function Top() {
 
   useEffect(() => {
     loginState()
-  }, [])
+  }, [isLoginVisible])
 
   const menu = (
     <Menu
@@ -43,7 +43,13 @@ export default function Top() {
       }}
     >
       <Menu.Item key="userInfo">主页</Menu.Item>
-      <Menu.Item key="logout">退出登录</Menu.Item>
+      <Menu.Item key="logout" style={{ borderBottom: '1px solid #e8e8e8' }}>
+        退出登录
+      </Menu.Item>
+      <Menu.Item key="github">
+        <GithubOutlined />
+        &nbsp; Github仓库
+      </Menu.Item>
     </Menu>
   )
 
@@ -55,10 +61,13 @@ export default function Top() {
       case 'logout':
         React.$axios.get('/api/logout')
         localStorage.clear()
+        // 离线
+        setDisPlayText('block')
+        setDisPlayAvatar('none')
         message.success('已退出登录')
-        setTimeout(() => {
-          window.top.location.reload(true)
-        }, 1500)
+        break
+      case 'github':
+        window.open('https://github.com/TristesAnima/react_music')
         break
       default:
         break
@@ -68,7 +77,9 @@ export default function Top() {
   return (
     <div className="top">
       <div className="sign">
-        <img src="http://chcmusic.cloud/images/Cat.svg" alt="" onClick={() => navigate('/home/discovery')} />
+        <Tooltip title={<span style={{ fontSize: 12, fontWeight: 400 }}>点我返回首页</span>} color={'#2db7f5'} placement="bottomRight">
+          <img src="http://chcmusic.cloud/images/Cat.svg" alt="" onClick={() => navigate('/home/discovery')} style={{ cursor: 'pointer' }} />
+        </Tooltip>
       </div>
 
       {/* 前进后退路由 */}
