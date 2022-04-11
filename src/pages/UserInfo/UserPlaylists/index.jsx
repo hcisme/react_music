@@ -22,7 +22,7 @@ export default function UserPlaylists() {
   }, [])
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '20px 0' }} className="userplaylists">
+    <div className="userplaylists">
       {userPlaylistsInfo.map((item) => {
         return (
           <Card

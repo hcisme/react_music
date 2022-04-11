@@ -32,7 +32,7 @@ export default function NearListen() {
     <div>
       <div className="nearlisten">
         <Divider orientation="left">最近播放-视频</Divider>
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '20px 0' }}>
+        <div className='recentmv'>
           {recentMv.map((item) => {
             return (
               <Card
@@ -59,7 +59,7 @@ export default function NearListen() {
 
       <div>
         <Divider orientation="left">最近播放-歌单</Divider>
-        <div className="items" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 20 }}>
+        <div className="recentplaylists">
           {recentPlaylists.map((item) => {
             return (
               <Card

@@ -124,7 +124,7 @@ export default function UserInfo() {
         </Popover>
         <span style={{ fontSize: 25 }}>{userInfo.profile?.nickname}</span>
       </div>
-      <div className="user-playlists" style={{ display: 'flex', justifyContent: 'flex-start' }}>
+      <div className="user-playlists">
         <Spin spinning={isshow}>
           <Card
             style={{ width: 250, marginRight: 30, cursor: 'pointer' }}

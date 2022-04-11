@@ -88,7 +88,7 @@ export default function Mvs() {
         </Menu>
       </div>
 
-      <div className="items" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+      <div className="items">
         {source.map((item) => {
           return (
             <Skeleton style={{ width: 300 }} loading={loading} avatar active key={item.id}>

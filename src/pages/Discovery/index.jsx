@@ -87,6 +87,7 @@ export default function Discovery() {
 
   return (
     <div className="discovery">
+      {/* 轮播 */}
       <div className="banner">
         <Carousel autoplay effect="fade">
           {banners.map((item) => {

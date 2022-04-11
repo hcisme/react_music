@@ -17,10 +17,6 @@
   margin-top: 20px;
 }
 
-.userinfo .near-music {
-  width: 75%;
-}
-
 .userinfo .near-music .ant-comment {
   width: 300px;
 }
@@ -36,4 +32,18 @@
 
 .pop {
   width: 50% !important;
+}
+
+.userinfo .user-playlists {
+  display: grid;
+  grid-template-columns: 250px calc(100% - 250px);
+  justify-content: space-between;
+  gap: 0 40px;
+}
+
+@media screen and (max-width: 450px) {
+  .userinfo .user-playlists {
+    display: grid;
+    justify-items: center;
+  }
 }

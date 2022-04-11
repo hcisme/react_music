@@ -1,4 +1,12 @@
+.mvs .items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 300px);
+  justify-content: space-between;
+  gap: 40px 0;
+}
+
 .mvs .items .ant-card {
+  margin-bottom: 0 !important;
   border-radius: 5px;
   overflow: hidden;
 }
@@ -49,6 +57,10 @@
 }
 
 @media screen and (max-width: 450px) {
+  .mvs .items {
+    justify-content: center;
+  }
+
   .mvs .mvCard .playcount {
     top: 0;
   }

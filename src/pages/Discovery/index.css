@@ -13,18 +13,20 @@
 } */
 
 .discovery .recommandplaylists {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 200px);
   justify-content: space-between;
+  align-content: space-between;
+  gap: 30px 40px;
 }
 
 .discovery .recommandplaylists .item {
   position: relative;
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .discovery .recommandplaylists .item .playcount,
-.discovery .recommandmvs .item .playcount  {
+.discovery .recommandmvs .item .playcount {
   position: absolute;
   top: 0;
   right: 0;
@@ -61,13 +63,13 @@
 }
 
 .discovery .recommandplaylists .item .ant-card-meta-title {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    white-space: normal;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .discovery .recommandmvs {
   display: flex;
@@ -114,6 +116,12 @@
 
 
 @media screen and (max-width: 450px) {
+  .discovery .recommandplaylists {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 160px);
+    gap: 0;
+  }
+
   .discovery .recommandplaylists .item {
     padding: 10px 30px;
   }
