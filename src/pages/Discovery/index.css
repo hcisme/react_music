@@ -1,3 +1,7 @@
+.ant-carousel .slick-dots {
+  z-index: 0 !important;
+}
+
 .discovery .banner {
   text-align: center;
 }

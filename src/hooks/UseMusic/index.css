@@ -1,0 +1,186 @@
+.iconfont {
+  cursor: pointer;
+}
+
+#aplayer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  height: 3.9rem;
+  grid-template-columns: 7rem 10rem auto 17rem;
+  justify-items: center;
+  align-items: center;
+  background-color: white;
+  z-index: 999;
+}
+
+#aplayer .pic {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-self: flex-end;
+  width: 3.8rem;
+  height: 3.8rem;
+}
+
+#aplayer .pic img {
+  width: 90%;
+  height: 90%;
+  border-radius: .3rem;
+  background-color: #3c3c3c;
+  margin-top: .063rem;
+}
+
+#aplayer .musicinfo {
+  display: grid;
+  justify-self: flex-start;
+  margin-left: 1.25rem;
+  gap: .188rem;
+}
+
+#aplayer .musicinfo span {
+  font-size: small;
+}
+
+#aplayer .musicinfo span:nth-child(2) {
+  color: gray;
+}
+
+#aplayer .play_plug {
+  display: grid;
+  grid-template-columns: 1.25rem auto 2.5rem;
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+}
+
+#aplayer .play_plug .restartplay {
+  margin-left: 3.75rem;
+}
+
+#aplayer .play_plug .restartplay .icon-zhongxinkaishi {
+  color: #707070;
+  font-size: 1.25rem;
+}
+
+#aplayer .play_plug .play_pause {
+  display: flex;
+  column-gap: 1.6rem;
+}
+
+#aplayer .play_plug .play_pause .iconfont {
+  color: #707070;
+  font-size: 1.57rem;
+  transition: .3s;
+  cursor: pointer;
+}
+
+#aplayer .icon-lyric .icon-bottom {
+  display: inline-block;
+  transition: all .5s ease;
+  cursor: pointer;
+}
+
+#aplayer progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: .25rem;
+}
+
+/* 表示总长度背景色 */
+#aplayer progress::-webkit-progress-bar {
+  background-color: #dee1e6;
+}
+
+/* 表示已完成进度背景色 */
+#aplayer progress::-webkit-progress-value {
+  background: skyblue;
+}
+
+.lyrc-pic {
+  width: 100%;
+  height: calc(100% - 3.9rem);
+  transition: .5s ease;
+}
+
+.lyrc-pic {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.lyrc-pic .lyric-poster {
+  display: grid;
+  width: 100%;
+  place-items: center center;
+}
+
+.lyrc-pic .lyric {
+  width: 100%;
+  overflow: scroll;
+}
+
+/* .lyrc-pic .lyric .content {
+  position: relative;
+  top: 0;
+  transition: .7s;
+} */
+
+.lyrc-pic .lyric .content div {
+  font-size: 2rem;
+  cursor: default;
+  transition: .3s;
+  border-radius: .313rem;
+  padding: .625rem 0;
+}
+
+.lyrc-pic .lyric .content div:hover {
+  background-color: rgba(212, 216, 218, 0.6);
+}
+
+.lyrc-pic img {
+  width: 12.5rem;
+  height: 12.5rem;
+}
+
+.ant-drawer-body {
+  padding: 0;
+}
+
+@media only screen and (max-width: 500px) {
+  #aplayer {
+    grid-template-columns: 3.6rem 10rem 1.25rem 14rem;
+  }
+
+  .lyrc-pic {
+    display: block;
+  }
+
+  .lyric-poster {
+    display: none !important;
+  }
+
+  .lyrc-pic .lyric .content div {
+    height: 3.75rem;
+    font-size: 1.188rem;
+  }
+
+  #aplayer .pic {
+    justify-self: flex-start !important;
+  }
+
+  .restartplay,
+  .volumn,
+  .icon-prev,
+  .icon-next {
+    display: none;
+  }
+
+  #aplayer .play_plug {
+    grid-template-columns: 1.25rem;
+  }
+}

@@ -15,6 +15,7 @@ export default function SearchPage() {
   const [occs, setOccs] = useState({})
   const [isHid, setIsHid] = useState('block')
   const [isShow, setIsShow] = useState(true)
+  const [timer, setTimer] = useState(null)
 
   const handleSubmit = (e) => {
     if (e === '') return message.info('请写入搜索信息')
@@ -33,14 +34,6 @@ export default function SearchPage() {
       setHotWord(val)
       setIsShow(false)
     })
-    // const input = document.querySelector('input')
-    // if (input.value === '') {
-    //   document.onkeydown = (e) => {
-    //     if (e.keyCode === 13) {
-    //       navigate(`/home/result/${defaultWord.realkeyword}`)
-    //     }
-    //   }
-    // }
   }
 
   const getSuggestion = (e) => {
@@ -157,7 +150,15 @@ export default function SearchPage() {
             showList()
           }}
           onChange={(e) => {
-            getSuggestion(e)
+            // 防抖
+            if (timer !== null) {
+              clearTimeout(timer)
+            }
+            setTimer(
+              setTimeout(() => {
+                getSuggestion(e)
+              }, 500)
+            )
           }}
         />
       </Popover>

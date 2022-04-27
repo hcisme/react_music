@@ -22,7 +22,7 @@ const router = [
     element: <Navigate to="home" />,
   },
   {
-    path: 'home/*',
+    path: 'home',
     element: <Home />,
     children: [
       { path: '', element: <Navigate to="discovery" /> },
@@ -37,7 +37,7 @@ const router = [
     ],
   },
   {
-    path: 'userinfo/*', element: <UserInfo />, children: [
+    path: 'userinfo', element: <UserInfo />, children: [
       { path: '', element: <Navigate to="playlists" /> },
       { path: 'playlists', element: <UserPlayLists /> },
       { path: 'recent', element: <NearListen /> }

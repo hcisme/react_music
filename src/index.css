@@ -1,7 +1,6 @@
 * {
   box-sizing: border-box;
   user-select: none;
-  transition: 0.5s;
   font-family: 'Barlow' !important;
   font-weight: bold;
 }
