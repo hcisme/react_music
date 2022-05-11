@@ -5,6 +5,10 @@
   font-weight: bold;
 }
 
+.iconfont {
+  cursor: pointer;
+}
+
 @font-face {
   font-family: 'Barlow';
   font-weight: normal;

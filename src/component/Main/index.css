@@ -4,6 +4,7 @@
   left: 0;
   right: 0;
   z-index: 999;
+  box-shadow: 0px 16px 32px rgb(0 0 0 / 4%);
 }
 
 .main .main-menu .ant-menu {

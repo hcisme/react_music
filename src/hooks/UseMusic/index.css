@@ -1,5 +1,6 @@
-.iconfont {
+#aplayer .iconfont {
   cursor: pointer;
+  font-size: 1.25rem;
 }
 
 #aplayer {
@@ -9,7 +10,7 @@
   bottom: 0;
   display: grid;
   height: 3.9rem;
-  grid-template-columns: 7rem 10rem auto 17rem;
+  grid-template-columns: 7rem 10rem 2.188rem auto 17rem;
   justify-items: center;
   align-items: center;
   background-color: white;
@@ -99,7 +100,7 @@
 
 /* 表示已完成进度背景色 */
 #aplayer progress::-webkit-progress-value {
-  background: skyblue;
+  background: #335eea;
 }
 
 .lyrc-pic {
@@ -116,7 +117,34 @@
 .lyrc-pic .lyric-poster {
   display: grid;
   width: 100%;
+  grid-template-rows: 18.563rem 1.375rem 1.375rem;
   place-items: center center;
+  place-content: center center;
+  row-gap: 1.25rem;
+}
+
+.lyrc-pic .lyric-poster img{
+  width: 100%;
+  height: 100%;
+}
+
+.lyrc-pic .lyric-poster .miniplugin{
+  display: flex;
+  align-items: center;
+  gap: 0 .625rem;
+}
+
+.miniplay_pause {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 90% 10%;
+  place-items: center center;
+}
+
+.miniplay_pause .play_pause {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .lyrc-pic .lyric {
@@ -131,7 +159,7 @@
 } */
 
 .lyrc-pic .lyric .content div {
-  font-size: 2rem;
+  font-size: 1rem;
   cursor: default;
   transition: .3s;
   border-radius: .313rem;
@@ -150,6 +178,14 @@
 .ant-drawer-body {
   padding: 0;
 }
+
+.hover {
+  transition: .3s;
+}
+
+.hover:hover {
+  background-color: rgba(131, 131, 139, 0.28);
+} 
 
 @media only screen and (max-width: 500px) {
   #aplayer {
@@ -176,7 +212,8 @@
   .restartplay,
   .volumn,
   .icon-prev,
-  .icon-next {
+  .icon-next,
+  .love {
     display: none;
   }
 

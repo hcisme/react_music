@@ -1,4 +1,5 @@
 import React from 'react'
+import { message } from 'antd'
 
 export const getMusicUrl = async (id) => {
   const { data: res } = await React.$axios.get('/api/song/url', {
@@ -16,6 +17,24 @@ export const getlyrc = async (id) => {
     },
   })
   return res.lrc
+}
+
+// 
+export const request = async (method, url, parameter) => {
+  try {
+    if (method === 'get') {
+      const { data: res } = await React.$axios.get(url, { params: parameter })
+      return res
+    }
+    if (method === 'post') {
+      const { data: res } = await React.$axios.post(url, { data: parameter })
+      return res
+    }
+  } catch (err) {
+    if (err.response.data.code === 301) {
+      return message.info(err.response.data.msg)
+    }
+  }
 }
 
 // discovery页面--------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Card, Avatar, Table, Tabs, Pagination, Image } from 'antd'
+import { Card, Avatar, Table, Tabs, Pagination, Image, message } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
 import PubSub from 'pubsub-js'
 import './index.css'
@@ -52,6 +52,14 @@ export default function PlayList() {
       setTotal(val.total)
       setTime(val.comments[14]?.time)
     })
+  }
+
+  const isLove = async (e, item) => {
+    e.stopPropagation()
+    const res = await React.$apis.request('get', '/api/like', { id: item.id, like: 'true' })
+    if (res.code === 200) {
+      message.success('该音乐已添加到喜欢列表')
+    }
   }
 
   const columns = [
@@ -106,6 +114,14 @@ export default function PlayList() {
         return time(item.dt)
       },
     },
+    {
+      title: '',
+      render: (item) => {
+        return <i className='iconfont icon-xihuan' onClick={(e) => {
+          isLove(e, item)
+        }}></i>
+      }
+    }
   ]
 
   const handlePlayMusic = (record) => {

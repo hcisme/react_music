@@ -12,7 +12,7 @@ export const handleLyric = (lyric) => {
     const lrc = arr.find(item => !reg.test(item))
     if (!lrc) continue
     for (const timeStr of timeArr) {
-      const arr = timeStr.split(/[\[:.]/)
+      const arr = timeStr.split(/[[:.]/)
       const m = parseInt(arr[1])
       const s = parseInt(arr[2])
       const ms = parseInt(arr[3])

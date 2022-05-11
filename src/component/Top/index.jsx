@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Modal, Avatar, Dropdown, Menu, message, Tooltip } from 'antd'
+import { Modal, Avatar, Dropdown, Menu, message, Tooltip, Tabs } from 'antd'
 import { ImportOutlined, GithubOutlined } from '@ant-design/icons'
 import './index.css'
 import Search from './Search'
 import LoginModal from './LoginModal'
+
+const { TabPane } = Tabs
 
 export default function Top() {
   let navigate = useNavigate()
@@ -12,6 +14,12 @@ export default function Top() {
   const [displayText, setDisPlayText] = useState('block')
   const [displayAvatar, setDisPlayAvatar] = useState('none')
   const [userInfo, setUserInfo] = useState({})
+  const [loginType, setLoginType] = useState('phone')
+
+  const [qrurl, setQrUrl] = useState('https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg')
+  const [timer, SetTimer] = useState(null)
+  const [text, SetText] = useState('等待扫码')
+  const [code, SetCode] = useState(0)
 
   const getChildBool = (val) => {
     setIsLoginVisible(val)
@@ -31,10 +39,6 @@ export default function Top() {
       }
     })
   }
-
-  useEffect(() => {
-    loginState()
-  }, [isLoginVisible])
 
   const menu = (
     <Menu
@@ -72,6 +76,45 @@ export default function Top() {
       default:
         break
     }
+  }
+
+  const getQrKey = async () => {
+    const { data: res } = await React.$apis.request('post', '/api/login/qr/key')
+    const { data: result } = await React.$apis.request('get', '/api/login/qr/create', { key: res.unikey, qrimg: res.unikey })
+    setQrUrl(result.qrimg)
+    SetTimer(
+      setInterval(async () => {
+        const info = await React.$apis.request('get', '/api/login/qr/check', { key: res.unikey })
+        SetCode(info.code)
+        SetText(info.message)
+      }, 1000)
+    )
+  }
+
+  useEffect(() => {
+    if (code === 803) {
+      clearInterval(timer)
+      setIsLoginVisible(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code])
+
+  useEffect(() => {
+    loginType === 'qr' && getQrKey()
+    loginType === 'phone' && clearInterval(timer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginType])
+
+  useEffect(() => {
+    if (isLoginVisible === false) {
+      clearInterval(timer)
+      loginState()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoginVisible])
+
+  function callback(key) {
+    setLoginType(key)
   }
 
   return (
@@ -134,7 +177,22 @@ export default function Top() {
         footer={null}
         destroyOnClose={true}
       >
-        <LoginModal getBool={getChildBool}></LoginModal>
+        <Tabs activeKey={loginType} onChange={callback}>
+          <TabPane tab="手机号登录" key="phone">
+            <LoginModal getBool={getChildBool}></LoginModal>
+          </TabPane>
+          <TabPane tab="二维码登录" key="qr">
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', rowGap: '1.25rem' }}>
+              <div className="qr" style={{ width: '12.5rem', height: '12.5rem' }}>
+                <img src={qrurl} alt="" style={{ width: '100%' }} />
+              </div>
+              <div className="logininfo" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                <span>{text}</span>
+                <span>请使用网易云App扫码登录</span>
+              </div>
+            </div>
+          </TabPane>
+        </Tabs>
       </Modal>
     </div>
   )

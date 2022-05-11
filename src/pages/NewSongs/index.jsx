@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Menu, Table } from 'antd'
+import { Menu, Table, message } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
 import PubSub from 'pubsub-js'
 // 导入处理时间的函数
@@ -31,6 +31,14 @@ export default function NewSongs() {
       const Info = { id: record.id, posterUrl: record.album.picUrl, name: record.name, artistName: record.artists[0].name, lyrc: lyrc.lyric }
       PubSub.publish('ids', Info)
     })
+  }
+
+  const isLove = async (e, item) => {
+    e.stopPropagation()
+    const res = await React.$apis.request('get', '/api/like', { id: item.id, like: 'true' })
+    if (res.code === 200) {
+      message.success('该音乐已添加到喜欢列表')
+    }
   }
 
   const columns = [
@@ -89,6 +97,19 @@ export default function NewSongs() {
       align: 'center',
       render: (item) => {
         return <span>{time(item.duration)}</span>
+      },
+    },
+    {
+      title: '',
+      render: (item) => {
+        return (
+          <i
+            className="iconfont icon-xihuan"
+            onClick={(e) => {
+              isLove(e, item)
+            }}
+          ></i>
+        )
       },
     },
   ]

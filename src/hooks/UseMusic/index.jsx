@@ -2,7 +2,10 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Drawer, message } from 'antd'
 import { handleLyric } from './tools/setLyrc.js'
 import PubSub from 'pubsub-js'
+import { timer } from '../../utils/js/timeTool.js'
 import './index.css'
+
+const style = { width: '2.188rem', height: '2.188rem', lineHeight: '2.188rem', textAlign: 'center', borderRadius: '.313rem' }
 
 export default function UseMusic() {
   //#region
@@ -13,6 +16,8 @@ export default function UseMusic() {
   const lyric_btn = useRef(null)
   const restartPlay = useRef(null)
   const volume = useRef(null)
+  const isMiniPlay = useRef(null)
+  const minivolume = useRef(null)
   // #endregion
   let [beginTime, setBeginTime] = useState(0)
   let [overTime, setOverTime] = useState(0)
@@ -51,12 +56,14 @@ export default function UseMusic() {
   // 播放方法
   const playFunction = () => {
     isPlay.current.className = 'iconfont icon-pause chc-iconfont'
-    audio.current.play()
+    isMiniPlay.current.className = 'iconfont icon-pause chc-iconfont'
     setOverTime(audio.current.duration.toFixed(0))
+    audio.current.play()
   }
   // 暂停
   const pauseFunction = () => {
     isPlay.current.className = 'iconfont icon-play chc-iconfont'
+    isMiniPlay.current.className = 'iconfont icon-play chc-iconfont'
     audio.current.pause()
   }
   // 播放 或 暂停
@@ -80,8 +87,8 @@ export default function UseMusic() {
       }
       document.getElementById(newTime).style.background = 'gray'
       document.getElementById(newTime).style.color = 'white'
-      if (ap[3 + n].id === `${newTime}`) {
-        oCon.current.style.top = `${-n * 70}px`
+      if (ap[6 + n].id === `${newTime}`) {
+        oCon.current.style.top = `${-n * 45}px`
         setN((n += 1))
       }
     }
@@ -89,8 +96,10 @@ export default function UseMusic() {
   // 结束
   const ended = () => {
     isPlay.current.className = 'iconfont icon-play chc-iconfont'
+    isMiniPlay.current.className = 'iconfont icon-play chc-iconfont'
     audio.current.pause()
     progress.current.value = 0
+    oCon.current.style.top = `0px`
   }
   // 是否显示歌词蒙版（黑色背景）
   const showDrawer = () => {
@@ -98,22 +107,23 @@ export default function UseMusic() {
   }
   // 重新播放
   const resetMusic = () => {
-    audio.current.load()
-    isPlay.current.className = 'iconfont icon-pause chc-iconfont'
-    audio.current.play()
+    audio.current.currentTime = 0
+    playFunction()
   }
   // 音量
   const volumn = () => {
     if (audio.current.muted === false) {
       audio.current.muted = true
       volume.current.className = 'iconfont icon-24gf-volumeCross'
+      minivolume.current.className = 'iconfont icon-24gf-volumeCross'
     } else if (audio.current.muted === true) {
       audio.current.muted = false
       volume.current.className = 'iconfont icon-24gf-volumeHigh'
+      minivolume.current.className = 'iconfont icon-24gf-volumeHigh'
     }
   }
   // 点击歌词指定播放位置
-  const appointNode = (item, index) => {
+  const appointNode = (item) => {
     playFunction()
     let time = (item.time / 1000).toFixed(0)
     audio.current.currentTime = time
@@ -126,7 +136,7 @@ export default function UseMusic() {
     return () => {
       PubSub.unsubscribe('ids')
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -136,13 +146,17 @@ export default function UseMusic() {
         <div className="pic">
           <img src={picUrl} alt="" />
         </div>
+        {/* 歌曲信息 */}
         <div className="musicinfo">
           <span>{name}</span>
           <span>- {songName}</span>
         </div>
+        <div style={style} className="hover love">
+          <i className="iconfont icon-xihuan"></i>
+        </div>
         {/* <!-- 播放插件 --> */}
         <div className="play_plug">
-          <div className="restartplay">
+          <div className="restartplay hover" style={style}>
             <i
               className="iconfont icon-zhongxinkaishi"
               ref={restartPlay}
@@ -152,17 +166,23 @@ export default function UseMusic() {
             ></i>
           </div>
           <div className="play_pause">
-            <i className="iconfont icon-prev"></i>
-            <i
-              className="iconfont icon-play chc-iconfont"
-              ref={isPlay}
-              onClick={() => {
-                playOrPause()
-              }}
-            ></i>
-            <i className="iconfont icon-next"></i>
+            <div style={style} className="hover">
+              <i className="iconfont icon-prev"></i>
+            </div>
+            <div style={style} className="hover">
+              <i
+                className="iconfont icon-play chc-iconfont"
+                ref={isPlay}
+                onClick={() => {
+                  playOrPause()
+                }}
+              ></i>
+            </div>
+            <div style={style} className="hover">
+              <i className="iconfont icon-next"></i>
+            </div>
           </div>
-          <div className="volumn" style={{ position: 'relative' }}>
+          <div className="volumn hover" style={style}>
             <i
               ref={volume}
               className="iconfont icon-24gf-volumeHigh"
@@ -174,7 +194,7 @@ export default function UseMusic() {
           </div>
         </div>
         {/* <!-- 歌词按钮 --> */}
-        <div className="icon-lyric">
+        <div className="icon-lyric hover" style={style}>
           <i
             className="iconfont icon-bottom lyric_btn"
             ref={lyric_btn}
@@ -199,8 +219,40 @@ export default function UseMusic() {
         {/* 歌词蒙版 */}
         <div className="lyrc-pic lyricRef">
           <div className="lyric-poster">
-            <img src={picUrl} alt="" />
+            <img src={picUrl} alt="" style={{ borderRadius: '.313rem', objectFit: 'cover' }} />
+            <span style={{ fontSize: '.938rem' }}>
+              {name} - <span style={{ fontSize: '.75rem' }}>{songName}</span>
+            </span>
+            <div className="miniplugin">
+              <span>{timer(beginTime)}</span>
+              <progress max={overTime} value={beginTime}></progress>
+              <span>{timer(overTime)}</span>
+            </div>
+            <div className="miniplay_pause">
+              <div className="play_pause">
+                <i className="iconfont icon-prev"></i>
+                <i
+                  className="iconfont icon-play chc-iconfont"
+                  ref={isMiniPlay}
+                  onClick={() => {
+                    playOrPause()
+                  }}
+                ></i>
+                <i className="iconfont icon-next"></i>
+              </div>
+              <div className="volumn" style={{ position: 'relative', justifySelf: 'end' }}>
+                <i
+                  ref={minivolume}
+                  className="iconfont icon-24gf-volumeHigh"
+                  onClick={() => {
+                    volumn()
+                  }}
+                  style={{ color: '#707070', fontSize: '1.25rem' }}
+                ></i>
+              </div>
+            </div>
           </div>
+          {/* 歌词 */}
           <div className="lyric">
             <div className="content" ref={oCon} style={{ height: '100%', position: 'relative', top: 0, transition: '.7s' }}>
               {lyric.map((item, index) => {

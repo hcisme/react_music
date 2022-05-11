@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pagination, Descriptions, Table, Tabs, Skeleton, Card, Image, Spin } from 'antd'
+import { Pagination, Descriptions, Table, Tabs, Skeleton, Card, Image, Spin, message } from 'antd'
 import { PlayCircleTwoTone, PlayCircleOutlined } from '@ant-design/icons'
 import { time } from '../../utils/js/timeTool'
 import PubSub from 'pubsub-js'
@@ -36,6 +36,12 @@ export default function Result() {
       setLoading(false)
       setIsHid(false)
     })
+  }
+
+  const isLove = async (e, item) => {
+    e.stopPropagation()
+    const res = await React.$apis.request('get', '/api/like', { id: item.id, like: 'true' })
+    if (res.code === 200) return message.success('该音乐已添加到喜欢列表')
   }
 
   const columns = [
@@ -81,6 +87,19 @@ export default function Result() {
       title: '时长',
       render: (item) => {
         return time(item.dt)
+      },
+    },
+    {
+      title: '',
+      render: (item) => {
+        return (
+          <i
+            className="iconfont icon-xihuan"
+            onClick={(e) => {
+              isLove(e, item)
+            }}
+          ></i>
+        )
       },
     },
   ]
@@ -196,7 +215,7 @@ export default function Result() {
             onRow={(record) => {
               return {
                 onClick: () => {
-                  React.$apis.getlyrc(record.id).then(lyrc=> {
+                  React.$apis.getlyrc(record.id).then((lyrc) => {
                     PubSub.publish('ids', { id: record.id, posterUrl: record.al?.picUrl, name: record.name, artistName: record.ar[0]?.name, lyrc: lyrc.lyric })
                   })
                 }, // 点击行
