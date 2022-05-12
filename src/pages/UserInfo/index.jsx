@@ -3,7 +3,8 @@ import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { Avatar, Card, Comment, Menu, Divider, BackTop, Spin, Popover, Descriptions } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import { time, dayjs } from '../../utils/js/timeTool'
-import PubSub from 'pubsub-js'
+import store from '../../redux/store'
+import { HearFromHomeInfo } from '../../redux/actions'
 import './index.css'
 import UseMusic from '../../hooks/UseMusic'
 
@@ -50,11 +51,9 @@ export default function UserInfo() {
     })
   }
 
-  const toPlay = (record) => {
-    React.$apis.getlyrc(record.resourceId).then((lyrc) => {
-      const Info = { id: record.resourceId, posterUrl: record.data?.al?.picUrl, name: record.data?.al?.name, artistName: record.data?.ar[0]?.name, lyrc: lyrc.lyric }
-      PubSub.publish('ids', Info)
-    })
+  const toPlay = async (record) => {
+    const info = await HearFromHomeInfo(record)
+    store.dispatch(info)
   }
 
   const handleClick = (e) => {

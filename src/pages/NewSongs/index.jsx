@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Menu, Table, message } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
-import PubSub from 'pubsub-js'
+import store from '../../redux/store'
+import { HearFromNewSongInfo } from '../../redux/actions'
 // 导入处理时间的函数
 import { time } from '../../utils/js/timeTool.js'
 import './index.css'
@@ -26,11 +27,9 @@ export default function NewSongs() {
     })
   }
 
-  const handlePlayMusic = (record) => {
-    React.$apis.getlyrc(record.id).then(lyrc=> {
-      const Info = { id: record.id, posterUrl: record.album.picUrl, name: record.name, artistName: record.artists[0].name, lyrc: lyrc.lyric }
-      PubSub.publish('ids', Info)
-    })
+  const handlePlayMusic = async (record) => {
+    const musicInfo = await HearFromNewSongInfo(record)
+    store.dispatch(musicInfo)
   }
 
   const isLove = async (e, item) => {

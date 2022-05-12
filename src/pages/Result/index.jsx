@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Pagination, Descriptions, Table, Tabs, Skeleton, Card, Image, Spin, message } from 'antd'
 import { PlayCircleTwoTone, PlayCircleOutlined } from '@ant-design/icons'
 import { time } from '../../utils/js/timeTool'
-import PubSub from 'pubsub-js'
+import { HearFromResultInfo } from '../../redux/actions'
+import store from '../../redux/store'
 import './index.css'
 
 const { TabPane } = Tabs
@@ -214,11 +215,11 @@ export default function Result() {
             loading={isHid}
             onRow={(record) => {
               return {
-                onClick: () => {
-                  React.$apis.getlyrc(record.id).then((lyrc) => {
-                    PubSub.publish('ids', { id: record.id, posterUrl: record.al?.picUrl, name: record.name, artistName: record.ar[0]?.name, lyrc: lyrc.lyric })
-                  })
-                }, // 点击行
+                // 点击行
+                onClick: async () => {
+                  const musicInfo = await HearFromResultInfo(record)
+                  store.dispatch(musicInfo)
+                },
               }
             }}
           />

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Card, Avatar, Table, Tabs, Pagination, Image, message } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
-import PubSub from 'pubsub-js'
 import './index.css'
 import { dayjs, time } from '../../utils/js/timeTool.js'
+import store from '../../redux/store'
+import { HearFromResultInfo } from '../../redux/actions'
 import Commmnt from '../../hooks/UseComment'
 
 const { Meta } = Card
@@ -117,18 +118,21 @@ export default function PlayList() {
     {
       title: '',
       render: (item) => {
-        return <i className='iconfont icon-xihuan' onClick={(e) => {
-          isLove(e, item)
-        }}></i>
-      }
-    }
+        return (
+          <i
+            className="iconfont icon-xihuan"
+            onClick={(e) => {
+              isLove(e, item)
+            }}
+          ></i>
+        )
+      },
+    },
   ]
 
-  const handlePlayMusic = (record) => {
-    React.$apis.getlyrc(record.id).then((lyrc) => {
-      const Info = { id: record.id, posterUrl: record.al?.picUrl, name: record.name, artistName: record.ar[0]?.name, lyrc: lyrc.lyric }
-      PubSub.publish('ids', Info)
-    })
+  const handlePlayMusic = async (record) => {
+    const musicInfo = await HearFromResultInfo(record)
+    store.dispatch(musicInfo)
   }
 
   useEffect(() => {
