@@ -6,7 +6,6 @@ import { time, dayjs } from '../../utils/js/timeTool'
 import store from '../../redux/store'
 import { HearFromHomeInfo } from '../../redux/actions'
 import './index.css'
-import UseMusic from '../../hooks/UseMusic'
 
 const { Meta } = Card
 const style = {
@@ -196,8 +195,6 @@ export default function UserInfo() {
           </div>
         </div>
       </div>
-
-      <UseMusic></UseMusic>
 
       <BackTop style={{ marginBottom: 40 }}>
         <div style={style}>UP</div>

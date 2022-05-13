@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Drawer, message } from 'antd'
-import { timer } from '../../utils/js/timeTool.js'
+import { Drawer, message, Popover, Table } from 'antd'
+import { time, timer } from '../../utils/js/timeTool.js'
 import store from '../../redux/store/index.js'
 import './index.css'
 
@@ -28,6 +28,7 @@ export default function UseMusic() {
   const [songName, setSongName] = useState('')
   const [picUrl, setPicUrl] = useState('')
   const [lyric, setLyric] = useState([])
+  const [musicList, setMusicList] = useState([])
 
   // 播放方法
   const playFunction = () => {
@@ -114,17 +115,62 @@ export default function UseMusic() {
     setSongName(songName)
     setPicUrl(picUrl)
     setLyric(lyric)
-    if (name !== '春娇与志明/街道办GDC') {
-      setTimeout(() => {
-        playFunction()
-      }, 1000)
-    }
+
+    setMusicList(JSON.parse(localStorage.getItem('musicList')))
   }, [url])
 
   store.subscribe(() => {
     const { url } = store.getState()
     setUrl(url)
+    setTimeout(() => {
+      playFunction()
+    }, 1000)
   })
+
+  // 音乐列表
+  const columns = [
+    {
+      title: '',
+      render: (text, record, index) => index + 1
+    },
+    {
+      title: '单曲',
+      dataIndex: 'name',
+    },
+    {
+      title: '歌手',
+      dataIndex: 'songName',
+    },
+    {
+      title: '',
+      render: (item) => {
+        return time(item.dt)
+      },
+    },
+  ]
+
+  const content = (
+    <Table
+      dataSource={musicList}
+      pagination={false}
+      columns={columns}
+      rowKey={(record) => record.id}
+      onRow={(record) => {
+        return {
+          onClick: async () => {
+            setUrl(record.url)
+            setName(record.name)
+            setSongName(record.songName)
+            setPicUrl(record.picUrl)
+            setLyric(record.lyric)
+            setTimeout(() => {
+              playFunction()
+            }, 1000)
+          }
+        }
+      }}
+    />
+  )
 
   return (
     <div>
@@ -179,6 +225,11 @@ export default function UseMusic() {
               style={{ color: '#707070', fontSize: '1.25rem' }}
             ></i>
           </div>
+          <Popover content={content} title="音乐列表" trigger="hover" overlayClassName="chc-popover-list">
+            <div className="hover" style={style}>
+              <i className="iconfont icon-24gf-playlistMusic5"></i>
+            </div>
+          </Popover>
         </div>
         {/* <!-- 歌词按钮 --> */}
         <div className="icon-lyric hover" style={style}>

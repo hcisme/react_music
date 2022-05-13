@@ -9,6 +9,10 @@
   cursor: pointer;
 }
 
+img {
+  object-fit: cover;
+}
+
 @font-face {
   font-family: 'Barlow';
   font-weight: normal;

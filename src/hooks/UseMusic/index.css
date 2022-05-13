@@ -1,3 +1,7 @@
+.chc-popover-list {
+  min-width: 31.25rem;
+}
+
 #aplayer .iconfont {
   cursor: pointer;
   font-size: 1.25rem;
@@ -51,7 +55,7 @@
 
 #aplayer .play_plug {
   display: grid;
-  grid-template-columns: 1.25rem auto 2.5rem;
+  grid-template-columns: 1.25rem auto 2.5rem 2.188rem;
   align-items: center;
   justify-items: center;
   width: 100%;

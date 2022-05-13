@@ -3,7 +3,6 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, BackTop } from 'antd'
 import { SendOutlined, BgColorsOutlined, GithubOutlined } from '@ant-design/icons'
 import './index.css'
-import MusicHooks from '../../hooks/UseMusic'
 
 const style = {
   height: 40,
@@ -73,7 +72,6 @@ export default function Main() {
         </div>
       </div>
 
-      <MusicHooks></MusicHooks>
 
       <BackTop style={{ marginBottom: 40 }}>
         <div style={style}>UP</div>
