@@ -19,6 +19,7 @@
 
 .userinfo .near-music .ant-comment {
   width: 300px;
+  padding-left: 1.25rem;
 }
 
 .userinfo .near-music .ant-comment:hover {

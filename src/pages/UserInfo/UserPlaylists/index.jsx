@@ -23,7 +23,7 @@ export default function UserPlaylists() {
 
   return (
     <div className="userplaylists">
-      {userPlaylistsInfo.map((item) => {
+      {userPlaylistsInfo?.map((item) => {
         return (
           <Card
             style={{ width: 200, position: 'relative' }}

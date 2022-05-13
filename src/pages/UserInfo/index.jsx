@@ -5,6 +5,7 @@ import { GithubOutlined } from '@ant-design/icons'
 import { time, dayjs } from '../../utils/js/timeTool'
 import store from '../../redux/store'
 import { HearFromHomeInfo } from '../../redux/actions'
+import UseMusic from '../../hooks/UseMusic'
 import './index.css'
 
 const { Meta } = Card
@@ -195,6 +196,8 @@ export default function UserInfo() {
           </div>
         </div>
       </div>
+
+      <UseMusic></UseMusic>
 
       <BackTop style={{ marginBottom: 40 }}>
         <div style={style}>UP</div>

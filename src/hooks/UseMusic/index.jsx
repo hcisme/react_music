@@ -30,6 +30,8 @@ export default function UseMusic() {
   const [lyric, setLyric] = useState([])
   const [musicList, setMusicList] = useState([])
 
+  // const [list, setList] = useState({})
+
   // 播放方法
   const playFunction = () => {
     isPlay.current.className = 'iconfont icon-pause chc-iconfont'
@@ -117,11 +119,18 @@ export default function UseMusic() {
     setLyric(lyric)
 
     setMusicList(JSON.parse(localStorage.getItem('musicList')))
-  }, [url])
+  }, [])
 
   store.subscribe(() => {
-    const { url } = store.getState()
+    // const { url } = store.getState()
+    // setUrl(url)
+    const { name, lyric, picUrl, songName, url } = store.getState()
     setUrl(url)
+    setName(name)
+    setSongName(songName)
+    setPicUrl(picUrl)
+    setLyric(lyric)
+    setMusicList(JSON.parse(localStorage.getItem('musicList')))
     setTimeout(() => {
       playFunction()
     }, 1000)
@@ -131,7 +140,7 @@ export default function UseMusic() {
   const columns = [
     {
       title: '',
-      render: (text, record, index) => index + 1
+      render: (text, record, index) => index + 1,
     },
     {
       title: '单曲',
@@ -157,20 +166,25 @@ export default function UseMusic() {
       rowKey={(record) => record.id}
       onRow={(record) => {
         return {
-          onClick: async () => {
-            setUrl(record.url)
-            setName(record.name)
-            setSongName(record.songName)
-            setPicUrl(record.picUrl)
-            setLyric(record.lyric)
-            setTimeout(() => {
-              playFunction()
-            }, 1000)
-          }
+          onClick: () => {
+            toplay(record)
+            // setList(record)
+          },
         }
       }}
     />
   )
+
+  const toplay = (record) => {
+    setUrl(record.url)
+    setSongName(record.songName)
+    setPicUrl(record.picUrl)
+    setLyric(record.lyric)
+    setName(record.name)
+    setTimeout(() => {
+      playFunction()
+    }, 1500)
+  }
 
   return (
     <div>
@@ -293,7 +307,7 @@ export default function UseMusic() {
           {/* 歌词 */}
           <div className="lyric">
             <div className="content" ref={oCon} style={{ height: '100%', position: 'relative', top: 0, transition: '.7s' }}>
-              {lyric.map((item, index) => {
+              {lyric?.map((item, index) => {
                 return (
                   <div
                     className="chc-lyrc"

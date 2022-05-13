@@ -32,7 +32,7 @@ export const HearFromResultInfo = async (data) => {
   let url = ''
   let ly = ''
 
-  const { id, al: { picUrl }, name } = data
+  const { id, al: { picUrl }, name, dt } = data
   // 获取歌曲url
   const val = await React.$apis.getMusicUrl(id)
   url = val[0].url
@@ -48,6 +48,7 @@ export const HearFromResultInfo = async (data) => {
     songName: data.ar[0]?.name,
     picUrl,
     lyric: handleLyric(ly),
+    dt
   }
 }
 
@@ -56,7 +57,7 @@ export const HearFromNewSongInfo = async (data) => {
   let url = ''
   let ly = ''
 
-  const { id, album: { picUrl }, name } = data
+  const { id, album: { picUrl }, name, duration: dt } = data
   // 获取歌曲url
   const val = await React.$apis.getMusicUrl(id)
   url = val[0].url
@@ -72,6 +73,7 @@ export const HearFromNewSongInfo = async (data) => {
     songName: data.artists[0]?.name,
     picUrl,
     lyric: handleLyric(ly),
+    dt
   }
 }
 
@@ -80,7 +82,7 @@ export const HearFromHomeInfo = async (data) => {
   let url = ''
   let ly = ''
 
-  const { resourceId: id, data: { al: { picUrl } }, data: { al: { name } } } = data
+  const { resourceId: id, data: { al: { picUrl } }, data: { al: { name } }, data: { dt } } = data
   // 获取歌曲url
   const val = await React.$apis.getMusicUrl(id)
   url = val[0].url
@@ -96,5 +98,6 @@ export const HearFromHomeInfo = async (data) => {
     songName: data.data?.ar[0]?.name,
     picUrl,
     lyric: handleLyric(ly),
+    dt
   }
 }
