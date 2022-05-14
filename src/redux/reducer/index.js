@@ -1,3 +1,4 @@
+import { notification } from 'antd'
 import { handleLyric } from "../../hooks/UseMusic/tools/setLyrc"
 import { HEARFROM } from '../constant'
 
@@ -40,6 +41,12 @@ export default function reducer(preState = initState, action) {
     // 数组中 对象 查重
     let newArr = distinct3(newLists)
     localStorage.setItem('musicList', JSON.stringify(newArr))
+
+    if (newArr[0].id !== 6666666) {
+      notification.success({
+        message: '已成功添加到音乐列表',
+      })
+    }
   } else {
     localStorage.setItem('musicList', JSON.stringify([initState]))
   }

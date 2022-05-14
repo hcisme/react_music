@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Drawer, message, Popover, Table } from 'antd'
+import { Drawer, message, Popover, Table, Button } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import { time, timer } from '../../utils/js/timeTool.js'
 import store from '../../redux/store/index.js'
 import './index.css'
@@ -29,8 +30,6 @@ export default function UseMusic() {
   const [picUrl, setPicUrl] = useState('')
   const [lyric, setLyric] = useState([])
   const [musicList, setMusicList] = useState([])
-
-  // const [list, setList] = useState({})
 
   // 播放方法
   const playFunction = () => {
@@ -122,8 +121,6 @@ export default function UseMusic() {
   }, [])
 
   store.subscribe(() => {
-    // const { url } = store.getState()
-    // setUrl(url)
     const { name, lyric, picUrl, songName, url } = store.getState()
     setUrl(url)
     setName(name)
@@ -156,23 +153,49 @@ export default function UseMusic() {
         return time(item.dt)
       },
     },
+    {
+      title: '',
+      render: (text, item, index) => {
+        return (
+          item.id !== 6666666 && (
+            <CloseCircleOutlined
+              style={{ cursor: 'pointer' }}
+              onClick={(e) => {
+                delMusic(e, index)
+              }}
+            />
+          )
+        )
+      },
+    },
   ]
 
   const content = (
-    <Table
-      dataSource={musicList}
-      pagination={false}
-      columns={columns}
-      rowKey={(record) => record.id}
-      onRow={(record) => {
-        return {
-          onClick: () => {
-            toplay(record)
-            // setList(record)
-          },
-        }
-      }}
-    />
+    <div>
+      <Button
+        type="dashed"
+        size={'small'}
+        onClick={() => {
+          clearAll()
+        }}
+        style={{display: 'flex', flexDirection: 'column', marginLeft: 'auto'}}
+      >
+        Clear All
+      </Button>
+      <Table
+        dataSource={musicList}
+        pagination={false}
+        columns={columns}
+        rowKey={(record) => record.id}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              toplay(record)
+            },
+          }
+        }}
+      />
+    </div>
   )
 
   const toplay = (record) => {
@@ -184,6 +207,22 @@ export default function UseMusic() {
     setTimeout(() => {
       playFunction()
     }, 1500)
+  }
+
+  // 删除音乐
+  const delMusic = (e, index) => {
+    e.stopPropagation()
+    let arr = JSON.parse(localStorage.getItem('musicList'))
+    arr.splice(index, 1)
+    localStorage.setItem('musicList', JSON.stringify(arr))
+    let arrList = JSON.parse(localStorage.getItem('musicList'))
+    setMusicList(arrList)
+  }
+
+  // 清空播放列表
+  const clearAll = () => {
+    localStorage.removeItem('musicList')
+    setMusicList([])
   }
 
   return (
@@ -240,7 +279,7 @@ export default function UseMusic() {
             ></i>
           </div>
           <Popover content={content} title="音乐列表" trigger="hover" overlayClassName="chc-popover-list">
-            <div className="hover" style={style}>
+            <div className="hover chc-music-list" style={style}>
               <i className="iconfont icon-24gf-playlistMusic5"></i>
             </div>
           </Popover>

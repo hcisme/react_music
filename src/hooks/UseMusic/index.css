@@ -200,7 +200,7 @@
     display: block;
   }
 
-  .lyric-poster {
+  .lyric-poster, .chc-music-list {
     display: none !important;
   }
 
