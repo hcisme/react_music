@@ -5,7 +5,8 @@
   font-weight: bold;
 }
 
-.iconfont {
+.iconfont,
+.anticon {
   cursor: pointer;
 }
 

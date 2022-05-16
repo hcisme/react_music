@@ -1,5 +1,7 @@
 .chc-popover-list {
   min-width: 31.25rem;
+  max-height: 21.875rem;
+  overflow: scroll;
 }
 
 #aplayer .iconfont {
@@ -55,7 +57,7 @@
 
 #aplayer .play_plug {
   display: grid;
-  grid-template-columns: 1.25rem auto 2.5rem 2.188rem;
+  grid-template-columns: 1.25rem auto 2.5rem 2.5rem 2.188rem;
   align-items: center;
   justify-items: center;
   width: 100%;
@@ -136,6 +138,10 @@
   display: flex;
   align-items: center;
   gap: 0 .625rem;
+}
+
+.lyrc-pic .lyric-poster .miniplugin progress {
+  height: 0..55rem;
 }
 
 .miniplay_pause {

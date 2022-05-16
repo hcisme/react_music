@@ -1,6 +1,6 @@
 import React from "react"
 import { handleLyric } from "../../hooks/UseMusic/tools/setLyrc"
-import { HEARFROM } from '../constant'
+import { HEARFROM, CHANGE } from '../constant'
 
 // 首页音乐播放
 export const HearFromDisInfo = async (data) => {
@@ -77,6 +77,31 @@ export const HearFromNewSongInfo = async (data) => {
   }
 }
 
+// 搜索建议时提示的音乐
+export const HearFromSearchSuggestInfo = async (data) => {
+  let url = ''
+  let ly = ''
+
+  const { id, album: { artist: { picUrl } }, name, duration: dt } = data
+  // 获取歌曲url
+  const val = await React.$apis.getMusicUrl(id)
+  url = val[0].url
+  // 获取歌词
+  const lyrc = await React.$apis.getlyrc(id)
+  ly = lyrc.lyric
+
+  return {
+    type: HEARFROM,
+    id,
+    url,
+    name,
+    songName: data.artists[0]?.name,
+    picUrl,
+    lyric: handleLyric(ly),
+    dt
+  }
+}
+
 // 主页最近在听的音乐
 export const HearFromHomeInfo = async (data) => {
   let url = ''
@@ -99,5 +124,12 @@ export const HearFromHomeInfo = async (data) => {
     picUrl,
     lyric: handleLyric(ly),
     dt
+  }
+}
+
+export const statusChange = () => {
+  return {
+    type: CHANGE,
+    num: Math.random()
   }
 }

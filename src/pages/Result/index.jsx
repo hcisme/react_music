@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pagination, Descriptions, Table, Tabs, Skeleton, Card, Image, Spin, message } from 'antd'
-import { PlayCircleTwoTone, PlayCircleOutlined } from '@ant-design/icons'
+import { Pagination, Descriptions, Table, Tabs, Skeleton, Card, Image, Spin, message, notification } from 'antd'
+import { PlayCircleTwoTone, PlayCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { time } from '../../utils/js/timeTool'
-import { HearFromResultInfo } from '../../redux/actions'
+import { HearFromResultInfo, statusChange } from '../../redux/actions'
+import { distinct3 } from '../../utils/js/timeTool.js'
 import store from '../../redux/store'
 import './index.css'
 
@@ -53,7 +54,7 @@ export default function Result() {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <span>{item.name}</span>
-            {item.mv && (
+            {item.mv ? (
               <span
                 className="iconfont icon-movie-line"
                 style={{ color: 'red', padding: 3, cursor: 'pointer' }}
@@ -63,6 +64,8 @@ export default function Result() {
                   navigate(`/home/mv/${item.mv}`)
                 }}
               ></span>
+            ) : (
+              ''
             )}
             {item.privilege?.maxbr === 999000 ? <span className="iconfont icon-wusunyinzhi" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
             {item.fee === 1 ? <span className="iconfont icon-VIP" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
@@ -94,16 +97,42 @@ export default function Result() {
       title: '',
       render: (item) => {
         return (
-          <i
-            className="iconfont icon-xihuan"
-            onClick={(e) => {
-              isLove(e, item)
-            }}
-          ></i>
+          <div style={{ display: 'flex', alignItems: 'center', columnGap: '1.25rem' }}>
+            <i
+              className="iconfont icon-xihuan"
+              onClick={(e) => {
+                isLove(e, item)
+              }}
+            ></i>
+            <PlusCircleOutlined
+              onClick={(e) => {
+                addMusicList(e, item)
+              }}
+            />
+          </div>
         )
       },
     },
   ]
+
+  const addMusicList = async (e, item) => {
+    e.stopPropagation()
+    let initData = await HearFromResultInfo(item)
+    let localData = JSON.parse(localStorage.getItem('musicList'))
+    if (localData !== null) {
+      localData.unshift(initData)
+      // 数组中 对象 查重
+      let newArr = distinct3(localData)
+      localStorage.setItem('musicList', JSON.stringify(newArr))
+
+      if (newArr[0].id !== 6666666) {
+        notification.success({
+          message: '已成功添加到音乐列表',
+        })
+      }
+    }
+    store.dispatch(statusChange())
+  }
 
   useEffect(() => {
     getSearchResult()

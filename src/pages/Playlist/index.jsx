@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Card, Avatar, Table, Tabs, Pagination, Image, message } from 'antd'
-import { PlayCircleTwoTone } from '@ant-design/icons'
-import './index.css'
-import { dayjs, time } from '../../utils/js/timeTool.js'
+import { Card, Avatar, Table, Tabs, Pagination, Image, message, notification, Button, Tag } from 'antd'
+import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons'
+import { dayjs, time, distinct3 } from '../../utils/js/timeTool.js'
 import store from '../../redux/store'
-import { HearFromResultInfo } from '../../redux/actions'
+import { HearFromResultInfo, statusChange } from '../../redux/actions'
 import Commmnt from '../../hooks/UseComment'
+import './index.css'
 
 const { Meta } = Card
 const { TabPane } = Tabs
@@ -81,7 +81,7 @@ export default function PlayList() {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <span>{item.name}</span>
-            {item.mv && (
+            {item.mv === 0 ? (
               <span
                 className="iconfont icon-movie-line"
                 style={{ color: 'red', padding: 3, cursor: 'pointer' }}
@@ -91,6 +91,8 @@ export default function PlayList() {
                   navigate(`/home/mv/${item.mv}`)
                 }}
               ></span>
+            ) : (
+              ''
             )}
             {item.fee === 1 ? <span className="iconfont icon-VIP" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
           </div>
@@ -119,16 +121,42 @@ export default function PlayList() {
       title: '',
       render: (item) => {
         return (
-          <i
-            className="iconfont icon-xihuan"
-            onClick={(e) => {
-              isLove(e, item)
-            }}
-          ></i>
+          <div style={{ display: 'flex', alignItems: 'center', columnGap: '1.25rem' }}>
+            <i
+              className="iconfont icon-xihuan"
+              onClick={(e) => {
+                isLove(e, item)
+              }}
+            ></i>
+            <PlusCircleOutlined
+              onClick={(e) => {
+                addMusicList(e, item)
+              }}
+            />
+          </div>
         )
       },
     },
   ]
+
+  const addMusicList = async (e, item) => {
+    e.stopPropagation()
+    let initData = await HearFromResultInfo(item)
+    let localData = JSON.parse(localStorage.getItem('musicList'))
+    if (localData !== null) {
+      localData.unshift(initData)
+      // 数组中 对象 查重
+      let newArr = distinct3(localData)
+      localStorage.setItem('musicList', JSON.stringify(newArr))
+
+      if (newArr[0].id !== 6666666) {
+        notification.success({
+          message: '已成功添加到音乐列表',
+        })
+      }
+    }
+    store.dispatch(statusChange())
+  }
 
   const handlePlayMusic = async (record) => {
     const musicInfo = await HearFromResultInfo(record)
@@ -153,12 +181,49 @@ export default function PlayList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const playAllMusic = async () => {
+    message.info('只能存20首歌在播放列表')
+    for (let i = 0; i < 20; i++) {
+      let initData = await HearFromResultInfo(dataSource[i])
+      let localData = JSON.parse(localStorage.getItem('musicList'))
+      if (localData !== null) {
+        localData.unshift(initData)
+        // 数组中 对象 查重
+        let newArr = distinct3(localData)
+        localStorage.setItem('musicList', JSON.stringify(newArr))
+
+        if (newArr[0].id !== 6666666) {
+          notification.success({
+            message: '已成功添加到音乐列表',
+          })
+        }
+      }
+      store.dispatch(statusChange())
+    }
+  }
+
   return (
     <div className="playlist">
       <Card style={{ display: 'flex', alignItems: 'center', width: '100%', height: '240px' }} cover={<Image width={240} height={240} src={topPoster.coverImgUrl} fallback="http://chcmusic.cloud/images/error.png" />}>
         <div>{topPoster.name}</div>
         <Meta avatar={<Avatar src={topPoster.creator?.avatarUrl} />} title={topPoster.creator?.nickname} description={`创建时间：${dayjs(topPoster.createTime)}`} />
-        <Meta title={`标签：${topPoster.tags ? '这个人很懒 什么也没留下' : topPoster.tags?.join(' / ')}`} description={<div className="overflow">{`简介：${topPoster.description ? topPoster.description : '这个人很懒 什么也没留下'}`}</div>} />
+        <Meta
+          title={
+            <div>
+              <span>标签：{topPoster.tags === '' ? <Tag color="blue">{topPoster.tags?.join(' / ')}</Tag> : <Tag color="volcano">这个人很懒 什么也没留下</Tag>}</span>
+              <Button
+                type="danger"
+                style={{ marginLeft: '3.125rem' }}
+                onClick={() => {
+                  playAllMusic()
+                }}
+              >
+                播放全部
+              </Button>
+            </div>
+          }
+          description={<div className="overflow">{`简介：${topPoster.description ? topPoster.description : '这个人很懒 什么也没留下'}`}</div>}
+        />
       </Card>
       <Tabs
         activeKey={tabsPage}

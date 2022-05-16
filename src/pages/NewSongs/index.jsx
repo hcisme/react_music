@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Menu, Table, message } from 'antd'
-import { PlayCircleTwoTone } from '@ant-design/icons'
+import { Menu, Table, message, notification } from 'antd'
+import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons'
 import store from '../../redux/store'
-import { HearFromNewSongInfo } from '../../redux/actions'
+import { HearFromNewSongInfo, statusChange } from '../../redux/actions'
+// 查重
+import { distinct3 } from '../../utils/js/timeTool.js'
 // 导入处理时间的函数
 import { time } from '../../utils/js/timeTool.js'
 import './index.css'
@@ -102,16 +104,42 @@ export default function NewSongs() {
       title: '',
       render: (item) => {
         return (
-          <i
-            className="iconfont icon-xihuan"
-            onClick={(e) => {
-              isLove(e, item)
-            }}
-          ></i>
+          <div style={{ display: 'flex', alignItems: 'center', columnGap: '1.25rem' }}>
+            <i
+              className="iconfont icon-xihuan"
+              onClick={(e) => {
+                isLove(e, item)
+              }}
+            ></i>
+            <PlusCircleOutlined
+              onClick={(e) => {
+                addMusicList(e, item)
+              }}
+            />
+          </div>
         )
       },
     },
   ]
+
+  const addMusicList = async (e, item) => {
+    e.stopPropagation()
+    let initData = await HearFromNewSongInfo(item)
+    let localData = JSON.parse(localStorage.getItem('musicList'))
+    if (localData !== null) {
+      localData.unshift(initData)
+      // 数组中 对象 查重
+      let newArr = distinct3(localData)
+      localStorage.setItem('musicList', JSON.stringify(newArr))
+
+      if (newArr[0].id !== 6666666) {
+        notification.success({
+          message: '已成功添加到音乐列表',
+        })
+      }
+    }
+    store.dispatch(statusChange())
+  }
 
   useEffect(() => {
     getMusicList()

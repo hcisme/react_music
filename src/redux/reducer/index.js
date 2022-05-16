@@ -1,6 +1,5 @@
-import { notification } from 'antd'
 import { handleLyric } from "../../hooks/UseMusic/tools/setLyrc"
-import { HEARFROM } from '../constant'
+import { HEARFROM, CHANGE } from '../constant'
 
 const initState = {
   type: HEARFROM,
@@ -15,44 +14,13 @@ const initState = {
   dt: 205000
 }
 
-// 数组中 对象 查重
-function distinct3(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = i + 1; j < arr.length; j++) {
-      if (arr[i].id === arr[j].id) {
-        arr.splice(j, 1);
-        j = j - 1;
-      }
-    }
-  }
-  return arr;
-}
-
 export default function reducer(preState = initState, action) {
   const { type } = action
 
-  let localData = JSON.parse(localStorage.getItem('musicList'))
-  if (localData !== null) {
-    localData.unshift(action)
-    // 数组过滤
-    let newLists = localData.filter((item) => {
-      return item.type === "HEARFROM"
-    })
-    // 数组中 对象 查重
-    let newArr = distinct3(newLists)
-    localStorage.setItem('musicList', JSON.stringify(newArr))
-
-    if (newArr[0].id !== 6666666) {
-      notification.success({
-        message: '已成功添加到音乐列表',
-      })
-    }
-  } else {
-    localStorage.setItem('musicList', JSON.stringify([initState]))
-  }
-
   switch (type) {
     case HEARFROM:
+      return action
+    case CHANGE:
       return action
     default:
       return preState

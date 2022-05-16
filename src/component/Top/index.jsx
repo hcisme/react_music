@@ -64,7 +64,8 @@ export default function Top() {
         break
       case 'logout':
         React.$axios.get('/api/logout')
-        localStorage.clear()
+        localStorage.removeItem('id')
+        localStorage.removeItem('token')
         // 离线
         setDisPlayText('block')
         setDisPlayAvatar('none')

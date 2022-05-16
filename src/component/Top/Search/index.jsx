@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Input, Popover, List, Typography, Avatar, message, Spin } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
-import PubSub from 'pubsub-js'
+import store, { Store } from '../../../redux/store'
+import { HearFromSearchSuggestInfo } from '../../../redux/actions'
 import './index.css'
 
 const { Search } = Input
@@ -83,8 +84,9 @@ export default function SearchPage() {
           dataSource={occs?.songs}
           renderItem={(item) => (
             <List.Item
-              onClick={() => {
-                PubSub.publish('ids', { id: item.id })
+              onClick={ async () => {
+                let data = await HearFromSearchSuggestInfo(item)
+                store.dispatch(data)
               }}
               style={{ cursor: 'pointer' }}
             >

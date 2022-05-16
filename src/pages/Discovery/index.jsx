@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Carousel, Divider, Card, Table, Image, message } from 'antd'
-import { PlayCircleTwoTone, PlayCircleOutlined } from '@ant-design/icons'
+import { Carousel, Divider, Card, Table, Image, message, notification } from 'antd'
+import { PlayCircleTwoTone, PlayCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import store from '../../redux/store'
-import { HearFromDisInfo } from '../../redux/actions'
+import { HearFromDisInfo, statusChange } from '../../redux/actions'
+import { distinct3 } from '../../utils/js/timeTool.js'
 import './index.css'
 // 导入处理时间的函数
 import { time } from '../../utils/js/timeTool.js'
@@ -73,30 +74,56 @@ export default function Discovery() {
     {
       title: '歌手',
       render: (text, record, index) => {
-        return record.song.album.artists[0].name
+        return record.song?.album?.artists[0]?.name
       },
     },
     {
       title: '时长',
       align: 'center',
       render: (item) => {
-        return <span>{time(item.song.duration)}</span>
+        return <span>{time(item.song?.duration)}</span>
       },
     },
     {
       title: '',
       render: (item) => {
         return (
-          <i
-            className="iconfont icon-xihuan"
-            onClick={(e) => {
-              isLove(e, item)
-            }}
-          ></i>
+          <div style={{ display: 'flex', alignItems: 'center', columnGap: '1.25rem' }}>
+            <i
+              className="iconfont icon-xihuan"
+              onClick={(e) => {
+                isLove(e, item)
+              }}
+            ></i>
+            <PlusCircleOutlined
+              onClick={(e) => {
+                addMusicList(e, item)
+              }}
+            />
+          </div>
         )
       },
     },
   ]
+
+  const addMusicList = async (e, item) => {
+    e.stopPropagation()
+    let initData = await HearFromDisInfo(item)
+    let localData = JSON.parse(localStorage.getItem('musicList'))
+    if (localData !== null) {
+      localData.unshift(initData)
+      // 数组中 对象 查重
+      let newArr = distinct3(localData)
+      localStorage.setItem('musicList', JSON.stringify(newArr))
+
+      if (newArr[0].id !== 6666666) {
+        notification.success({
+          message: '已成功添加到音乐列表',
+        })
+      }
+    }
+    store.dispatch(statusChange())
+  }
 
   useEffect(() => {
     getbanner()
