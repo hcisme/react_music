@@ -6,7 +6,7 @@
 
 #aplayer .iconfont {
   cursor: pointer;
-  font-size: 1.25rem;
+  /* font-size: 1.25rem; */
 }
 
 #aplayer {
@@ -79,7 +79,6 @@
 
 #aplayer .play_plug .play_pause .iconfont {
   color: #707070;
-  font-size: 1.57rem;
   transition: .3s;
   cursor: pointer;
 }

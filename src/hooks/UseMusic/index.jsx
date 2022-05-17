@@ -34,6 +34,8 @@ export default function UseMusic() {
   const [num, setNum] = useState(0)
   const [playType, setPlayType] = useState('icon-order')
   const [playTypeText, setPlayTypeText] = useState('顺序播放')
+  // 获取当前播放的歌曲索引
+  const [currentIndex, setCurrentIndex] = useState(0)
 
   // localStorage 初始化数据
   const initState = {
@@ -71,6 +73,9 @@ export default function UseMusic() {
       return message.info('此歌曲暂时没有版权, 以为您切换')
     }
     if (audio.current.error?.code === 4) return notification.error({ message: '由于音频在列表存放时间较长，链接已失效，请重新获取有效的音频链接' })
+    // 获取当前播放的歌曲索引
+    let index = musicList.findIndex((item) => item.url === audio.current.src)
+    setCurrentIndex(index)
   }
   // 暂停
   const pauseFunction = () => {
@@ -339,6 +344,12 @@ export default function UseMusic() {
     }
   }
 
+  // 喜欢音乐
+  const isLove = async () => {
+    const res = await React.$apis.request('get', '/api/like', { id: musicList[currentIndex]?.id, like: 'true' })
+    if (res.code === 200) return message.success('该音乐已添加到喜欢列表')
+  }
+
   return (
     <div>
       <div id="aplayer">
@@ -351,8 +362,14 @@ export default function UseMusic() {
           <span>{name}</span>
           <span>- {songName}</span>
         </div>
-        <div style={style} className="hover love">
-          <i className="iconfont icon-xihuan"></i>
+        <div
+          style={style}
+          className="hover love"
+          onClick={() => {
+            isLove()
+          }}
+        >
+          <i className="iconfont icon-xihuan" style={{ display: musicList[currentIndex]?.id === 6666666? 'none' : 'block' }}></i>
         </div>
         {/* <!-- 播放插件 --> */}
         <div className="play_plug">
