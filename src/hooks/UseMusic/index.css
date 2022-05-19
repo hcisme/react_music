@@ -89,13 +89,32 @@
   cursor: pointer;
 }
 
-#aplayer progress {
+#aplayer .progress.ant-slider {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
   height: .25rem;
+  padding: 0;
+  margin: 0 .063rem;
+}
+
+#aplayer .progress .ant-slider-rail,
+#aplayer .progress .ant-slider-step,
+#aplayer .progress .ant-slider-track {
+  height: .188rem;
+}
+
+#aplayer .progress .ant-slider-track,
+#aplayer .progress .ant-slider-handle {
+  transition: .5s;
+}
+
+#aplayer .progress .ant-slider-handle {
+  width: 10px;
+  height: 10px;
+  margin-top: -0.25rem;
 }
 
 /* 表示总长度背景色 */
@@ -128,19 +147,21 @@
   row-gap: 1.25rem;
 }
 
-.lyrc-pic .lyric-poster img{
+.lyrc-pic .lyric-poster img {
   width: 100%;
   height: 100%;
 }
 
-.lyrc-pic .lyric-poster .miniplugin{
+.lyrc-pic .lyric-poster .miniplugin {
   display: flex;
   align-items: center;
   gap: 0 .625rem;
+  width: 100%;
 }
 
-.lyrc-pic .lyric-poster .miniplugin progress {
-  height: 0..55rem;
+.lyrc-pic .lyric-poster .miniplugin .progress {
+  width: 100%;
+  height: 0.55rem;
 }
 
 .miniplay_pause {
@@ -194,7 +215,7 @@
 
 .hover:hover {
   background-color: rgba(131, 131, 139, 0.28);
-} 
+}
 
 @media only screen and (max-width: 500px) {
   #aplayer {
@@ -205,7 +226,8 @@
     display: block;
   }
 
-  .lyric-poster, .chc-music-list {
+  .lyric-poster,
+  .chc-music-list {
     display: none !important;
   }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Drawer, message, Popover, Table, Button, notification, Tooltip } from 'antd'
+import { Drawer, message, Popover, Table, Button, notification, Tooltip, Slider } from 'antd'
 import { CloseCircleOutlined } from '@ant-design/icons'
 import { time, timer } from '../../utils/js/timeTool.js'
 import { handleLyric } from './tools/setLyrc.js'
@@ -13,7 +13,6 @@ export default function UseMusic() {
   const audio = useRef(null)
   const oCon = useRef(null)
   const isPlay = useRef(null)
-  const progress = useRef(null)
   const lyric_btn = useRef(null)
   const restartPlay = useRef(null)
   const volume = useRef(null)
@@ -36,6 +35,8 @@ export default function UseMusic() {
   const [playTypeText, setPlayTypeText] = useState('顺序播放')
   // 获取当前播放的歌曲索引
   const [currentIndex, setCurrentIndex] = useState(0)
+  // 音量
+  const [currentVolume, setCurrentVolume] = useState(50)
 
   // localStorage 初始化数据
   const initState = {
@@ -115,7 +116,7 @@ export default function UseMusic() {
     isPlay.current.className = 'iconfont icon-play chc-iconfont'
     isMiniPlay.current.className = 'iconfont icon-play chc-iconfont'
     audio.current.pause()
-    progress.current.value = 0
+    setOverTime(0)
     oCon.current.style.top = `0px`
     switch (playType) {
       // 顺序播放
@@ -154,10 +155,14 @@ export default function UseMusic() {
   const volumn = () => {
     if (audio.current.muted === false) {
       audio.current.muted = true
+      // 点击后静音
+      setCurrentVolume(0)
       volume.current.className = 'iconfont icon-24gf-volumeCross'
       minivolume.current.className = 'iconfont icon-24gf-volumeCross'
     } else if (audio.current.muted === true) {
       audio.current.muted = false
+      // 不静音
+      setCurrentVolume(50)
       volume.current.className = 'iconfont icon-24gf-volumeHigh'
       minivolume.current.className = 'iconfont icon-24gf-volumeHigh'
     }
@@ -350,6 +355,31 @@ export default function UseMusic() {
     if (res.code === 200) return message.success('该音乐已添加到喜欢列表')
   }
 
+  // 改变音量
+  const changeVolume = (
+    <Slider
+      onChange={(value) => {
+        Volume(value)
+      }}
+      max={100}
+      min={0}
+      value={currentVolume}
+    />
+  )
+
+  const Volume = (value) => {
+    setCurrentVolume(value)
+    audio.current.volume = value / 100
+    if (value === 0) {
+      volume.current.className = 'iconfont icon-24gf-volumeCross'
+      minivolume.current.className = 'iconfont icon-24gf-volumeCross'
+      return
+    } else if (value !== 0) {
+      volume.current.className = 'iconfont icon-24gf-volumeHigh'
+      minivolume.current.className = 'iconfont icon-24gf-volumeHigh'
+    }
+  }
+
   return (
     <div>
       <div id="aplayer">
@@ -369,19 +399,19 @@ export default function UseMusic() {
             isLove()
           }}
         >
-          <i className="iconfont icon-xihuan" style={{ display: musicList[currentIndex]?.id === 6666666? 'none' : 'block' }}></i>
+          <i className="iconfont icon-xihuan" style={{ display: musicList[currentIndex]?.id === 6666666 ? 'none' : 'block' }}></i>
         </div>
         {/* <!-- 播放插件 --> */}
         <div className="play_plug">
           <Tooltip placement="top" title={'重新播放'}>
-            <div className="restartplay hover" style={style}>
-              <i
-                className="iconfont icon-zhongxinkaishi"
-                ref={restartPlay}
-                onClick={() => {
-                  resetMusic()
-                }}
-              ></i>
+            <div
+              className="restartplay hover"
+              style={style}
+              onClick={() => {
+                resetMusic()
+              }}
+            >
+              <i className="iconfont icon-zhongxinkaishi" ref={restartPlay}></i>
             </div>
           </Tooltip>
           <div className="play_pause">
@@ -396,14 +426,14 @@ export default function UseMusic() {
                 <i className="iconfont icon-prev"></i>
               </div>
             </Tooltip>
-            <div style={style} className="hover">
-              <i
-                className="iconfont icon-play chc-iconfont"
-                ref={isPlay}
-                onClick={() => {
-                  playOrPause()
-                }}
-              ></i>
+            <div
+              style={style}
+              className="hover"
+              onClick={() => {
+                playOrPause()
+              }}
+            >
+              <i className="iconfont icon-play chc-iconfont" ref={isPlay}></i>
             </div>
             <Tooltip placement="top" title={'下一首'}>
               <div
@@ -417,28 +447,28 @@ export default function UseMusic() {
               </div>
             </Tooltip>
           </div>
-          <div className="playOrder">
+          <div
+            className="playOrder order hover"
+            onClick={() => {
+              changePlayType()
+            }}
+            style={style}
+          >
             <Tooltip placement="top" title={playTypeText}>
-              <div
-                className="order hover"
-                onClick={() => {
-                  changePlayType()
-                }}
-              >
-                <i className={`iconfont ${playType}`} style={{ color: '#707070' }}></i>
-              </div>
+              <i className={`iconfont ${playType}`} style={{ color: '#707070' }}></i>
             </Tooltip>
           </div>
-          <div className="volumn hover" style={style}>
-            <i
-              ref={volume}
-              className="iconfont icon-24gf-volumeHigh"
+          <Popover content={changeVolume} title="音量" trigger="hover">
+            <div
+              className="volumn hover"
+              style={style}
               onClick={() => {
                 volumn()
               }}
-              style={{ color: '#707070', fontSize: '1.25rem' }}
-            ></i>
-          </div>
+            >
+              <i ref={volume} className="iconfont icon-24gf-volumeHigh" style={{ color: '#707070', fontSize: '1.25rem' }}></i>
+            </div>
+          </Popover>
           <Popover content={content} title="音乐列表" trigger="hover" overlayClassName="chc-popover-list">
             <div className="hover chc-music-list" style={style}>
               <i className="iconfont icon-24gf-playlistMusic5"></i>
@@ -447,18 +477,30 @@ export default function UseMusic() {
         </div>
         {/* <!-- 歌词按钮 --> */}
         <Tooltip placement="top" title={'歌词'}>
-          <div className="icon-lyric hover" style={style}>
-            <i
-              className="iconfont icon-bottom lyric_btn"
-              ref={lyric_btn}
-              onClick={() => {
-                showDrawer()
-              }}
-            ></i>
+          <div
+            className="icon-lyric hover"
+            style={style}
+            onClick={() => {
+              showDrawer()
+            }}
+          >
+            <i className="iconfont icon-bottom lyric_btn" ref={lyric_btn}></i>
           </div>
         </Tooltip>
         {/* <!-- 音乐进度条 --> */}
-        <progress max={overTime} value={beginTime} ref={progress}></progress>
+        <Slider
+          max={overTime}
+          min={0}
+          value={beginTime}
+          className="progress"
+          tipFormatter={() => {
+            return timer(beginTime)
+          }}
+          onChange={(value) => {
+            setBeginTime(value)
+            audio.current.currentTime = value
+          }}
+        />
       </div>
       <Drawer
         title={name}
@@ -479,7 +521,17 @@ export default function UseMusic() {
             </span>
             <div className="miniplugin">
               <span>{timer(beginTime)}</span>
-              <progress max={overTime} value={beginTime}></progress>
+              <Slider
+                max={overTime}
+                min={0}
+                value={beginTime}
+                className="progress"
+                tipFormatter={null}
+                onChange={(value) => {
+                  setBeginTime(value)
+                  audio.current.currentTime = value
+                }}
+              />
               <span>{timer(overTime)}</span>
             </div>
             <div className="miniplay_pause">
