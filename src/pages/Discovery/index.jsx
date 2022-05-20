@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Carousel, Divider, Card, Table, Image, message, notification } from 'antd'
 import { PlayCircleTwoTone, PlayCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import store from '../../redux/store'
-import { HearFromDisInfo, statusChange } from '../../redux/actions'
+import { HearFromDisInfo, statusChange, hearMusicInfo } from '../../redux/actions'
 import { distinct3 } from '../../utils/js/timeTool.js'
 import './index.css'
 // 导入处理时间的函数
@@ -139,7 +139,15 @@ export default function Discovery() {
         <Carousel autoplay effect="fade">
           {banners.map((item) => {
             return (
-              <div key={item.targetId} className="disbanner">
+              <div
+                key={item.targetId}
+                className="disbanner"
+                onClick={async () => {
+                  navigate(`/home/song`)
+                  let data = await hearMusicInfo(item)
+                  store.dispatch(data)
+                }}
+              >
                 <Image src={item.imageUrl} fallback="http://chcmusic.cloud/images/error.png" />
               </div>
             )

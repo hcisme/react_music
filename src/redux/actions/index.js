@@ -1,6 +1,6 @@
 import React from "react"
 import { handleLyric } from "../../hooks/UseMusic/tools/setLyrc"
-import { HEARFROM, CHANGE } from '../constant'
+import { HEARFROM, CHANGE, HEARMUSICINFO } from '../constant'
 
 // 首页音乐播放
 export const HearFromDisInfo = async (data) => {
@@ -131,5 +131,13 @@ export const statusChange = () => {
   return {
     type: CHANGE,
     num: Math.random()
+  }
+}
+
+// 点击文字需要跳转传递的信息
+export const hearMusicInfo = (data) => {
+  return {
+    type: HEARMUSICINFO,
+    data
   }
 }

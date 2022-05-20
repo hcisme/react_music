@@ -74,9 +74,6 @@ export default function UseMusic() {
       return message.info('此歌曲暂时没有版权, 以为您切换')
     }
     if (audio.current.error?.code === 4) return notification.error({ message: '由于音频在列表存放时间较长，链接已失效，请重新获取有效的音频链接' })
-    // 获取当前播放的歌曲索引
-    let index = musicList.findIndex((item) => item.url === audio.current.src)
-    setCurrentIndex(index)
   }
   // 暂停
   const pauseFunction = () => {
@@ -108,6 +105,12 @@ export default function UseMusic() {
       if (ap[6 + n]?.id === `${newTime}`) {
         oCon.current.style.top = `${-n * 45}px`
         setN((n += 1))
+      }
+      // 改变当前播放时间 获取当前时间进入用户视图
+      for (let i = 0; i < ap.length; i++) {
+        if (ap[i]?.id === `${newTime}`) {
+          oCon.current.style.top = `${-(i - 6) * 45}px`
+        }
       }
     }
   }
@@ -142,10 +145,7 @@ export default function UseMusic() {
         break
     }
   }
-  // 是否显示歌词蒙版（黑色背景）
-  const showDrawer = () => {
-    setVisible(true)
-  }
+
   // 重新播放
   const resetMusic = () => {
     audio.current.currentTime = 0
@@ -213,6 +213,12 @@ export default function UseMusic() {
       localStorage.setItem('musicList', JSON.stringify([initState]))
       setMusicList(JSON.parse(localStorage.getItem('musicList')))
     }
+
+    setTimeout(() => {
+      // 获取当前播放的歌曲索引
+      let index = musicList.findIndex((item) => item.url === audio.current.src)
+      setCurrentIndex(index)
+    }, 1000)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -321,12 +327,15 @@ export default function UseMusic() {
     localStorage.setItem('musicList', JSON.stringify(arr))
     let arrList = JSON.parse(localStorage.getItem('musicList'))
     setMusicList(arrList)
-    notification.success('已删除')
+    notification.success({
+      message: '已删除',
+    })
   }
 
   // 清空播放列表
   const clearAll = () => {
     localStorage.removeItem('musicList')
+    localStorage.setItem('musicList', JSON.stringify([initState]))
     setMusicList([])
     notification.success({
       message: '已清空',
@@ -351,6 +360,7 @@ export default function UseMusic() {
 
   // 喜欢音乐
   const isLove = async () => {
+    if (musicList[musicList.length-1]?.id === 6666666 ) return message.info('该歌曲暂不支持添加到喜欢')
     const res = await React.$apis.request('get', '/api/like', { id: musicList[currentIndex]?.id, like: 'true' })
     if (res.code === 200) return message.success('该音乐已添加到喜欢列表')
   }
@@ -384,22 +394,18 @@ export default function UseMusic() {
     <div>
       <div id="aplayer">
         {/* <!-- 海报 --> */}
-        <div className="pic">
+        <div
+          className="pic"
+          onClick={() => {
+            setVisible(true)
+          }}
+        >
           <img src={picUrl ? picUrl : 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg'} alt="" />
         </div>
         {/* 歌曲信息 */}
         <div className="musicinfo">
           <span>{name}</span>
           <span>- {songName}</span>
-        </div>
-        <div
-          style={style}
-          className="hover love"
-          onClick={() => {
-            isLove()
-          }}
-        >
-          <i className="iconfont icon-xihuan" style={{ display: musicList[currentIndex]?.id === 6666666 ? 'none' : 'block' }}></i>
         </div>
         {/* <!-- 播放插件 --> */}
         <div className="play_plug">
@@ -412,6 +418,18 @@ export default function UseMusic() {
               }}
             >
               <i className="iconfont icon-zhongxinkaishi" ref={restartPlay}></i>
+            </div>
+          </Tooltip>
+          <Tooltip placement="top" title={'将歌曲添加到喜欢列表'}>
+            {/* 喜欢按钮 */}
+            <div
+              style={style}
+              className="hover love"
+              onClick={() => {
+                isLove()
+              }}
+            >
+              <i className="iconfont icon-xihuan" style={{fontSize: '1.25rem'}}></i>
             </div>
           </Tooltip>
           <div className="play_pause">
@@ -447,17 +465,17 @@ export default function UseMusic() {
               </div>
             </Tooltip>
           </div>
-          <div
-            className="playOrder order hover"
-            onClick={() => {
-              changePlayType()
-            }}
-            style={style}
-          >
-            <Tooltip placement="top" title={playTypeText}>
+          <Tooltip placement="top" title={playTypeText}>
+            <div
+              className="playOrder order hover"
+              onClick={() => {
+                changePlayType()
+              }}
+              style={style}
+            >
               <i className={`iconfont ${playType}`} style={{ color: '#707070' }}></i>
-            </Tooltip>
-          </div>
+            </div>
+          </Tooltip>
           <Popover content={changeVolume} title="音量" trigger="hover">
             <div
               className="volumn hover"
@@ -481,7 +499,7 @@ export default function UseMusic() {
             className="icon-lyric hover"
             style={style}
             onClick={() => {
-              showDrawer()
+              setVisible(true)
             }}
           >
             <i className="iconfont icon-bottom lyric_btn" ref={lyric_btn}></i>
@@ -536,25 +554,31 @@ export default function UseMusic() {
             </div>
             <div className="miniplay_pause">
               <div className="play_pause">
-                <i
-                  className="iconfont icon-prev"
-                  onClick={() => {
-                    prevMusic()
-                  }}
-                ></i>
-                <i
-                  className="iconfont icon-play chc-iconfont"
-                  ref={isMiniPlay}
-                  onClick={() => {
-                    playOrPause()
-                  }}
-                ></i>
-                <i
-                  className="iconfont icon-next"
-                  onClick={() => {
-                    nextMusic()
-                  }}
-                ></i>
+                <div style={style} className="hover">
+                  <i
+                    className="iconfont icon-prev"
+                    onClick={() => {
+                      prevMusic()
+                    }}
+                  ></i>
+                </div>
+                <div style={style} className="hover">
+                  <i
+                    className="iconfont icon-play chc-iconfont"
+                    ref={isMiniPlay}
+                    onClick={() => {
+                      playOrPause()
+                    }}
+                  ></i>
+                </div>
+                <div style={style} className="hover">
+                  <i
+                    className="iconfont icon-next"
+                    onClick={() => {
+                      nextMusic()
+                    }}
+                  ></i>
+                </div>
               </div>
               <div className="volumn" style={{ position: 'relative', justifySelf: 'end' }}>
                 <i

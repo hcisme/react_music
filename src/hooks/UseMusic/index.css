@@ -16,7 +16,7 @@
   bottom: 0;
   display: grid;
   height: 3.9rem;
-  grid-template-columns: 7rem 10rem 2.188rem auto 17rem;
+  grid-template-columns: 7rem 10rem auto 17rem;
   justify-items: center;
   align-items: center;
   background-color: white;
@@ -30,6 +30,7 @@
   justify-self: flex-end;
   width: 3.8rem;
   height: 3.8rem;
+  cursor: pointer;
 }
 
 #aplayer .pic img {
@@ -57,13 +58,10 @@
 
 #aplayer .play_plug {
   display: grid;
-  grid-template-columns: 1.25rem auto 2.5rem 2.5rem 2.188rem;
+  grid-template-columns: 2.188rem 2.188rem auto 2.5rem 2.5rem 2.188rem;
   align-items: center;
   justify-items: center;
   width: 100%;
-}
-
-#aplayer .play_plug .restartplay {
   margin-left: 3.75rem;
 }
 
@@ -182,12 +180,6 @@
   overflow: scroll;
 }
 
-/* .lyrc-pic .lyric .content {
-  position: relative;
-  top: 0;
-  transition: .7s;
-} */
-
 .lyrc-pic .lyric .content div {
   font-size: 1rem;
   cursor: default;
@@ -209,14 +201,6 @@
   padding: 0;
 }
 
-.hover {
-  transition: .3s;
-}
-
-.hover:hover {
-  background-color: rgba(131, 131, 139, 0.28);
-}
-
 @media only screen and (max-width: 500px) {
   #aplayer {
     grid-template-columns: 3.6rem 10rem 1.25rem 14rem;
@@ -227,7 +211,8 @@
   }
 
   .lyric-poster,
-  .chc-music-list {
+  .chc-music-list,
+  .playOrder {
     display: none !important;
   }
 

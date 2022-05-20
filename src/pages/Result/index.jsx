@@ -225,9 +225,12 @@ export default function Result() {
 
   return (
     <div className="result">
-      <Descriptions title={params.searchword} style={{ padding: '0 70px' }}>
-        <Descriptions.Item label="结果">{total}首</Descriptions.Item>
-      </Descriptions>
+      <div style={{ display: 'grid' , gridTemplateColumns: '4.375rem 21.875rem'}}>
+        <img src={dataSource[0]?.al?.picUrl} alt="" style={{ width: '4.375rem', height: '4.375rem', borderRadius: '.313rem' }} />
+        <Descriptions title={params.searchword} style={{ padding: '0 70px' }}>
+          <Descriptions.Item label="结果">{total}首</Descriptions.Item>
+        </Descriptions>
+      </div>
 
       <Tabs
         activeKey={tabsPage}

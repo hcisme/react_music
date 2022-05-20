@@ -10,8 +10,9 @@ const PlayList = lazy(() => import('../pages/Playlist'))
 const Mv = lazy(() => import('../pages/Mv'))
 const Result = lazy(() => import('../pages/Result'))
 const UserInfo = lazy(() => import('../pages/UserInfo'))
+const MusicInfo = lazy(() => import('../pages/MusicInfo'))
 
-const UserPlayLists = lazy(()=> import('../pages/UserInfo/UserPlaylists'))
+const UserPlayLists = lazy(() => import('../pages/UserInfo/UserPlaylists'))
 const NearListen = lazy(() => import('../pages/UserInfo/NearListen'))
 
 const NotFound = lazy(() => import('../pages/NotFound'))
@@ -33,6 +34,7 @@ const router = [
       { path: 'playlist/:id', element: <PlayList /> },
       { path: 'mv/:id', element: <Mv /> },
       { path: 'result/:searchword', element: <Result /> },
+      { path: 'song', element: <MusicInfo /> },
       { path: '*', element: <NotFound /> },
     ],
   },

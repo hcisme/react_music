@@ -1,5 +1,5 @@
 import { handleLyric } from "../../hooks/UseMusic/tools/setLyrc"
-import { HEARFROM, CHANGE } from '../constant'
+import { HEARFROM, CHANGE, HEARMUSICINFO } from '../constant'
 
 const initState = {
   type: HEARFROM,
@@ -21,6 +21,8 @@ export default function reducer(preState = initState, action) {
     case HEARFROM:
       return action
     case CHANGE:
+      return action
+    case HEARMUSICINFO:
       return action
     default:
       return preState

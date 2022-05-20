@@ -5,15 +5,6 @@
   font-weight: bold;
 }
 
-.iconfont,
-.anticon {
-  cursor: pointer;
-}
-
-img {
-  object-fit: cover;
-}
-
 @font-face {
   font-family: 'Barlow';
   font-weight: normal;
@@ -66,6 +57,23 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+}
+
+.iconfont,
+.anticon {
+  cursor: pointer;
+}
+
+img {
+  object-fit: cover;
+}
+
+.hover {
+  transition: .3s;
+}
+
+.hover:hover {
+  background-color: rgba(131, 131, 139, 0.28);
 }
 
 @media screen and (max-width: 450px) {
