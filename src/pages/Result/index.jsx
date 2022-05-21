@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Pagination, Descriptions, Table, Tabs, Skeleton, Card, Image, Spin, message, notification } from 'antd'
 import { PlayCircleTwoTone, PlayCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { time } from '../../utils/js/timeTool'
-import { HearFromResultInfo, statusChange } from '../../redux/actions'
+import { HearFromResultInfo, statusChange, hearMusicInfo } from '../../redux/actions'
 import { distinct3 } from '../../utils/js/timeTool.js'
 import store from '../../redux/store'
 import './index.css'
@@ -53,7 +53,15 @@ export default function Result() {
       render: (item) => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span>{item.name}</span>
+            <span
+              onClick={(e) => {
+                e.stopPropagation()
+                play(item)
+              }}
+              className="supername anticon"
+            >
+              {item.name}
+            </span>
             {item.mv ? (
               <span
                 className="iconfont icon-movie-line"
@@ -223,9 +231,15 @@ export default function Result() {
     </Spin>
   )
 
+  const play = async (item) => {
+    navigate('/home/song')
+    let data = await hearMusicInfo(item)
+    store.dispatch(data)
+  }
+
   return (
     <div className="result">
-      <div style={{ display: 'grid' , gridTemplateColumns: '4.375rem 21.875rem'}}>
+      <div style={{ display: 'grid', gridTemplateColumns: '4.375rem 21.875rem' }}>
         <img src={dataSource[0]?.al?.picUrl} alt="" style={{ width: '4.375rem', height: '4.375rem', borderRadius: '.313rem' }} />
         <Descriptions title={params.searchword} style={{ padding: '0 70px' }}>
           <Descriptions.Item label="结果">{total}首</Descriptions.Item>

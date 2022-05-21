@@ -4,7 +4,7 @@ import { Card, Avatar, Table, Tabs, Pagination, Image, message, notification, Bu
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons'
 import { dayjs, time, distinct3 } from '../../utils/js/timeTool.js'
 import store from '../../redux/store'
-import { HearFromResultInfo, statusChange } from '../../redux/actions'
+import { HearFromResultInfo, statusChange, hearMusicInfo } from '../../redux/actions'
 import Commmnt from '../../hooks/UseComment'
 import './index.css'
 
@@ -80,7 +80,15 @@ export default function PlayList() {
       render: (item) => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span>{item.name}</span>
+            <span
+              onClick={(e) => {
+                e.stopPropagation()
+                play(item)
+              }}
+              className="supername anticon"
+            >
+              {item.name}
+            </span>
             {item.mv === 0 ? (
               <span
                 className="iconfont icon-movie-line"
@@ -138,6 +146,12 @@ export default function PlayList() {
       },
     },
   ]
+
+  const play = async (item) => {
+    navigate('/home/song')
+    let data = await hearMusicInfo(item)
+    store.dispatch(data)
+  }
 
   const addMusicList = async (e, item) => {
     e.stopPropagation()

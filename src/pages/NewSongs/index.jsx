@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Menu, Table, message, notification } from 'antd'
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons'
 import store from '../../redux/store'
-import { HearFromNewSongInfo, statusChange } from '../../redux/actions'
+import { HearFromNewSongInfo, statusChange, hearMusicInfo } from '../../redux/actions'
 // 查重
 import { distinct3 } from '../../utils/js/timeTool.js'
 // 导入处理时间的函数
@@ -61,8 +61,16 @@ export default function NewSongs() {
       render: (item) => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span>{item.name}</span>
-            {item.mvid && (
+            <span
+              onClick={(e) => {
+                e.stopPropagation()
+                play(item)
+              }}
+              className="supername anticon"
+            >
+              {item.name}
+            </span>
+            {item.mvid ? (
               <span
                 className="iconfont icon-movie-line"
                 style={{ color: 'red', padding: 3, cursor: 'pointer' }}
@@ -72,6 +80,8 @@ export default function NewSongs() {
                   navigate(`/home/mv/${item.mvid}`)
                 }}
               ></span>
+            ) : (
+              ''
             )}
             {item.privilege.maxbr === 999000 ? <span className="iconfont icon-wusunyinzhi" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
             {item.fee === 1 ? <span className="iconfont icon-VIP" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
@@ -121,6 +131,12 @@ export default function NewSongs() {
       },
     },
   ]
+
+  const play = async (item) => {
+    navigate('/home/song')
+    let data = await hearMusicInfo(item)
+    store.dispatch(data)
+  }
 
   const addMusicList = async (e, item) => {
     e.stopPropagation()

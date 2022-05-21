@@ -70,7 +70,25 @@ export default function Discovery() {
         )
       },
     },
-    { width: '500px', title: '名称', dataIndex: 'name' },
+    {
+      title: '名称',
+      render: (item) => {
+        return (
+          <div
+            className="supername anticon"
+            style={{ transition: '0.3s' }}
+            onClick={async (e) => {
+              e.stopPropagation()
+              navigate('/home/song')
+              let data = await hearMusicInfo(item)
+              store.dispatch(data)
+            }}
+          >
+            {item.name}
+          </div>
+        )
+      },
+    },
     {
       title: '歌手',
       render: (text, record, index) => {

@@ -16,9 +16,7 @@
 .userinfo .userplaylists .ant-card-meta-description {
   display: -webkit-box;
   overflow: hidden;
-  /* autoprefixer: off */
   -webkit-box-orient: vertical;
-  /* autoprefixer: on */
   -webkit-line-clamp: 3;
   text-overflow: ellipsis;
 }

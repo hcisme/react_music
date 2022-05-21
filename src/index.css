@@ -72,6 +72,11 @@ img {
   transition: .3s;
 }
 
+.supername:hover {
+  color: #1088e9;
+  text-decoration: underline;
+}
+
 .hover:hover {
   background-color: rgba(131, 131, 139, 0.28);
 }
