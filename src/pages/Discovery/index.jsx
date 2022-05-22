@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Carousel, Divider, Card, Table, Image, message, notification } from 'antd'
 import { PlayCircleTwoTone, PlayCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import store from '../../redux/store'
+import { store } from '../../redux/store'
 import { HearFromDisInfo, statusChange, hearMusicInfo } from '../../redux/actions'
 import { distinct3 } from '../../utils/js/timeTool.js'
 import './index.css'
@@ -18,7 +18,6 @@ export default function Discovery() {
   const [playLists, setPlayLists] = useState([])
   const [musics, setMusics] = useState([])
   const [mvs, setMvs] = useState([])
-  const [loading, setLoading] = useState(true)
 
   const getbanner = () => {
     React.$apis.getBanners().then((val) => {
@@ -35,7 +34,6 @@ export default function Discovery() {
   const getRecommandMusic = () => {
     React.$apis.recommandMusic().then((val) => {
       setMusics(val)
-      setLoading(false)
     })
   }
 
@@ -78,7 +76,9 @@ export default function Discovery() {
             className="supername anticon"
             style={{ transition: '0.3s' }}
             onClick={async (e) => {
-              e.stopPropagation()
+              let ev = e || window.event
+              ev.stopPropagation()
+              ev.nativeEvent.stopImmediatePropagation()
               navigate('/home/song')
               let data = await hearMusicInfo(item)
               store.dispatch(data)
@@ -207,7 +207,6 @@ export default function Discovery() {
           columns={columns}
           pagination={false}
           rowKey={(record) => record.id}
-          loading={loading}
           onRow={(record) => {
             return {
               onClick: () => {

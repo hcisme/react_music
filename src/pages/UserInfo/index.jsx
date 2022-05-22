@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
-import { Avatar, Card, Comment, Menu, Divider, BackTop, Spin, Popover, Descriptions } from 'antd'
+import { Avatar, Card, Comment, Menu, Divider, BackTop, Popover, Descriptions } from 'antd'
 import { GithubOutlined } from '@ant-design/icons'
 import { time, dayjs } from '../../utils/js/timeTool'
-import store from '../../redux/store'
+import { store } from '../../redux/store'
 import { HearFromHomeInfo } from '../../redux/actions'
 import UseMusic from '../../hooks/UseMusic'
 import './index.css'
@@ -28,7 +28,6 @@ export default function UserInfo() {
   const [lovePlaylistsInfo, setLovePlaylistsInfo] = useState({})
   const [accountInfo, setAccountInfo] = useState({})
   const [nearMusic, setNearMusic] = useState([])
-  const [isshow, setIsShow] = useState(true)
   const [userDetail, setUserDetail] = useState({})
 
   const getStatus = () => {
@@ -38,10 +37,8 @@ export default function UserInfo() {
   }
 
   const getPlaylists = () => {
-    setIsShow(true)
     React.$apis.getPlaylists(localStorage.getItem('id')).then((val) => {
       val && setLovePlaylistsInfo(val[0])
-      setIsShow(false)
     })
   }
 
@@ -124,17 +121,15 @@ export default function UserInfo() {
         <span style={{ fontSize: 25 }}>{userInfo.profile?.nickname}</span>
       </div>
       <div className="user-playlists">
-        <Spin spinning={isshow}>
-          <Card
-            style={{ width: 250, marginRight: 30, cursor: 'pointer' }}
-            cover={<img alt="example" src={lovePlaylistsInfo.coverImgUrl} />}
-            onClick={() => {
-              navigate(`/home/playlist/${lovePlaylistsInfo.id}`)
-            }}
-          >
-            <Meta avatar={<Avatar src={lovePlaylistsInfo.creator?.avatarUrl} />} title={lovePlaylistsInfo.name} description={lovePlaylistsInfo.description ? lovePlaylistsInfo.description : '这个人很懒 什么也没留下'} />
-          </Card>
-        </Spin>
+        <Card
+          style={{ width: 250, marginRight: 30, cursor: 'pointer' }}
+          cover={<img alt="example" src={lovePlaylistsInfo.coverImgUrl} />}
+          onClick={() => {
+            navigate(`/home/playlist/${lovePlaylistsInfo.id}`)
+          }}
+        >
+          <Meta avatar={<Avatar src={lovePlaylistsInfo.creator?.avatarUrl} />} title={lovePlaylistsInfo.name} description={lovePlaylistsInfo.description ? lovePlaylistsInfo.description : '这个人很懒 什么也没留下'} />
+        </Card>
         <div className="near-music">
           <span>最近播放-歌曲</span>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>

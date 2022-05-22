@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pagination, Descriptions, Table, Tabs, Skeleton, Card, Image, Spin, message, notification } from 'antd'
+import { Pagination, Descriptions, Table, Tabs, Skeleton, Card, Image, message, notification } from 'antd'
 import { PlayCircleTwoTone, PlayCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { time } from '../../utils/js/timeTool'
 import { HearFromResultInfo, statusChange, hearMusicInfo } from '../../redux/actions'
 import { distinct3 } from '../../utils/js/timeTool.js'
-import store from '../../redux/store'
+import { store } from '../../redux/store'
 import './index.css'
 
 const { TabPane } = Tabs
@@ -195,40 +195,38 @@ export default function Result() {
 
   // playlists
   const renderPlaylistsLst = (
-    <Spin spinning={loading} style={{ width: '100% !import' }}>
-      <div className="items playlists" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-        {dataSource.map((item) => {
-          return (
-            <div
-              className="item"
-              key={item.id}
-              onClick={() => {
-                navigate(`/home/playlist/${item.id}`)
-              }}
-            >
-              <Card
-                hoverable
-                className="chc-card"
-                style={{ width: 200, height: 300 }}
-                cover={
-                  <div style={{ height: 180, position: 'relative' }}>
-                    <Image height={'100%'} src={item.coverImgUrl} fallback="http://chcmusic.cloud/images/error.png" />
-                    <PlayCircleTwoTone className="play" />
-                  </div>
-                }
-              >
-                <Meta className="chc-meta" title={item.name} description={item.description} />
-                <div className="playcount">
-                  <i>
-                    <PlayCircleOutlined /> {item.playCount}
-                  </i>
+    <div className="items playlists" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+      {dataSource.map((item) => {
+        return (
+          <div
+            className="item"
+            key={item.id}
+            onClick={() => {
+              navigate(`/home/playlist/${item.id}`)
+            }}
+          >
+            <Card
+              hoverable
+              className="chc-card"
+              style={{ width: 200, height: 300 }}
+              cover={
+                <div style={{ height: 180, position: 'relative' }}>
+                  <Image height={'100%'} src={item.coverImgUrl} fallback="http://chcmusic.cloud/images/error.png" />
+                  <PlayCircleTwoTone className="play" />
                 </div>
-              </Card>
-            </div>
-          )
-        })}
-      </div>
-    </Spin>
+              }
+            >
+              <Meta className="chc-meta" title={item.name} description={item.description} />
+              <div className="playcount">
+                <i>
+                  <PlayCircleOutlined /> {item.playCount}
+                </i>
+              </div>
+            </Card>
+          </div>
+        )
+      })}
+    </div>
   )
 
   const play = async (item) => {

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Menu, BackTop } from 'antd'
+import { Menu, BackTop, Spin } from 'antd'
 import { SendOutlined, BgColorsOutlined, GithubOutlined } from '@ant-design/icons'
 import UseMusic from '../../hooks/UseMusic'
 import './index.css'
+import { store } from '../../redux/store'
 
 const style = {
   height: 40,
@@ -20,10 +21,15 @@ const style = {
 export default function Main() {
   let location = useLocation()
   let navigate = useNavigate()
+  const [show, setShow] = useState(false)
 
   const handleClick = (e) => {
     navigate(e.key)
   }
+
+  store.subscribe(() => {
+    setShow(store.getState()?.showReducer?.bool)
+  })
 
   return (
     <div className="main">
@@ -50,7 +56,9 @@ export default function Main() {
         </Menu>
       </div>
       <div className="mainArticle">
+        <Spin spinning={show}>
         <Outlet />
+        </Spin>
 
         <div className="thanks" style={{ display: 'flex', justifyContent: 'center', paddingTop: 10 }}>
           <div>

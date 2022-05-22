@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Input, Popover, List, Typography, Avatar, message, Spin } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
-import store, { Store } from '../../../redux/store'
+import { store } from '../../../redux/store'
 import { HearFromSearchSuggestInfo } from '../../../redux/actions'
 import './index.css'
 

@@ -3,7 +3,7 @@ import { Drawer, message, Popover, Table, Button, notification, Tooltip, Slider 
 import { CloseCircleOutlined } from '@ant-design/icons'
 import { time, timer } from '../../utils/js/timeTool.js'
 import { handleLyric } from './tools/setLyrc.js'
-import store from '../../redux/store/index.js'
+import { store } from '../../redux/store/index.js'
 import './index.css'
 
 const style = { width: '2.188rem', height: '2.188rem', lineHeight: '2.188rem', textAlign: 'center', borderRadius: '.313rem' }
@@ -200,7 +200,7 @@ export default function UseMusic() {
   }
 
   useEffect(() => {
-    const { name, lyric, picUrl, songName, url } = store.getState()
+    const { name, lyric, picUrl, songName, url } = store.getState()?.mainReducer
     setUrl(url)
     setName(name)
     setSongName(songName)
@@ -223,8 +223,8 @@ export default function UseMusic() {
   }, [])
 
   store.subscribe(() => {
-    if (store.getState()?.url) {
-      const { name, lyric, picUrl, songName, url } = store.getState()
+    if (store.getState()?.mainReducer?.id !== 6666666) {
+      const { name, lyric, picUrl, songName, url } = store.getState()?.mainReducer
       setUrl(url)
       setName(name)
       setSongName(songName)
@@ -235,7 +235,7 @@ export default function UseMusic() {
         playFunction()
       }, 1000)
     } else {
-      setNum(store.getState().num)
+      setNum(store.getState()?.mainReducer.num)
     }
   })
 
@@ -360,7 +360,7 @@ export default function UseMusic() {
 
   // 喜欢音乐
   const isLove = async () => {
-    if (musicList[musicList.length-1]?.id === 6666666 ) return message.info('该歌曲暂不支持添加到喜欢')
+    if (musicList[musicList.length - 1]?.id === 6666666) return message.info('该歌曲暂不支持添加到喜欢')
     const res = await React.$apis.request('get', '/api/like', { id: musicList[currentIndex]?.id, like: 'true' })
     if (res.code === 200) return message.success('该音乐已添加到喜欢列表')
   }
@@ -429,7 +429,7 @@ export default function UseMusic() {
                 isLove()
               }}
             >
-              <i className="iconfont icon-xihuan" style={{fontSize: '1.25rem'}}></i>
+              <i className="iconfont icon-xihuan" style={{ fontSize: '1.25rem' }}></i>
             </div>
           </Tooltip>
           <div className="play_pause">

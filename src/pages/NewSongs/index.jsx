@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Menu, Table, message, notification } from 'antd'
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons'
-import store from '../../redux/store'
+import { store } from '../../redux/store'
 import { HearFromNewSongInfo, statusChange, hearMusicInfo } from '../../redux/actions'
 // 查重
 import { distinct3 } from '../../utils/js/timeTool.js'
@@ -14,7 +14,6 @@ export default function NewSongs() {
   let navigate = useNavigate()
 
   const [cat, setCat] = useState('0')
-  const [isHid, setIsHid] = useState(true)
   const [dataSource, setDataSource] = useState([])
 
   const handleClickToggle = (e) => {
@@ -22,10 +21,8 @@ export default function NewSongs() {
   }
 
   const getMusicList = () => {
-    setIsHid(true)
     React.$apis.getLists(cat).then((val) => {
       setDataSource(val)
-      setIsHid(false)
     })
   }
 
@@ -183,7 +180,6 @@ export default function NewSongs() {
         dataSource={dataSource}
         columns={columns}
         rowKey={(item) => item.id}
-        loading={isHid}
         pagination={{
           pageSize: 25,
         }}

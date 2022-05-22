@@ -1,4 +1,6 @@
 import Axios from 'axios'
+import { store } from '../../redux/store'
+import { SHOWCONTENT } from '../../redux/constant'
 // nprogress进度条
 import NProgress from 'nprogress'
 // 引入nprogress样式文件
@@ -15,6 +17,7 @@ NProgress.configure({
 Axios.interceptors.request.use(
   (config) => {
     NProgress.start()
+    store.dispatch({ type: SHOWCONTENT, bool: true })
     if (config.method === 'post') {
       config.data = {
         _t: new Date().getTime(),
@@ -38,9 +41,12 @@ Axios.interceptors.request.use(
 Axios.interceptors.response.use(
   (config) => {
     NProgress.done()
+    store.dispatch({ type: SHOWCONTENT, bool: false })
     return config
   },
   function (error) {
+    NProgress.done()
+    store.dispatch({ type: SHOWCONTENT, bool: false })
     // Do something with response error
     return Promise.reject(error)
   }
