@@ -5,39 +5,14 @@
   gap: 0 35px;
 }
 
-.userinfo .userplaylists .ant-card .createTime {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  font-size: 10px;
-  font-weight: 400;
-}
-
-.userinfo .userplaylists .ant-card-meta-description {
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  text-overflow: ellipsis;
-}
-
 @media screen and (max-width: 450px) {
   .userinfo .userplaylists {
-    grid-template-columns: repeat(auto-fill, 140px);
+    grid-template-columns: repeat(auto-fill, 150px);
+    justify-content: center;
+    gap: 2.188rem .313rem;
   }
 
-  .userinfo .userplaylists .ant-card {
-    width: 140px !important;
-    min-height: 250px;
-  }
-
-  .userinfo .userplaylists .ant-card .ant-card-meta-description {
-    display: none;
-    -webkit-box-orient: vertical;
-    white-space: normal;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 12px;
+  .userinfo .userplaylists img {
+    height: 9.375rem;
   }
 }

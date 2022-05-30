@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pagination, Descriptions, Table, Tabs, Skeleton, Card, Image, message, notification } from 'antd'
-import { PlayCircleTwoTone, PlayCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { Pagination, Descriptions, Table, Tabs, Skeleton, message, notification } from 'antd'
+import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons'
 import { time } from '../../utils/js/timeTool'
 import { HearFromResultInfo, statusChange, hearMusicInfo } from '../../redux/actions'
 import { distinct3 } from '../../utils/js/timeTool.js'
@@ -9,7 +9,6 @@ import { store } from '../../redux/store'
 import './index.css'
 
 const { TabPane } = Tabs
-const { Meta } = Card
 
 export default function Result() {
   let params = useParams()
@@ -49,7 +48,6 @@ export default function Result() {
   const columns = [
     {
       title: '歌曲',
-      width: 400,
       render: (item) => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -160,32 +158,28 @@ export default function Result() {
 
   // mvs
   const renderMvsList = (
-    <div className="items mvs" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+    <div className="mvs">
       {dataSource.map((item) => {
         return (
           <Skeleton style={{ width: 300 }} loading={loading} avatar active key={item.id}>
             <div
-              style={{ overflow: 'hidden' }}
+              className="item cursor"
               onClick={() => {
                 navigate(`/home/mv/${item.id}`)
               }}
             >
-              <Card
-                className="mvCard"
-                style={{ width: 300, marginBottom: 25 }}
-                cover={
-                  <div style={{ width: 300 }}>
-                    <Image width={'100%'} src={item.cover} fallback="http://chcmusic.cloud/images/error.png" />
-                    <div className="duration">{time(item.duration)}</div> <PlayCircleTwoTone className="PlayCircleTwoTone" />
-                  </div>
-                }
-              >
-                <Meta title={item.name} description={item.artistName} />
-                <div className="playcount">
-                  <i style={{ paddingRight: 2 }} className="iconfont icon-bofang"></i>
-                  <i>{item.playCount}</i>
+              <div className="posterImg" style={{ position: 'relative' }}>
+                <img src={item.cover} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '9.688rem', borderRadius: '0.75rem' }} />
+                <PlayCircleTwoTone className="hover1" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }} />
+              </div>
+              <div className="text" style={{ marginTop: '.5rem' }}>
+                <div className="title wordbreak" style={{ fontSize: '15px' }}>
+                  {item.name}
                 </div>
-              </Card>
+                <div className="info" style={{ fontSize: '.75rem', opacity: 0.6, marginTop: '.125rem' }}>
+                  {item.artistName}
+                </div>
+              </div>
             </div>
           </Skeleton>
         )
@@ -195,34 +189,28 @@ export default function Result() {
 
   // playlists
   const renderPlaylistsLst = (
-    <div className="items playlists" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+    <div className="playlists">
       {dataSource.map((item) => {
         return (
           <div
-            className="item"
+            className="item cursor"
             key={item.id}
             onClick={() => {
               navigate(`/home/playlist/${item.id}`)
             }}
           >
-            <Card
-              hoverable
-              className="chc-card"
-              style={{ width: 200, height: 300 }}
-              cover={
-                <div style={{ height: 180, position: 'relative' }}>
-                  <Image height={'100%'} src={item.coverImgUrl} fallback="http://chcmusic.cloud/images/error.png" />
-                  <PlayCircleTwoTone className="play" />
-                </div>
-              }
-            >
-              <Meta className="chc-meta" title={item.name} description={item.description} />
-              <div className="playcount">
-                <i>
-                  <PlayCircleOutlined /> {item.playCount}
-                </i>
+            <div className="posterImg" style={{ position: 'relative' }}>
+              <img src={item.coverImgUrl} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '100%', borderRadius: '0.75rem' }} />
+              <PlayCircleTwoTone className="hover1" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }} />
+            </div>
+            <div className="text" style={{ marginTop: '.5rem' }}>
+              <div className="title wordbreak" style={{ fontSize: '15px' }}>
+                {item.name}
               </div>
-            </Card>
+              <div className="info" style={{ fontSize: '.75rem', opacity: 0.6, marginTop: '.125rem' }}>
+                {item.creator?.nickname}
+              </div>
+            </div>
           </div>
         )
       })}
@@ -238,7 +226,7 @@ export default function Result() {
   return (
     <div className="result">
       <div style={{ display: 'grid', gridTemplateColumns: '4.375rem 21.875rem' }}>
-        <img src={dataSource[0]?.al?.picUrl} alt="" style={{ width: '4.375rem', height: '4.375rem', borderRadius: '.313rem' }} />
+        <img src={dataSource[0]?.al?.picUrl || dataSource[0]?.cover || dataSource[0]?.coverImgUrl} alt="" style={{ width: '4.375rem', height: '4.375rem', borderRadius: '.313rem' }} />
         <Descriptions title={params.searchword} style={{ padding: '0 70px' }}>
           <Descriptions.Item label="结果">{total}首</Descriptions.Item>
         </Descriptions>

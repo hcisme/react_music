@@ -22,20 +22,12 @@
 
 @media screen and (max-width: 450px) {
   .userinfo .recentplaylists {
-    grid-template-columns: repeat(auto-fill, 130px);
+    grid-template-columns: repeat(auto-fill, 150px);
     justify-content: space-between;
+    gap: 0;
   }
 
-  .userinfo .recentplaylists .ant-card {
-    width: 130px !important;
-  }
-
-  .userinfo .recentplaylists .ant-card .ant-card-meta-description {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    white-space: normal;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .userinfo .recentplaylists img {
+    height: 9.375rem !important;
   }
 }

@@ -10,112 +10,26 @@
   height: 200px;
 }
 
-.playlists .items {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 180px);
-  justify-content: space-around;
-  gap: 30px 40px;
-  margin-bottom: 40px;
-}
-
-.playlists .items .item .ant-card-meta-description {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-}
-
-.playlists .items .item .playcount {
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: white;
-  text-align: right;
-  opacity: 0;
-}
-
-.playlists .items .item .playcount i {
-  margin-right: 5px;
-}
-
-.playlists .items .item:hover .playcount {
-  opacity: 0.6;
-  width: 100%;
-  height: 23px;
-  background-color: #8f879c;
-}
-
 .playlists .page {
   text-align: center;
 }
 
-.playlists .items .item .play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 50px;
-  opacity: 0;
+.playlists .items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 210px);
+  justify-content: space-between;
+  gap: 44px 34px;
+  margin: 1.25rem 0;
 }
 
-.playlists .items .item:hover .play {
-  opacity: 0.6;
+.playlists .items .item:hover .anticon-play-circle {
+  opacity: 0.68 !important;
 }
 
 @media screen and (max-width: 450px) {
-  .playlists .navigate {
-    margin-bottom: 20px;
-  }
-
   .playlists .items {
-    grid-template-columns: repeat(auto-fill, 130px);
-    justify-content: space-around;
-    justify-items: center;
+    grid-template-columns: repeat(auto-fill, 150px);
     gap: 30px 20px;
     padding: 0;
-  }
-
-  .playlists .items .item {
-    width: 130px !important;
-    height: 210px !important;
-    margin: 5px 0 !important;
-  }
-
-  .playlists .items .item img {
-    height: 130px !important;
-  }
-
-  .playlists .items .item .chc-card {
-    width: 100% !important;
-    height: 210px !important;
-  }
-
-  .playlists .items .item .chc-card .ant-card-cover {
-    height: 130px;
-  }
-
-  .playlists .ant-image {
-    height: 130px !important;
-  }
-
-  .playlists .items .item .ant-card-body {
-    padding: 5px 2px;
-    height: 130px;
-  }
-
-  .playlists .items .item .chc-meta .ant-card-meta-title {
-    font-size: 13px !important;
-  }
-
-  .playlists .items .item .ant-card-meta-title {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .playlists .page {
-    margin-top: 50px;
   }
 }

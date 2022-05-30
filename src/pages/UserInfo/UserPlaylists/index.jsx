@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card, Avatar } from 'antd'
-import { dayjs } from '../../../utils/js/timeTool.js'
 import './index.css'
 
-const { Meta } = Card
 
 export default function UserPlaylists() {
   let navigate = useNavigate()
@@ -25,17 +22,25 @@ export default function UserPlaylists() {
     <div className="userplaylists">
       {userPlaylistsInfo?.map((item) => {
         return (
-          <Card
-            style={{ width: 200, position: 'relative' }}
-            cover={<img alt="example" src={item.coverImgUrl} style={{ objectFit: 'cover' }} />}
+          <div
+            className="item cursor"
             key={item.id}
             onClick={() => {
               navigate(`/home/playlist/${item.id}`)
             }}
           >
-            <Meta avatar={<Avatar src={item.creator?.avatarUrl} />} title={item.name} description={item.description ? item.description : '这个人很懒 什么也没留下'} />
-            <span className="createTime">{`创建时间：${dayjs(item.createTime)}`}</span>
-          </Card>
+            <div className="posterImg">
+              <img src={item.coverImgUrl} alt="" style={{ width: '100%', maxHeight: '12.5rem', borderRadius: '0.75rem' }} />
+            </div>
+            <div className="text" style={{ marginTop: '.5rem' }}>
+              <div className="title wordbreak" style={{ fontSize: '15px' }}>
+                {item.name}
+              </div>
+              <div className="info wordbreak" style={{ fontSize: '.75rem', opacity: 0.6, marginTop: '.125rem' }}>
+                {item.description ? item.description : '这个人很懒 什么也没留下'}
+              </div>
+            </div>
+          </div>
         )
       })}
     </div>

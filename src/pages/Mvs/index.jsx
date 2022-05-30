@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Menu, Card, Skeleton, Pagination, Image } from 'antd'
+import { Menu, Skeleton, Pagination } from 'antd'
 import { PlayCircleTwoTone } from '@ant-design/icons'
-import { time } from '../../utils/js/timeTool.js'
 import './index.css'
 
-const { Meta } = Card
 
 export default function Mvs() {
   let navigate = useNavigate()
@@ -93,27 +91,23 @@ export default function Mvs() {
           return (
             <Skeleton style={{ width: 300 }} loading={loading} avatar active key={item.id}>
               <div
-                style={{ overflow: 'hidden' }}
+                className="item cursor"
                 onClick={() => {
                   navigate(`/home/mv/${item.id}`)
                 }}
               >
-                <Card
-                  className="mvCard"
-                  style={{ width: 300, marginBottom: 25 }}
-                  cover={
-                    <div style={{ width: 300 }}>
-                      <Image width={'100%'} src={item.cover} fallback="http://chcmusic.cloud/images/error.png" />
-                      <div className="duration">{time(item.duration)}</div> <PlayCircleTwoTone className="PlayCircleTwoTone" />
-                    </div>
-                  }
-                >
-                  <Meta title={item.name} description={item.artistName} />
-                  <div className="playcount">
-                    <i style={{ paddingRight: 2 }} className="iconfont icon-bofang"></i>
-                    <i>{item.playCount}</i>
+                <div className="posterImg" style={{ position: 'relative' }}>
+                  <img src={item.cover} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '9.688rem', borderRadius: '0.75rem' }} />
+                  <PlayCircleTwoTone className="hover1" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }} />
+                </div>
+                <div className="text" style={{ marginTop: '.5rem' }}>
+                  <div className="title wordbreak" style={{ fontSize: '15px' }}>
+                    {item.name}
                   </div>
-                </Card>
+                  <div className="info" style={{ fontSize: '.75rem', opacity: 0.6, marginTop: '.125rem' }}>
+                    {item.artists[0]?.name}
+                  </div>
+                </div>
               </div>
             </Skeleton>
           )

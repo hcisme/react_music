@@ -227,7 +227,6 @@ export default function PlayList() {
               <span>标签：{topPoster.tags === '' ? <Tag color="blue">{topPoster.tags?.join(' / ')}</Tag> : <Tag color="volcano">这个人很懒 什么也没留下</Tag>}</span>
               <Button
                 type="danger"
-                style={{ marginLeft: '3.125rem' }}
                 onClick={() => {
                   playAllMusic()
                 }}

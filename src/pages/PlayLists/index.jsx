@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Menu, Card, Image, Skeleton, Pagination } from 'antd'
-import { PlayCircleTwoTone, PlayCircleOutlined } from '@ant-design/icons'
+import { PlayCircleTwoTone } from '@ant-design/icons'
 import './index.css'
 
 const { Meta } = Card
@@ -90,30 +90,24 @@ export default function PlayLists() {
         {listData.map((item) => {
           return (
             <div
-              className="item"
+              className="item cursor"
               key={item.id}
               onClick={() => {
                 navigate(`/home/playlist/${item.id}`)
               }}
             >
-              <Card
-                hoverable
-                className="chc-card"
-                style={{ width: 180, height: 300 }}
-                cover={
-                  <div style={{height: 180 , position: 'relative'}}>
-                    <Image height={'100%'} src={item.coverImgUrl} fallback="http://chcmusic.cloud/images/error.png" />
-                    <PlayCircleTwoTone className="play" />
-                  </div>
-                }
-              >
-                <Meta className="chc-meta" title={item.name} description={item.description} />
-                <div className="playcount">
-                  <i>
-                    <PlayCircleOutlined /> {item.playCount}
-                  </i>
+              <div className="posterImg" style={{ position: 'relative' }}>
+                <img src={item.coverImgUrl} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '100%', borderRadius: '0.75rem' }} />
+                <PlayCircleTwoTone className="hover1" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }} />
+              </div>
+              <div className="text" style={{ marginTop: '.5rem' }}>
+                <div className="title wordbreak" style={{ fontSize: '15px' }}>
+                  {item.name}
                 </div>
-              </Card>
+                <div className="info" style={{ fontSize: '.75rem', opacity: 0.6, marginTop: '.125rem' }}>
+                  {item.creator?.nickname}
+                </div>
+              </div>
             </div>
           )
         })}

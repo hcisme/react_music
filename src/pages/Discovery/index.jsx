@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Carousel, Divider, Card, Table, Image, message, notification } from 'antd'
-import { PlayCircleTwoTone, PlayCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { Carousel, Divider, Table, Image, message, notification } from 'antd'
+import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons'
 import { store } from '../../redux/store'
 import { HearFromDisInfo, statusChange, hearMusicInfo } from '../../redux/actions'
 import { distinct3 } from '../../utils/js/timeTool.js'
@@ -9,7 +9,6 @@ import './index.css'
 // 导入处理时间的函数
 import { time } from '../../utils/js/timeTool.js'
 
-const { Meta } = Card
 
 export default function Discovery() {
   let navigate = useNavigate()
@@ -160,11 +159,11 @@ export default function Discovery() {
               <div
                 key={item.targetId}
                 className="disbanner"
-                onClick={async () => {
-                  navigate(`/home/song`)
-                  let data = await hearMusicInfo(item)
-                  store.dispatch(data)
-                }}
+                // onClick={async () => {
+                //   navigate(`/home/song`)
+                //   let data = await hearMusicInfo(item)
+                //   store.dispatch(data)
+                // }}
               >
                 <Image src={item.imageUrl} fallback="http://chcmusic.cloud/images/error.png" />
               </div>
@@ -179,21 +178,24 @@ export default function Discovery() {
         {playLists.map((item) => {
           return (
             <div
-              className="item"
+              className="item cursor"
               key={item.id}
               onClick={() => {
                 navigate(`/home/playlist/${item.id}`)
               }}
             >
-              <Card hoverable className="chc-card" style={{ width: 200, height: 320 }} cover={<Image height={'100%'} src={item.picUrl} fallback="http://chcmusic.cloud/images/error.png" />}>
-                <Meta className="chc-meta" title={item.name} description={item.copywriter} />
-                <div className="playcount">
-                  <i>
-                    <PlayCircleOutlined /> {item.playCount}
-                  </i>
+              <div className="posterImg" style={{ position: 'relative' }}>
+                <img src={item.picUrl} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '100%', borderRadius: '0.75rem' }} />
+                <PlayCircleTwoTone className="hover1" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }} />
+              </div>
+              <div className="text" style={{ marginTop: '.5rem' }}>
+                <div className="title wordbreak" style={{ fontSize: '15px' }}>
+                  {item.name}
                 </div>
-                <PlayCircleTwoTone className="PlayCircleTwoTone" />
-              </Card>
+                <div className="info" style={{ fontSize: '.75rem', opacity: 0.6, marginTop: '.125rem' }}>
+                  {item.alg}
+                </div>
+              </div>
             </div>
           )
         })}
@@ -223,21 +225,24 @@ export default function Discovery() {
         {mvs.map((item) => {
           return (
             <div
-              className="item"
+              className="item cursor"
               key={item.id}
               onClick={() => {
                 navigate(`/home/mv/${item.id}`)
               }}
             >
-              <Card hoverable style={{ width: 300 }} cover={<img style={{ height: 180, borderRadius: '5px' }} alt="example" src={item.picUrl} />}>
-                <Meta title={item.name} description={item.artists[0].name} />
-                <PlayCircleTwoTone className="iconfont" />
-                <div className="playcount">
-                  <i>
-                    <PlayCircleOutlined /> {item.playCount}
-                  </i>
+              <div className="posterImg" style={{ position: 'relative' }}>
+                <img src={item.picUrl} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '9.688rem', borderRadius: '0.75rem' }} />
+                <PlayCircleTwoTone className="hover1" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }} />
+              </div>
+              <div className="text" style={{ marginTop: '.5rem' }}>
+                <div className="title wordbreak" style={{ fontSize: '15px' }}>
+                  {item.name}
                 </div>
-              </Card>
+                <div className="info" style={{ fontSize: '.75rem', opacity: 0.6, marginTop: '.125rem' }}>
+                  {item.artists[0]?.name}
+                </div>
+              </div>
             </div>
           )
         })}

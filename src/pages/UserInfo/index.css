@@ -44,7 +44,7 @@
 
 @media screen and (max-width: 450px) {
   .userinfo .user-playlists {
-    display: grid;
+    grid-template-columns: 100%;
     justify-items: center;
   }
 }

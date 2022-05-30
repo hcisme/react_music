@@ -62,16 +62,25 @@ export default function NearListen() {
         <div className="recentplaylists">
           {recentPlaylists.map((item) => {
             return (
-              <Card
-                style={{ width: 220, cursor: 'pointer' }}
-                cover={<img alt="example" src={item.data?.coverImgUrl} />}
+              <div
+                className="item cursor"
                 key={item.data?.id}
                 onClick={() => {
                   navigate(`/home/playlist/${item.data?.id}`)
                 }}
               >
-                <Meta avatar={<Avatar src={item.data?.creator?.avatarUrl} />} title={item.data?.name} description={`最新歌曲：${item.data?.lastSong?.name}`} />
-              </Card>
+                <div className="posterImg">
+                  <img src={item.data?.coverImgUrl} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '12.5rem', borderRadius: '0.75rem' }} />
+                </div>
+                <div className="text" style={{ marginTop: '.5rem' }}>
+                  <div className="title wordbreak" style={{ fontSize: '15px' }}>
+                    {item.data?.name}
+                  </div>
+                  <div className="info" style={{ fontSize: '.75rem', opacity: 0.6, marginTop: '.125rem' }}>
+                    {`最新歌曲：${item.data?.lastSong?.name}`}
+                  </div>
+                </div>
+              </div>
             )
           })}
         </div>

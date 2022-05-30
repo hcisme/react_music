@@ -11,30 +11,35 @@
   src: url('https://chcblogs.com/fonts/Barlow-Regular.woff2') format('woff2'),
     url('https://chcblogs.com/fonts/Barlow-Regular.ttf') format('truetype');
 }
+
 @font-face {
   font-family: 'Barlow';
   font-weight: medium;
   src: url('https://chcblogs.com/fonts/Barlow-Medium.woff2') format('woff2'),
     url('https://chcblogs.com/fonts/Barlow-Medium.ttf') format('truetype');
 }
+
 @font-face {
   font-family: 'Barlow';
   font-weight: 600;
   src: url('https://chcblogs.com/fonts/Barlow-SemiBold.woff2') format('woff2'),
     url('https://chcblogs.com/fonts/Barlow-SemiBold.ttf') format('truetype');
 }
+
 @font-face {
   font-family: 'Barlow';
   font-weight: bold;
   src: url('https://chcblogs.com/fonts/Barlow-Bold.woff2') format('woff2'),
     url('https://chcblogs.com/fonts/Barlow-Bold.ttf') format('truetype');
 }
+
 @font-face {
   font-family: 'Barlow';
   font-weight: 800;
   src: url('https://chcblogs.com/fonts/Barlow-ExtraBold.woff2') format('woff2'),
     url('https://chcblogs.com/fonts/Barlow-ExtraBold.ttf') format('truetype');
 }
+
 @font-face {
   font-family: 'Barlow';
   font-weight: 900;
@@ -64,11 +69,19 @@ body {
   cursor: pointer;
 }
 
+.cursor {
+  cursor: pointer;
+}
+
 img {
   object-fit: cover;
 }
 
 .hover {
+  transition: .3s;
+}
+
+.hover1{
   transition: .3s;
 }
 
@@ -81,8 +94,16 @@ img {
   background-color: rgba(131, 131, 139, 0.28);
 }
 
+.ant-table-tbody tr>td:nth-child(1),
 .ant-table-tbody tr>td:nth-child(2) {
   min-width: 9.375rem;
+}
+
+.wordbreak {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 450px) {
@@ -90,4 +111,3 @@ img {
     width: 100%;
   }
 }
-
