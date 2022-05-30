@@ -27,7 +27,7 @@ export default function Top() {
 
   const loginState = () => {
     React.$apis.loginStatus().then((val) => {
-      if (val.account === null && val.profile === null) {
+      if (val.account === null || val.profile === null) {
         // 离线
         setDisPlayText('block')
         setDisPlayAvatar('none')

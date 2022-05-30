@@ -104,6 +104,10 @@
   height: .188rem;
 }
 
+.ant-slider-track {
+  background-image: linear-gradient(45deg, rgb(158, 255, 174), rgb(175, 153, 255), rgb(158, 255, 174), rgb(175, 153, 255));
+}
+
 #aplayer .progress .ant-slider-track,
 #aplayer .progress .ant-slider-handle {
   transition: .5s;
@@ -113,16 +117,6 @@
   width: 10px;
   height: 10px;
   margin-top: -0.25rem;
-}
-
-/* 表示总长度背景色 */
-#aplayer progress::-webkit-progress-bar {
-  background-color: #dee1e6;
-}
-
-/* 表示已完成进度背景色 */
-#aplayer progress::-webkit-progress-value {
-  background: #335eea;
 }
 
 .lyrc-pic {
@@ -203,11 +197,29 @@
 
 @media only screen and (max-width: 500px) {
   #aplayer {
-    grid-template-columns: 3.6rem 10rem 1.25rem 14rem;
+    grid-template-columns: 60px 150px 35px 35px;
+  }
+
+  .musicinfo {
+    margin-left: .125rem !important;
+  }
+
+  #aplayer .play_plug {
+    margin-left: .125rem !important;
   }
 
   .lyrc-pic {
     display: block;
+  }
+
+  #aplayer .play_plug>div:nth-child(1),
+  #aplayer .play_plug>div:nth-child(2),
+  #aplayer .play_plug>.playOrder,
+  #aplayer .play_plug>.volumn,
+  #aplayer .play_plug>.chc-music-list,
+  #aplayer .play_plug>.play_pause>div:nth-child(1),
+  #aplayer .play_plug>.play_pause>div:nth-child(3) {
+    display: none;
   }
 
   .lyric-poster,
@@ -225,15 +237,7 @@
     justify-self: flex-start !important;
   }
 
-  .restartplay,
-  .volumn,
-  .icon-prev,
-  .icon-next,
-  .love {
-    display: none;
-  }
-
   #aplayer .play_plug {
-    grid-template-columns: 1.25rem;
+    grid-template-columns: 100%;
   }
 }

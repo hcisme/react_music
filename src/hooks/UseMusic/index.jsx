@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Drawer, message, Popover, Table, Button, notification, Tooltip, Slider } from 'antd'
+import { Drawer, message, Popover, Table, Button, notification, Slider } from 'antd'
 import { CloseCircleOutlined } from '@ant-design/icons'
 import { time, timer } from '../../utils/js/timeTool.js'
 import { handleLyric } from './tools/setLyrc.js'
@@ -32,7 +32,6 @@ export default function UseMusic() {
   const [musicList, setMusicList] = useState([])
   const [num, setNum] = useState(0)
   const [playType, setPlayType] = useState('icon-order')
-  const [playTypeText, setPlayTypeText] = useState('顺序播放')
   // 获取当前播放的歌曲索引
   const [currentIndex, setCurrentIndex] = useState(0)
   // 音量
@@ -157,12 +156,14 @@ export default function UseMusic() {
       audio.current.muted = true
       // 点击后静音
       setCurrentVolume(0)
+      audio.current.volume = 0
       volume.current.className = 'iconfont icon-24gf-volumeCross'
       minivolume.current.className = 'iconfont icon-24gf-volumeCross'
     } else if (audio.current.muted === true) {
       audio.current.muted = false
       // 不静音
       setCurrentVolume(50)
+      audio.current.volume = 1
       volume.current.className = 'iconfont icon-24gf-volumeHigh'
       minivolume.current.className = 'iconfont icon-24gf-volumeHigh'
     }
@@ -223,7 +224,7 @@ export default function UseMusic() {
   }, [])
 
   store.subscribe(() => {
-    if (store.getState()?.mainReducer?.id !== 6666666) {
+    if (store.getState()?.mainReducer?.id && store.getState()?.mainReducer?.id !== 6666666) {
       const { name, lyric, picUrl, songName, url } = store.getState()?.mainReducer
       setUrl(url)
       setName(name)
@@ -347,11 +348,9 @@ export default function UseMusic() {
     switch (playType) {
       case 'icon-order':
         setPlayType('icon-random')
-        setPlayTypeText('随机播放')
         break
       case 'icon-random':
         setPlayType('icon-order')
-        setPlayTypeText('顺序播放')
         break
       default:
         break
@@ -409,41 +408,35 @@ export default function UseMusic() {
         </div>
         {/* <!-- 播放插件 --> */}
         <div className="play_plug">
-          <Tooltip placement="top" title={'重新播放'}>
-            <div
-              className="restartplay hover"
-              style={style}
-              onClick={() => {
-                resetMusic()
-              }}
-            >
-              <i className="iconfont icon-zhongxinkaishi" ref={restartPlay}></i>
-            </div>
-          </Tooltip>
-          <Tooltip placement="top" title={'将歌曲添加到喜欢列表'}>
-            {/* 喜欢按钮 */}
-            <div
-              style={style}
-              className="hover love"
-              onClick={() => {
-                isLove()
-              }}
-            >
-              <i className="iconfont icon-xihuan" style={{ fontSize: '1.25rem' }}></i>
-            </div>
-          </Tooltip>
+          <div
+            className="restartplay hover"
+            style={style}
+            onClick={() => {
+              resetMusic()
+            }}
+          >
+            <i className="iconfont icon-zhongxinkaishi" ref={restartPlay}></i>
+          </div>
+          {/* 喜欢按钮 */}
+          <div
+            style={style}
+            className="hover love"
+            onClick={() => {
+              isLove()
+            }}
+          >
+            <i className="iconfont icon-xihuan" style={{ fontSize: '1.25rem' }}></i>
+          </div>
           <div className="play_pause">
-            <Tooltip placement="top" title={'上一首'}>
-              <div
-                style={style}
-                className="hover"
-                onClick={() => {
-                  prevMusic()
-                }}
-              >
-                <i className="iconfont icon-prev"></i>
-              </div>
-            </Tooltip>
+            <div
+              style={style}
+              className="hover"
+              onClick={() => {
+                prevMusic()
+              }}
+            >
+              <i className="iconfont icon-prev"></i>
+            </div>
             <div
               style={style}
               className="hover"
@@ -453,58 +446,54 @@ export default function UseMusic() {
             >
               <i className="iconfont icon-play chc-iconfont" ref={isPlay}></i>
             </div>
-            <Tooltip placement="top" title={'下一首'}>
-              <div
-                style={style}
-                className="hover"
-                onClick={() => {
-                  nextMusic()
-                }}
-              >
-                <i className="iconfont icon-next"></i>
-              </div>
-            </Tooltip>
+
+            <div
+              style={style}
+              className="hover"
+              onClick={() => {
+                nextMusic()
+              }}
+            >
+              <i className="iconfont icon-next"></i>
+            </div>
           </div>
-          <Tooltip placement="top" title={playTypeText}>
-            <div
-              className="playOrder order hover"
-              onClick={() => {
-                changePlayType()
-              }}
-              style={style}
-            >
-              <i className={`iconfont ${playType}`} style={{ color: '#707070' }}></i>
-            </div>
-          </Tooltip>
-          <Popover content={changeVolume} title="音量" trigger="hover">
-            <div
-              className="volumn hover"
-              style={style}
-              onClick={() => {
-                volumn()
-              }}
-            >
-              <i ref={volume} className="iconfont icon-24gf-volumeHigh" style={{ color: '#707070', fontSize: '1.25rem' }}></i>
-            </div>
-          </Popover>
-          <Popover content={content} title="音乐列表" trigger="hover" overlayClassName="chc-popover-list">
-            <div className="hover chc-music-list" style={style}>
+          <div
+            className="playOrder order hover"
+            onClick={() => {
+              changePlayType()
+            }}
+            style={style}
+          >
+            <i className={`iconfont ${playType}`} style={{ color: '#707070' }}></i>
+          </div>
+          <div className="volumn hover" style={style}>
+            <Popover content={changeVolume} title="音量" trigger="hover">
+              <i
+                ref={volume}
+                className="iconfont icon-24gf-volumeHigh"
+                style={{ color: '#707070', fontSize: '1.25rem' }}
+                onClick={() => {
+                  volumn()
+                }}
+              ></i>
+            </Popover>
+          </div>
+          <div className="hover chc-music-list" style={style}>
+            <Popover content={content} title="音乐列表" trigger="hover" overlayClassName="chc-popover-list">
               <i className="iconfont icon-24gf-playlistMusic5"></i>
-            </div>
-          </Popover>
+            </Popover>
+          </div>
         </div>
         {/* <!-- 歌词按钮 --> */}
-        <Tooltip placement="top" title={'歌词'}>
-          <div
-            className="icon-lyric hover"
-            style={style}
-            onClick={() => {
-              setVisible(true)
-            }}
-          >
-            <i className="iconfont icon-bottom lyric_btn" ref={lyric_btn}></i>
-          </div>
-        </Tooltip>
+        <div
+          className="icon-lyric hover"
+          style={style}
+          onClick={() => {
+            setVisible(true)
+          }}
+        >
+          <i className="iconfont icon-bottom lyric_btn" ref={lyric_btn}></i>
+        </div>
         {/* <!-- 音乐进度条 --> */}
         <Slider
           max={overTime}
