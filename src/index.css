@@ -81,6 +81,10 @@ img {
   background-color: rgba(131, 131, 139, 0.28);
 }
 
+.ant-table-tbody tr>td:nth-child(2) {
+  min-width: 9.375rem;
+}
+
 @media screen and (max-width: 450px) {
   html {
     width: 100%;
