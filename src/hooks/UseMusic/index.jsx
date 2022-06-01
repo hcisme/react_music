@@ -12,15 +12,10 @@ export default function UseMusic() {
   //#region
   const audio = useRef(null)
   const oCon = useRef(null)
-  const isPlay = useRef(null)
-  const lyric_btn = useRef(null)
-  const restartPlay = useRef(null)
-  const volume = useRef(null)
-  const isMiniPlay = useRef(null)
-  const minivolume = useRef(null)
-  // #endregion
-  let [beginTime, setBeginTime] = useState(0)
+  // 所有事件
   let [overTime, setOverTime] = useState(0)
+  // 当前时间
+  let [currentTime, setCurrentTime] = useState(0)
   let [n, setN] = useState(0)
   const [visible, setVisible] = useState(false)
 
@@ -30,12 +25,18 @@ export default function UseMusic() {
   const [picUrl, setPicUrl] = useState('https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg')
   const [lyric, setLyric] = useState([])
   const [musicList, setMusicList] = useState([])
+  // 引起页面更新的值
   const [num, setNum] = useState(0)
+  // 播放类型
   const [playType, setPlayType] = useState('icon-order')
   // 获取当前播放的歌曲索引
   const [currentIndex, setCurrentIndex] = useState(0)
   // 音量
   const [currentVolume, setCurrentVolume] = useState(50)
+  const [colIcon, setVolIcon] = useState('iconfont icon-24gf-volumeHigh')
+  // 是否播放
+  const [isPlay, setIsPlay] = useState('iconfont icon-play chc-iconfont')
+  // #endregion
 
   // localStorage 初始化数据
   const initState = {
@@ -64,8 +65,7 @@ export default function UseMusic() {
 
   // 播放方法
   const playFunction = () => {
-    isPlay.current.className = 'iconfont icon-pause chc-iconfont'
-    isMiniPlay.current.className = 'iconfont icon-pause chc-iconfont'
+    setIsPlay('iconfont icon-pause chc-iconfont')
     setOverTime(audio.current.duration.toFixed(0))
     audio.current.play()
     if (!audio.current.src) {
@@ -74,15 +74,14 @@ export default function UseMusic() {
     }
     if (audio.current.error?.code === 4) return notification.error({ message: '由于音频在列表存放时间较长，链接已失效，请重新获取有效的音频链接' })
   }
-  // 暂停
+  // 暂停方法
   const pauseFunction = () => {
-    isPlay.current.className = 'iconfont icon-play chc-iconfont'
-    isMiniPlay.current.className = 'iconfont icon-play chc-iconfont'
+    setIsPlay('iconfont icon-play chc-iconfont')
     audio.current.pause()
   }
   // 播放 或 暂停
   const playOrPause = () => {
-    if (isPlay.current.className === 'iconfont icon-play chc-iconfont') {
+    if (isPlay === 'iconfont icon-play chc-iconfont') {
       playFunction()
     } else {
       pauseFunction()
@@ -92,7 +91,7 @@ export default function UseMusic() {
   const timeUpdate = () => {
     // 每个歌词块
     const ap = document.querySelectorAll('.chc-lyrc')
-    setBeginTime(parseInt(audio.current.currentTime)) // 当前播放器当前时间
+    setCurrentTime(parseInt(audio.current.currentTime)) // 当前播放器当前时间
     let newTime = parseInt(audio.current.currentTime)
     if (document.getElementById(newTime)) {
       for (let i = 0; i < ap.length; i++) {
@@ -113,12 +112,11 @@ export default function UseMusic() {
       }
     }
   }
-  // 结束
+  // 播放结束
   const ended = () => {
-    isPlay.current.className = 'iconfont icon-play chc-iconfont'
-    isMiniPlay.current.className = 'iconfont icon-play chc-iconfont'
+    setIsPlay('iconfont icon-play chc-iconfont')
     audio.current.pause()
-    setOverTime(0)
+    setCurrentTime(0)
     oCon.current.style.top = `0px`
     switch (playType) {
       // 顺序播放
@@ -153,19 +151,17 @@ export default function UseMusic() {
   // 音量
   const volumn = () => {
     if (audio.current.muted === false) {
-      audio.current.muted = true
       // 点击后静音
       setCurrentVolume(0)
       audio.current.volume = 0
-      volume.current.className = 'iconfont icon-24gf-volumeCross'
-      minivolume.current.className = 'iconfont icon-24gf-volumeCross'
+      setVolIcon('iconfont icon-24gf-volumeCross')
+      audio.current.muted = true
     } else if (audio.current.muted === true) {
-      audio.current.muted = false
       // 不静音
       setCurrentVolume(50)
-      audio.current.volume = 1
-      volume.current.className = 'iconfont icon-24gf-volumeHigh'
-      minivolume.current.className = 'iconfont icon-24gf-volumeHigh'
+      audio.current.volume = 0.5
+      setVolIcon('iconfont icon-24gf-volumeHigh')
+      audio.current.muted = false
     }
   }
   // 点击歌词指定播放位置
@@ -173,7 +169,7 @@ export default function UseMusic() {
     playFunction()
     let time = (item.time / 1000).toFixed(0)
     audio.current.currentTime = time
-    setBeginTime(time)
+    setCurrentTime(time)
     message.info('点击歌词后会失去滚动效果')
   }
 
@@ -380,12 +376,10 @@ export default function UseMusic() {
     setCurrentVolume(value)
     audio.current.volume = value / 100
     if (value === 0) {
-      volume.current.className = 'iconfont icon-24gf-volumeCross'
-      minivolume.current.className = 'iconfont icon-24gf-volumeCross'
+      setVolIcon('iconfont icon-24gf-volumeCross')
       return
     } else if (value !== 0) {
-      volume.current.className = 'iconfont icon-24gf-volumeHigh'
-      minivolume.current.className = 'iconfont icon-24gf-volumeHigh'
+      setVolIcon('iconfont icon-24gf-volumeHigh')
     }
   }
 
@@ -415,7 +409,7 @@ export default function UseMusic() {
               resetMusic()
             }}
           >
-            <i className="iconfont icon-zhongxinkaishi" ref={restartPlay}></i>
+            <i className="iconfont icon-zhongxinkaishi"></i>
           </div>
           {/* 喜欢按钮 */}
           <div
@@ -444,7 +438,7 @@ export default function UseMusic() {
                 playOrPause()
               }}
             >
-              <i className="iconfont icon-play chc-iconfont" ref={isPlay}></i>
+              <i className={isPlay}></i>
             </div>
 
             <div
@@ -469,8 +463,7 @@ export default function UseMusic() {
           <div className="volumn hover" style={style}>
             <Popover content={changeVolume} title="音量" trigger="hover">
               <i
-                ref={volume}
-                className="iconfont icon-24gf-volumeHigh"
+                className={colIcon}
                 style={{ color: '#707070', fontSize: '1.25rem' }}
                 onClick={() => {
                   volumn()
@@ -492,19 +485,19 @@ export default function UseMusic() {
             setVisible(true)
           }}
         >
-          <i className="iconfont icon-bottom lyric_btn" ref={lyric_btn}></i>
+          <i className="iconfont icon-bottom lyric_btn"></i>
         </div>
         {/* <!-- 音乐进度条 --> */}
         <Slider
           max={overTime}
           min={0}
-          value={beginTime}
+          value={currentTime}
           className="progress"
           tipFormatter={() => {
-            return timer(beginTime)
+            return timer(currentTime)
           }}
           onChange={(value) => {
-            setBeginTime(value)
+            setCurrentTime(value)
             audio.current.currentTime = value
           }}
         />
@@ -527,15 +520,15 @@ export default function UseMusic() {
               {name} - <span style={{ fontSize: '.75rem' }}>{songName}</span>
             </span>
             <div className="miniplugin">
-              <span>{timer(beginTime)}</span>
+              <span>{timer(currentTime)}</span>
               <Slider
                 max={overTime}
                 min={0}
-                value={beginTime}
+                value={currentTime}
                 className="progress"
                 tipFormatter={null}
                 onChange={(value) => {
-                  setBeginTime(value)
+                  setCurrentTime(value)
                   audio.current.currentTime = value
                 }}
               />
@@ -553,8 +546,7 @@ export default function UseMusic() {
                 </div>
                 <div style={style} className="hover">
                   <i
-                    className="iconfont icon-play chc-iconfont"
-                    ref={isMiniPlay}
+                    className={isPlay}
                     onClick={() => {
                       playOrPause()
                     }}
@@ -571,8 +563,7 @@ export default function UseMusic() {
               </div>
               <div className="volumn" style={{ position: 'relative', justifySelf: 'end' }}>
                 <i
-                  ref={minivolume}
-                  className="iconfont icon-24gf-volumeHigh"
+                  className={colIcon}
                   onClick={() => {
                     volumn()
                   }}
