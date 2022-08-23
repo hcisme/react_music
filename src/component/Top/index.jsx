@@ -1,49 +1,49 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Modal, Avatar, Dropdown, Menu, message, Tooltip, Tabs } from 'antd'
-import { ImportOutlined, GithubOutlined } from '@ant-design/icons'
-import './index.css'
-import Search from './Search'
-import LoginModal from './LoginModal'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Modal, Avatar, Dropdown, Menu, message, Tooltip, Tabs } from 'antd';
+import { ImportOutlined, GithubOutlined } from '@ant-design/icons';
+import './index.css';
+import Search from './Search';
+import LoginModal from './LoginModal';
 
-const { TabPane } = Tabs
+const { TabPane } = Tabs;
 
 export default function Top() {
-  let navigate = useNavigate()
-  const [isLoginVisible, setIsLoginVisible] = useState(false)
-  const [displayText, setDisPlayText] = useState('block')
-  const [displayAvatar, setDisPlayAvatar] = useState('none')
-  const [userInfo, setUserInfo] = useState({})
-  const [loginType, setLoginType] = useState('phone')
+  let navigate = useNavigate();
+  const [isLoginVisible, setIsLoginVisible] = useState(false);
+  const [displayText, setDisPlayText] = useState('block');
+  const [displayAvatar, setDisPlayAvatar] = useState('none');
+  const [userInfo, setUserInfo] = useState({});
+  const [loginType, setLoginType] = useState('phone');
 
-  const [qrurl, setQrUrl] = useState('https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg')
-  const [timer, SetTimer] = useState(null)
-  const [text, SetText] = useState('等待扫码')
-  const [code, SetCode] = useState(0)
+  const [qrurl, setQrUrl] = useState('https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg');
+  const [timer, SetTimer] = useState(null);
+  const [text, SetText] = useState('等待扫码');
+  const [code, SetCode] = useState(0);
 
   const getChildBool = (val) => {
-    setIsLoginVisible(val)
-  }
+    setIsLoginVisible(val);
+  };
 
   const loginState = () => {
     React.$apis.loginStatus().then((val) => {
       if (val.account === null || val.profile === null) {
         // 离线
-        setDisPlayText('block')
-        setDisPlayAvatar('none')
+        setDisPlayText('block');
+        setDisPlayAvatar('none');
       } else {
         // 在线
-        setUserInfo(val)
-        setDisPlayText('none')
-        setDisPlayAvatar('block')
+        setUserInfo(val);
+        setDisPlayText('none');
+        setDisPlayAvatar('block');
       }
-    })
-  }
+    });
+  };
 
   const menu = (
     <Menu
       onClick={(key) => {
-        handleCheck(key)
+        handleCheck(key);
       }}
     >
       <Menu.Item key="userInfo">主页</Menu.Item>
@@ -55,67 +55,67 @@ export default function Top() {
         &nbsp; Github仓库
       </Menu.Item>
     </Menu>
-  )
+  );
 
   const handleCheck = ({ key }) => {
     switch (key) {
       case 'userInfo':
-        navigate(`/userinfo`)
-        break
+        navigate(`/userinfo`);
+        break;
       case 'logout':
-        React.$axios.get('/api/logout')
-        localStorage.removeItem('id')
-        localStorage.removeItem('token')
+        React.$axios.get('/logout');
+        localStorage.removeItem('id');
+        localStorage.removeItem('token');
         // 离线
-        setDisPlayText('block')
-        setDisPlayAvatar('none')
-        message.success('已退出登录')
-        break
+        setDisPlayText('block');
+        setDisPlayAvatar('none');
+        message.success('已退出登录');
+        break;
       case 'github':
-        window.open('https://github.com/TristesAnima/react_music')
-        break
+        window.open('https://github.com/TristesAnima/react_music');
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
 
   const getQrKey = async () => {
-    const { data: res } = await React.$apis.request('post', '/api/login/qr/key')
-    const { data: result } = await React.$apis.request('get', '/api/login/qr/create', { key: res.unikey, qrimg: res.unikey })
-    setQrUrl(result.qrimg)
+    const { data: res } = await React.$apis.request('post', '/login/qr/key');
+    const { data: result } = await React.$apis.request('get', '/login/qr/create', { key: res.unikey, qrimg: res.unikey });
+    setQrUrl(result.qrimg);
     SetTimer(
       setInterval(async () => {
-        const info = await React.$apis.request('get', '/api/login/qr/check', { key: res.unikey })
-        SetCode(info.code)
-        SetText(info.message)
+        const info = await React.$apis.request('get', '/login/qr/check', { key: res.unikey });
+        SetCode(info.code);
+        SetText(info.message);
       }, 1000)
-    )
-  }
+    );
+  };
 
   useEffect(() => {
     if (code === 803) {
-      clearInterval(timer)
-      setIsLoginVisible(false)
+      clearInterval(timer);
+      setIsLoginVisible(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code])
+  }, [code]);
 
   useEffect(() => {
-    loginType === 'qr' && getQrKey()
-    loginType === 'phone' && clearInterval(timer)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loginType])
+    loginType === 'qr' && getQrKey();
+    loginType === 'phone' && clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginType]);
 
   useEffect(() => {
     if (isLoginVisible === false) {
-      clearInterval(timer)
-      loginState()
+      clearInterval(timer);
+      loginState();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoginVisible])
+  }, [isLoginVisible]);
 
   function callback(key) {
-    setLoginType(key)
+    setLoginType(key);
   }
 
   return (
@@ -131,13 +131,13 @@ export default function Top() {
         <i
           className="iconfont icon-right"
           onClick={() => {
-            window.history.go(-1)
+            window.history.go(-1);
           }}
         ></i>
         <i
           className="iconfont icon-tubiaozhizuo--"
           onClick={() => {
-            window.history.go(1)
+            window.history.go(1);
           }}
         ></i>
       </div>
@@ -149,7 +149,7 @@ export default function Top() {
       <div
         className="login"
         onClick={() => {
-          setIsLoginVisible(true)
+          setIsLoginVisible(true);
         }}
         style={{ display: displayText }}
       >
@@ -172,7 +172,7 @@ export default function Top() {
         title="登录"
         visible={isLoginVisible}
         onCancel={() => {
-          setIsLoginVisible(false)
+          setIsLoginVisible(false);
         }}
         mask={false}
         footer={null}
@@ -196,5 +196,5 @@ export default function Top() {
         </Tabs>
       </Modal>
     </div>
-  )
+  );
 }

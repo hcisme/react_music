@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Menu, BackTop, Spin } from 'antd'
-import { SendOutlined, BgColorsOutlined, GithubOutlined } from '@ant-design/icons'
-import UseMusic from '../../hooks/UseMusic'
-import './index.css'
-import { store } from '../../redux/store'
+import React from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, BackTop } from 'antd';
+import { SendOutlined, BgColorsOutlined, GithubOutlined } from '@ant-design/icons';
+import UseMusic from '../../hooks/UseMusic';
+import './index.css';
 
 const style = {
   height: 40,
@@ -16,27 +15,22 @@ const style = {
   textAlign: 'center',
   fontSize: 14,
   marginLeft: 90,
-}
+};
 
 export default function Main() {
-  let location = useLocation()
-  let navigate = useNavigate()
-  const [show, setShow] = useState(false)
+  let location = useLocation();
+  let navigate = useNavigate();
 
   const handleClick = (e) => {
-    navigate(e.key)
-  }
-
-  store.subscribe(() => {
-    setShow(store.getState()?.showReducer?.bool)
-  })
+    navigate(e.key);
+  };
 
   return (
     <div className="main">
       <div className="main-menu">
         <Menu
           onClick={(e) => {
-            handleClick(e)
+            handleClick(e);
           }}
           selectedKeys={[location.pathname]}
           mode="horizontal"
@@ -56,9 +50,7 @@ export default function Main() {
         </Menu>
       </div>
       <div className="mainArticle">
-        <Spin spinning={show}>
         <Outlet />
-        </Spin>
 
         <div className="thanks" style={{ display: 'flex', justifyContent: 'center', paddingTop: 10 }}>
           <div>
@@ -87,5 +79,5 @@ export default function Main() {
         <div style={style}>UP</div>
       </BackTop>
     </div>
-  )
+  );
 }

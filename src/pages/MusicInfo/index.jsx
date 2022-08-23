@@ -1,58 +1,58 @@
-import React, { useEffect, useState } from 'react'
-import { PageHeader, Descriptions, Button, message } from 'antd'
-import { store } from '../../redux/store'
-import { HearFromDisInfo, HearFromResultInfo, HearFromNewSongInfo } from '../../redux/actions'
-import { handleLyric } from '../../hooks/UseMusic/tools/setLyrc'
-import './index.css'
+import React, { useEffect, useState } from 'react';
+import { PageHeader, Descriptions, Button, message } from 'antd';
+import { store } from '../../redux/store';
+import { HearFromDisInfo, HearFromResultInfo, HearFromNewSongInfo } from '../../redux/actions';
+import { handleLyric } from '../../hooks/UseMusic/tools/setLyrc';
+import './index.css';
 
 export default function MusicInfo() {
-  const [musicObj, setMusicObj] = useState({})
-  const [musicLyric, setMusicLyric] = useState({})
-  const [showRow, setShowRow] = useState(10)
+  const [musicObj, setMusicObj] = useState({});
+  const [musicLyric, setMusicLyric] = useState({});
+  const [showRow, setShowRow] = useState(10);
 
   const getLyric = async () => {
-    const data = await React.$apis.request('get', '/api/lyric', { id: store.getState()?.deliverMusicInfo?.data?.id })
-    setMusicLyric(data)
-  }
+    const data = await React.$apis.request('get', '/lyric', { id: store.getState()?.deliverMusicInfo?.data?.id });
+    setMusicLyric(data);
+  };
 
   const showAllRow = () => {
-    showRow === 10 ? setShowRow(handleLyric(musicLyric?.lrc?.lyric)?.length) : setShowRow(10)
-  }
+    showRow === 10 ? setShowRow(handleLyric(musicLyric?.lrc?.lyric)?.length) : setShowRow(10);
+  };
 
   // 播放
   const play = async () => {
     if (store.getState()?.deliverMusicInfo?.data?.alg) {
-      const musicInfo = await HearFromDisInfo(store.getState()?.deliverMusicInfo?.data)
-      store.dispatch(musicInfo)
+      const musicInfo = await HearFromDisInfo(store.getState()?.deliverMusicInfo?.data);
+      store.dispatch(musicInfo);
     } else if (store.getState()?.deliverMusicInfo?.data?.al) {
-      const musicInfo = await HearFromResultInfo(store.getState()?.deliverMusicInfo?.data)
-      store.dispatch(musicInfo)
+      const musicInfo = await HearFromResultInfo(store.getState()?.deliverMusicInfo?.data);
+      store.dispatch(musicInfo);
     } else if (store.getState()?.deliverMusicInfo?.data?.bMusic) {
-      const musicInfo = await HearFromNewSongInfo(store.getState()?.deliverMusicInfo?.data)
-      store.dispatch(musicInfo)
+      const musicInfo = await HearFromNewSongInfo(store.getState()?.deliverMusicInfo?.data);
+      store.dispatch(musicInfo);
     }
-  }
+  };
 
   // 喜欢
   const isLove = async () => {
-    const res = await React.$apis.request('get', '/api/like', { id: musicObj.id, like: 'true' })
+    const res = await React.$apis.request('get', '/like', { id: musicObj.id, like: 'true' });
     if (res.code === 200) {
-      message.success('该音乐已添加到喜欢列表')
+      message.success('该音乐已添加到喜欢列表');
     }
-  }
+  };
 
   useEffect(() => {
     setTimeout(() => {
-      setMusicObj(store.getState()?.deliverMusicInfo?.data)
-      getLyric()
-    }, 500)
+      setMusicObj(store.getState()?.deliverMusicInfo?.data);
+      getLyric();
+    }, 500);
 
     return () => {
-      setMusicObj({})
-      setMusicLyric({})
-    }
+      setMusicObj({});
+      setMusicLyric({});
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   return (
     <div className="singermusicinfo">
@@ -65,7 +65,11 @@ export default function MusicInfo() {
           <PageHeader
             ghost={false}
             title={musicObj?.song?.name || musicObj?.name}
-            subTitle={musicObj?.song?.artists[0]?.name || musicObj?.ar?.map((item) => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>) || musicObj?.artists?.map((item) => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>)}
+            subTitle={
+              musicObj?.song?.artists[0]?.name ||
+              musicObj?.ar?.map((item) => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>) ||
+              musicObj?.artists?.map((item) => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>)
+            }
           >
             <Descriptions size="small" column={3}>
               <Descriptions.Item label="专辑" style={{ display: 'block' }}>
@@ -79,7 +83,7 @@ export default function MusicInfo() {
                   type="primary"
                   style={{ marginRight: '1.563rem' }}
                   onClick={() => {
-                    play()
+                    play();
                   }}
                 >
                   播放 <i className="iconfont icon-play" style={{ paddingLeft: '.375rem' }}></i>
@@ -88,7 +92,7 @@ export default function MusicInfo() {
                   type="primary"
                   danger
                   onClick={() => {
-                    isLove()
+                    isLove();
                   }}
                 >
                   喜欢 ❤
@@ -104,7 +108,7 @@ export default function MusicInfo() {
                         <div key={Math.random()} style={{ fontSize: '.938rem', padding: '.313rem' }}>
                           {item.text}
                         </div>
-                      )
+                      );
                     })}
                 </div>
               </Descriptions.Item>
@@ -115,7 +119,7 @@ export default function MusicInfo() {
       <span
         style={{ cursor: 'pointer', color: '#40a9ff' }}
         onClick={() => {
-          showAllRow()
+          showAllRow();
         }}
       >
         {showRow === 10 ? (
@@ -129,5 +133,5 @@ export default function MusicInfo() {
         )}
       </span>
     </div>
-  )
+  );
 }

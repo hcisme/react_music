@@ -1,59 +1,58 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Carousel, Divider, Table, Image, message, notification } from 'antd'
-import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons'
-import { store } from '../../redux/store'
-import { HearFromDisInfo, statusChange, hearMusicInfo } from '../../redux/actions'
-import { distinct3 } from '../../utils/js/timeTool.js'
-import './index.css'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Carousel, Divider, Table, Image, message, notification } from 'antd';
+import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
+import { store } from '../../redux/store';
+import { HearFromDisInfo, statusChange, hearMusicInfo } from '../../redux/actions';
+import { distinct3 } from '../../utils/js/timeTool.js';
+import './index.css';
 // 导入处理时间的函数
-import { time } from '../../utils/js/timeTool.js'
-
+import { time } from '../../utils/js/timeTool.js';
 
 export default function Discovery() {
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
-  const [banners, setBanners] = useState([])
-  const [playLists, setPlayLists] = useState([])
-  const [musics, setMusics] = useState([])
-  const [mvs, setMvs] = useState([])
+  const [banners, setBanners] = useState([]);
+  const [playLists, setPlayLists] = useState([]);
+  const [musics, setMusics] = useState([]);
+  const [mvs, setMvs] = useState([]);
 
   const getbanner = () => {
     React.$apis.getBanners().then((val) => {
-      setBanners(val)
-    })
-  }
+      setBanners(val);
+    });
+  };
 
   const getMusicPlaylists = () => {
     React.$apis.getRecommandPlaylists().then((val) => {
-      setPlayLists(val)
-    })
-  }
+      setPlayLists(val);
+    });
+  };
 
   const getRecommandMusic = () => {
     React.$apis.recommandMusic().then((val) => {
-      setMusics(val)
-    })
-  }
+      setMusics(val);
+    });
+  };
 
   const getRecommandMv = () => {
     React.$apis.recommandMv().then((val) => {
-      setMvs(val)
-    })
-  }
+      setMvs(val);
+    });
+  };
 
   const handlePlayMusic = async (record) => {
-    const musicInfo = await HearFromDisInfo(record)
-    store.dispatch(musicInfo)
-  }
+    const musicInfo = await HearFromDisInfo(record);
+    store.dispatch(musicInfo);
+  };
 
   const isLove = async (e, item) => {
-    e.stopPropagation()
-    const res = await React.$apis.request('get', '/api/like', { id: item.id, like: 'true' })
+    e.stopPropagation();
+    const res = await React.$apis.request('get', '/like', { id: item.id, like: 'true' });
     if (res.code === 200) {
-      message.success('该音乐已添加到喜欢列表')
+      message.success('该音乐已添加到喜欢列表');
     }
-  }
+  };
 
   const columns = [
     {
@@ -64,7 +63,7 @@ export default function Discovery() {
             <img src={record.picUrl} alt="加载失败请重试" style={{ width: '100%', height: '100%', borderRadius: '5px' }} />
             <PlayCircleTwoTone className="PlayCircleTwoTone" />
           </div>
-        )
+        );
       },
     },
     {
@@ -75,30 +74,30 @@ export default function Discovery() {
             className="supername anticon"
             style={{ transition: '0.3s' }}
             onClick={async (e) => {
-              let ev = e || window.event
-              ev.stopPropagation()
-              ev.nativeEvent.stopImmediatePropagation()
-              navigate('/home/song')
-              let data = await hearMusicInfo(item)
-              store.dispatch(data)
+              let ev = e || window.event;
+              ev.stopPropagation();
+              ev.nativeEvent.stopImmediatePropagation();
+              navigate('/home/song');
+              let data = await hearMusicInfo(item);
+              store.dispatch(data);
             }}
           >
             {item.name}
           </div>
-        )
+        );
       },
     },
     {
       title: '歌手',
       render: (text, record, index) => {
-        return record.song?.album?.artists[0]?.name
+        return record.song?.album?.artists[0]?.name;
       },
     },
     {
       title: '时长',
       align: 'center',
       render: (item) => {
-        return <span>{time(item.song?.duration)}</span>
+        return <span>{time(item.song?.duration)}</span>;
       },
     },
     {
@@ -109,45 +108,45 @@ export default function Discovery() {
             <i
               className="iconfont icon-xihuan"
               onClick={(e) => {
-                isLove(e, item)
+                isLove(e, item);
               }}
             ></i>
             <PlusCircleOutlined
               onClick={(e) => {
-                addMusicList(e, item)
+                addMusicList(e, item);
               }}
             />
           </div>
-        )
+        );
       },
     },
-  ]
+  ];
 
   const addMusicList = async (e, item) => {
-    e.stopPropagation()
-    let initData = await HearFromDisInfo(item)
-    let localData = JSON.parse(localStorage.getItem('musicList'))
+    e.stopPropagation();
+    let initData = await HearFromDisInfo(item);
+    let localData = JSON.parse(localStorage.getItem('musicList'));
     if (localData !== null) {
-      localData.unshift(initData)
+      localData.unshift(initData);
       // 数组中 对象 查重
-      let newArr = distinct3(localData)
-      localStorage.setItem('musicList', JSON.stringify(newArr))
+      let newArr = distinct3(localData);
+      localStorage.setItem('musicList', JSON.stringify(newArr));
 
       if (newArr[0].id !== 6666666) {
         notification.success({
           message: '已成功添加到音乐列表',
-        })
+        });
       }
     }
-    store.dispatch(statusChange())
-  }
+    store.dispatch(statusChange());
+  };
 
   useEffect(() => {
-    getbanner()
-    getMusicPlaylists()
-    getRecommandMusic()
-    getRecommandMv()
-  }, [])
+    getbanner();
+    getMusicPlaylists();
+    getRecommandMusic();
+    getRecommandMv();
+  }, []);
 
   return (
     <div className="discovery">
@@ -167,7 +166,7 @@ export default function Discovery() {
               >
                 <Image src={item.imageUrl} fallback="http://chcmusic.cloud/images/error.png" />
               </div>
-            )
+            );
           })}
         </Carousel>
       </div>
@@ -181,7 +180,7 @@ export default function Discovery() {
               className="item cursor"
               key={item.id}
               onClick={() => {
-                navigate(`/home/playlist/${item.id}`)
+                navigate(`/home/playlist/${item.id}`);
               }}
             >
               <div className="posterImg" style={{ position: 'relative' }}>
@@ -197,7 +196,7 @@ export default function Discovery() {
                 </div>
               </div>
             </div>
-          )
+          );
         })}
       </div>
       <Divider orientation="left" plain>
@@ -212,9 +211,9 @@ export default function Discovery() {
           onRow={(record) => {
             return {
               onClick: () => {
-                handlePlayMusic(record)
+                handlePlayMusic(record);
               }, // 点击行
-            }
+            };
           }}
         />
       </div>
@@ -228,7 +227,7 @@ export default function Discovery() {
               className="item cursor"
               key={item.id}
               onClick={() => {
-                navigate(`/home/mv/${item.id}`)
+                navigate(`/home/mv/${item.id}`);
               }}
             >
               <div className="posterImg" style={{ position: 'relative' }}>
@@ -244,9 +243,9 @@ export default function Discovery() {
                 </div>
               </div>
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }
