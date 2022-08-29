@@ -1,8 +1,9 @@
 import React from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, BackTop } from 'antd';
-import { SendOutlined, BgColorsOutlined, GithubOutlined } from '@ant-design/icons';
-import UseMusic from '../../hooks/UseMusic';
+import { Outlet } from 'react-router-dom';
+import { BackTop } from 'antd';
+import { GithubOutlined } from '@ant-design/icons';
+import UseMusic from '@/hooks/UseMusic';
+import MenuList from '../Menu';
 import './index.css';
 
 const style = {
@@ -18,36 +19,10 @@ const style = {
 };
 
 export default function Main() {
-  let location = useLocation();
-  let navigate = useNavigate();
-
-  const handleClick = (e) => {
-    navigate(e.key);
-  };
-
   return (
     <div className="main">
       <div className="main-menu">
-        <Menu
-          onClick={(e) => {
-            handleClick(e);
-          }}
-          selectedKeys={[location.pathname]}
-          mode="horizontal"
-        >
-          <Menu.Item key="/home/discovery" icon={<SendOutlined />}>
-            发现首页
-          </Menu.Item>
-          <Menu.Item key="/home/playlists" icon={<BgColorsOutlined />}>
-            推荐歌单
-          </Menu.Item>
-          <Menu.Item key="/home/newsongs" icon={<i className="iconfont icon-yinle" />}>
-            最新音乐
-          </Menu.Item>
-          <Menu.Item key="/home/mvs" icon={<i className="iconfont icon-movie-line"></i>}>
-            Mv
-          </Menu.Item>
-        </Menu>
+        <MenuList />
       </div>
       <div className="mainArticle">
         <Outlet />
