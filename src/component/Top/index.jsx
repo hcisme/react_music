@@ -21,12 +21,12 @@ export default function Top() {
   const [text, SetText] = useState('等待扫码');
   const [code, SetCode] = useState(0);
 
-  const getChildBool = (val) => {
+  const getChildBool = val => {
     setIsLoginVisible(val);
   };
 
   const loginState = () => {
-    React.$apis.loginStatus().then((val) => {
+    React.$apis.loginStatus().then(val => {
       if (val.account === null || val.profile === null) {
         // 离线
         setDisPlayText('block');
@@ -36,13 +36,14 @@ export default function Top() {
         setUserInfo(val);
         setDisPlayText('none');
         setDisPlayAvatar('block');
+        localStorage.setItem('id', val.account?.id);
       }
     });
   };
 
   const menu = (
     <Menu
-      onClick={(key) => {
+      onClick={key => {
         handleCheck(key);
       }}
     >

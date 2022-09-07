@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeader, Descriptions, Button, message } from 'antd';
 import { store } from '../../redux/store';
-import { HearFromDisInfo, HearFromResultInfo, HearFromNewSongInfo } from '../../redux/actions';
+import { commonPlayMusicFn } from '../../redux/actions';
 import { handleLyric } from '../../hooks/UseMusic/tools/setLyrc';
 import './index.css';
 
@@ -21,16 +21,8 @@ export default function MusicInfo() {
 
   // 播放
   const play = async () => {
-    if (store.getState()?.deliverMusicInfo?.data?.alg) {
-      const musicInfo = await HearFromDisInfo(store.getState()?.deliverMusicInfo?.data);
-      store.dispatch(musicInfo);
-    } else if (store.getState()?.deliverMusicInfo?.data?.al) {
-      const musicInfo = await HearFromResultInfo(store.getState()?.deliverMusicInfo?.data);
-      store.dispatch(musicInfo);
-    } else if (store.getState()?.deliverMusicInfo?.data?.bMusic) {
-      const musicInfo = await HearFromNewSongInfo(store.getState()?.deliverMusicInfo?.data);
-      store.dispatch(musicInfo);
-    }
+    const musicInfo = await commonPlayMusicFn(store.getState()?.deliverMusicInfo?.data);
+    store.dispatch(musicInfo);
   };
 
   // 喜欢
@@ -57,8 +49,15 @@ export default function MusicInfo() {
   return (
     <div className="singermusicinfo">
       <div className="header">
-        <div className="picyrl" style={{ width: '14rem', height: '14rem', borderRadius: '50%', background: '#f5f5f5', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <img src={musicObj?.picUrl || musicObj?.al?.picUrl || musicObj?.album?.blurPicUrl} alt="" style={{ width: '10.125rem', height: '10.125rem', borderRadius: '50%' }} />
+        <div
+          className="picyrl"
+          style={{ width: '14rem', height: '14rem', borderRadius: '50%', background: '#f5f5f5', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        >
+          <img
+            src={musicObj?.picUrl || musicObj?.al?.picUrl || musicObj?.album?.blurPicUrl}
+            alt=""
+            style={{ width: '10.125rem', height: '10.125rem', borderRadius: '50%' }}
+          />
         </div>
         {/* 歌曲介绍 */}
         <div className="site-page-header-ghost-wrapper">
@@ -67,8 +66,8 @@ export default function MusicInfo() {
             title={musicObj?.song?.name || musicObj?.name}
             subTitle={
               musicObj?.song?.artists[0]?.name ||
-              musicObj?.ar?.map((item) => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>) ||
-              musicObj?.artists?.map((item) => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>)
+              musicObj?.ar?.map(item => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>) ||
+              musicObj?.artists?.map(item => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>)
             }
           >
             <Descriptions size="small" column={3}>
@@ -103,7 +102,7 @@ export default function MusicInfo() {
                 <div>
                   {handleLyric(musicLyric?.lrc?.lyric)
                     ?.slice(0, showRow)
-                    .map((item) => {
+                    .map(item => {
                       return (
                         <div key={Math.random()} style={{ fontSize: '.938rem', padding: '.313rem' }}>
                           {item.text}

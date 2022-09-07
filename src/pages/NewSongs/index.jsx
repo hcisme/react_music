@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Menu, Table, message, notification } from 'antd';
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
 import { store } from '../../redux/store';
-import { HearFromNewSongInfo, statusChange, hearMusicInfo } from '../../redux/actions';
+import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
 // 查重
 import { distinct3 } from '../../utils/js/timeTool.js';
 // 导入处理时间的函数
@@ -27,7 +27,7 @@ export default function NewSongs() {
   };
 
   const handlePlayMusic = async (record) => {
-    const musicInfo = await HearFromNewSongInfo(record);
+    const musicInfo = await commonPlayMusicFn(record);
     store.dispatch(musicInfo);
   };
 
@@ -120,7 +120,7 @@ export default function NewSongs() {
             ></i>
             <PlusCircleOutlined
               onClick={(e) => {
-                // addMusicList(e, item);
+                addMusicList(e, item);
               }}
             />
           </div>
@@ -137,17 +137,31 @@ export default function NewSongs() {
 
   const addMusicList = async (e, item) => {
     e.stopPropagation();
-    let initData = await HearFromNewSongInfo(item);
     let localData = JSON.parse(localStorage.getItem('musicList'));
     if (localData !== null) {
-      localData.unshift(initData);
+      localData.unshift(item);
       // 数组中 对象 查重
       let newArr = distinct3(localData);
-      localStorage.setItem('musicList', JSON.stringify(newArr));
+
+      // 单曲名 歌手名 时长 id
+      const dealMusicList = newArr.map(item => {
+        if (item.id !== 6666666) {
+          return {
+            ...item,
+            songName: item?.name,
+            singer: item.artists?.map(v => v.name).join(' / '),
+            dt: item?.duration,
+            picUrl: item?.album?.blurPicUrl
+          };
+        }
+        return item
+      });
+
+      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
 
       if (newArr[0].id !== 6666666) {
         notification.success({
-          message: '已成功添加到音乐列表',
+          message: '已成功添加到音乐列表'
         });
       }
     }

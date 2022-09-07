@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Pagination, Descriptions, Table, Tabs, Skeleton, message, notification } from 'antd';
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
 import { time } from '../../utils/js/timeTool';
-import { HearFromResultInfo, statusChange, hearMusicInfo } from '../../redux/actions';
+import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
 import { distinct3 } from '../../utils/js/timeTool.js';
 import { store } from '../../redux/store';
 import './index.css';
@@ -22,7 +22,7 @@ export default function Result() {
   const [loading, setLoading] = useState(true);
 
   const getSearchResult = () => {
-    React.$apis.searchres(params.searchword, tabsPage === 'songs' ? 1 : tabsPage === 'mvs' ? 1004 : tabsPage === 'playlists' ? 1000 : '', page).then((val) => {
+    React.$apis.searchres(params.searchword, tabsPage === 'songs' ? 1 : tabsPage === 'mvs' ? 1004 : tabsPage === 'playlists' ? 1000 : '', page).then(val => {
       if (val.songs) {
         setDataSource(val.songs);
         setTotal(val.songCount);
@@ -48,11 +48,11 @@ export default function Result() {
   const columns = [
     {
       title: '歌曲',
-      render: (item) => {
+      render: item => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <span
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 play(item);
               }}
@@ -64,7 +64,7 @@ export default function Result() {
               <span
                 className="iconfont icon-movie-line"
                 style={{ color: 'red', padding: 3, cursor: 'pointer' }}
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   e.nativeEvent.stopImmediatePropagation();
                   navigate(`/home/mv/${item.mv}`);
@@ -77,63 +77,77 @@ export default function Result() {
             {item.fee === 1 ? <span className="iconfont icon-VIP" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
           </div>
         );
-      },
+      }
     },
     {
       title: '歌手',
-      render: (item) => {
-        return item.ar?.map((record) => {
+      render: item => {
+        return item.ar?.map(record => {
           return <div key={record.id}>{record.name}</div>;
         });
-      },
+      }
     },
     {
       title: '专辑',
-      render: (item) => {
+      render: item => {
         return item.al?.name;
-      },
+      }
     },
     {
       title: '时长',
-      render: (item) => {
+      render: item => {
         return time(item.dt);
-      },
+      }
     },
     {
       title: '',
-      render: (item) => {
+      render: item => {
         return (
           <div style={{ display: 'flex', alignItems: 'center', columnGap: '1.25rem' }}>
             <i
               className="iconfont icon-xihuan"
-              onClick={(e) => {
+              onClick={e => {
                 isLove(e, item);
               }}
             ></i>
             <PlusCircleOutlined
-              onClick={(e) => {
+              onClick={e => {
                 addMusicList(e, item);
               }}
             />
           </div>
         );
-      },
-    },
+      }
+    }
   ];
 
   const addMusicList = async (e, item) => {
     e.stopPropagation();
-    // let initData = await HearFromResultInfo(item);
-    let localData = JSON.parse(localStorage.getItem('musicList'));
+    const localData = JSON.parse(localStorage.getItem('musicList'));
     if (localData !== null) {
       localData.unshift(item);
       // 数组中 对象 查重
-      let newArr = distinct3(localData);
-      localStorage.setItem('musicList', JSON.stringify(newArr));
+      const newArr = distinct3(localData);
+
+      // 单曲名 歌手名 时长 id
+      const dealMusicList = newArr.map(item => {
+        if (item.id !== 6666666) {
+          return {
+            ...item,
+            songName: item?.name,
+            singer: item.ar?.map(v => v.name).join(' / '),
+            dt: item?.dt,
+            picUrl: item?.al?.picUrl
+          };
+        }
+        return item
+      });
+
+      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
 
       if (newArr[0].id !== 6666666) {
         notification.success({
-          message: '已成功添加到音乐列表',
+          message: '已成功添加到音乐列表'
         });
       }
     }
@@ -150,7 +164,7 @@ export default function Result() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.searchword]);
 
-  const callback = (e) => {
+  const callback = e => {
     setPage(1);
     setLoading(true);
     setTabsPage(e);
@@ -159,7 +173,7 @@ export default function Result() {
   // mvs
   const renderMvsList = (
     <div className="mvs">
-      {dataSource.map((item) => {
+      {dataSource.map(item => {
         return (
           <Skeleton style={{ width: 300 }} loading={loading} avatar active key={item.id}>
             <div
@@ -170,7 +184,10 @@ export default function Result() {
             >
               <div className="posterImg" style={{ position: 'relative' }}>
                 <img src={item.cover} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '9.688rem', borderRadius: '0.75rem' }} />
-                <PlayCircleTwoTone className="hover1" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }} />
+                <PlayCircleTwoTone
+                  className="hover1"
+                  style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }}
+                />
               </div>
               <div className="text" style={{ marginTop: '.5rem' }}>
                 <div className="title wordbreak" style={{ fontSize: '15px' }}>
@@ -190,7 +207,7 @@ export default function Result() {
   // playlists
   const renderPlaylistsLst = (
     <div className="playlists">
-      {dataSource.map((item) => {
+      {dataSource.map(item => {
         return (
           <div
             className="item cursor"
@@ -201,7 +218,10 @@ export default function Result() {
           >
             <div className="posterImg" style={{ position: 'relative' }}>
               <img src={item.coverImgUrl} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '100%', borderRadius: '0.75rem' }} />
-              <PlayCircleTwoTone className="hover1" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }} />
+              <PlayCircleTwoTone
+                className="hover1"
+                style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }}
+              />
             </div>
             <div className="text" style={{ marginTop: '.5rem' }}>
               <div className="title wordbreak" style={{ fontSize: '15px' }}>
@@ -217,7 +237,7 @@ export default function Result() {
     </div>
   );
 
-  const play = async (item) => {
+  const play = async item => {
     navigate('/home/song');
     let data = await hearMusicInfo(item);
     store.dispatch(data);
@@ -226,7 +246,11 @@ export default function Result() {
   return (
     <div className="result">
       <div style={{ display: 'grid', gridTemplateColumns: '4.375rem 21.875rem' }}>
-        <img src={dataSource[0]?.al?.picUrl || dataSource[0]?.cover || dataSource[0]?.coverImgUrl} alt="" style={{ width: '4.375rem', height: '4.375rem', borderRadius: '.313rem' }} />
+        <img
+          src={dataSource[0]?.al?.picUrl || dataSource[0]?.cover || dataSource[0]?.coverImgUrl}
+          alt=""
+          style={{ width: '4.375rem', height: '4.375rem', borderRadius: '.313rem' }}
+        />
         <Descriptions title={params.searchword} style={{ padding: '0 70px' }}>
           <Descriptions.Item label="结果">{total}首</Descriptions.Item>
         </Descriptions>
@@ -234,7 +258,7 @@ export default function Result() {
 
       <Tabs
         activeKey={tabsPage}
-        onChange={(e) => {
+        onChange={e => {
           callback(e);
         }}
       >
@@ -242,16 +266,16 @@ export default function Result() {
           <Table
             dataSource={dataSource}
             columns={columns}
-            rowKey={(item) => item.id}
+            rowKey={item => item.id}
             pagination={false}
             loading={isHid}
-            onRow={(record) => {
+            onRow={record => {
               return {
                 // 点击行
                 onClick: async () => {
-                  const musicInfo = await HearFromResultInfo(record);
+                  const musicInfo = await commonPlayMusicFn(record);
                   store.dispatch(musicInfo);
-                },
+                }
               };
             }}
           />
@@ -269,7 +293,7 @@ export default function Result() {
           current={page}
           total={total}
           showSizeChanger={false}
-          onChange={(current) => {
+          onChange={current => {
             setPage(current);
           }}
         />

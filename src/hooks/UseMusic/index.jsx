@@ -8,6 +8,19 @@ import { commonPlayMusicFn } from '../../redux/actions/index.js';
 import './index.css';
 
 const style = { width: '2.188rem', height: '2.188rem', lineHeight: '2.188rem', textAlign: 'center', borderRadius: '.313rem' };
+// localStorage 初始化数据
+const initState = {
+  type: 'HEARFROM',
+  id: 6666666,
+  url: 'https://chcmusic.cloud/images/%E6%98%A5%E5%A8%87%E4%B8%8E%E5%BF%97%E6%98%8E.mp3',
+  songName: '春娇与志明',
+  singer: '街道办GOC',
+  picUrl: 'https://p2.music.126.net/0KC-cAFqdJHDomIl3dSv4Q==/109951166676094043.jpg',
+  lyric: handleLyric(
+    '[00:00.000] 作词 : Aline\n[00:01.000] 作曲 : Aline\n[00:02.000] 编曲 : Aline\n[00:20.330]Jcool：\n[00:22.329]有个女仔令我思想变得大过\n[00:25.029]当初\n[00:25.879]我幼稚行为对你犯下大错\n[00:27.579]你话我唔识淋 用钱买无用饰品\n[00:30.329]你慢慢心淡觉得我对感情唔认真\n[00:33.330]要知道男人系天生的小朋友\n[00:36.329]小朋友弱点会忽略另一半感受\n[00:39.080]要改正好简单我只系欠调教\n[00:42.330]经历得多反而可以令到爱意浓厚\n[00:42.830]Vai：\n[00:44.581]志明的世界永远好动带着可爱\n[00:47.330]但有时间迷茫 爱情错过却唔可再\n[00:50.081]从开始走到结尾哪个不会变大个\n[00:53.081]但春娇想要那个你又有谁可以劝阻\n[00:55.831]等待 UFO 纵有变数\n[00:58.079]最普通慨佢哋世上遍布\n[01:01.576]爱漫春天散落每个季节慨消耗\n[01:04.325]看着花瓣跌落过程撑得过衰老\n[01:04.575]欧：\n[01:09.825]重新出发吗 huh 更渴望未来\n[01:12.825]以往这少年懂爱吗\n[01:16.328]仿佛不够\n[01:21.328]成长会进化吗 也信念自由\n[01:25.078]我爱这少年讽刺吗\n[01:28.021]这花开吗\n[01:28.521]留：\n[01:30.271]我爱你 你是唱将我做配合\n[01:32.521]但你予我这过程细致给我培训\n[01:35.524]情与爱 太过复杂 我要太多喘息\n[01:38.274]但你爱我慨以后不会太过忐忑\n[01:41.274]当拥有慨时候 又接近放手\n[01:44.024]循环播放剧情有多少个然后\n[01:46.524]如果系现实我会选择打破现实\n[01:49.274]喺你慨世界里面我会选择慢慢渐入\n[01:49.774]Vai：\n[01:52.527]志明慨世界永远好动带着可爱\n[01:55.024]佢冇时间迷茫 爱情错过却唔可再\n[01:57.774]从开始走到结尾哪个不会变大个\n[02:00.774]但春娇想要那个你又有谁可以劝阻\n[02:03.274]等待 UFO 纵有变数\n[02:06.027]最普通慨佢哋世上遍布\n[02:09.276]爱漫春天散落每个季节慨消耗\n[02:12.026]看着花瓣跌落过程撑得过衰老\n[02:13.026]欧：\n[02:18.026]重新出发吗 huh 更渴望未来\n[02:21.276]以往这少年懂爱吗\n[02:24.526]仿佛不够\n[02:29.027]成长会进化吗 也信念自由\n[02:32.777]我爱这少年讽刺吗\n[02:34.777]这花开吗\n[02:35.527]Garyu：\n[02:37.277]破碎婚姻里出身逼出佢慨硬净\n[02:40.027]佢再牺牲佢慨率真改变佢慨硬颈\n[02:42.780]戴眼镜慨佢明白波珠解决唔到逃避\n[02:45.780]要长大要负责任缩短两个人慨距离\n[02:49.479]美梦里学会感慨\n[02:51.229]你亦放肆你的爱\n[02:53.729]用力转载 越过比赛\n[02:58.729]为我掩盖 都因为爱\n[02:58.979]欧：\n[03:02.979]重新出发吗 huh 更渴望未来\n[03:06.729]以往这少年懂爱吗\n[03:09.479]仿佛不够\n[03:14.229]成长会进化吗 也信念自由\n[03:17.479]我爱这少年讽刺吗\n[03:19.223]这花开吗\n'
+  ),
+  dt: 205000
+};
 
 export default function UseMusic() {
   //#region
@@ -32,6 +45,8 @@ export default function UseMusic() {
   const [playType, setPlayType] = useState('icon-order');
   // 获取当前播放的歌曲索引
   const [currentIndex, setCurrentIndex] = useState(0);
+  // 当前播放列表的歌曲id
+  const [currentId, setCurrentId] = useState(6666666);
   // 音量
   const [currentVolume, setCurrentVolume] = useState(50);
   const [colIcon, setVolIcon] = useState('iconfont icon-24gf-volumeHigh');
@@ -39,23 +54,9 @@ export default function UseMusic() {
   const [isPlay, setIsPlay] = useState('iconfont icon-play chc-iconfont');
   // #endregion
 
-  // localStorage 初始化数据
-  const initState = {
-    type: 'HEARFROM',
-    id: 6666666,
-    url: 'https://chcmusic.cloud/images/%E6%98%A5%E5%A8%87%E4%B8%8E%E5%BF%97%E6%98%8E.mp3',
-    name: '春娇与志明/街道办GDC',
-    songName: '街道办GOC',
-    picUrl: 'https://p2.music.126.net/0KC-cAFqdJHDomIl3dSv4Q==/109951166676094043.jpg',
-    lyric: handleLyric(
-      '[00:00.000] 作词 : Aline\n[00:01.000] 作曲 : Aline\n[00:02.000] 编曲 : Aline\n[00:20.330]Jcool：\n[00:22.329]有个女仔令我思想变得大过\n[00:25.029]当初\n[00:25.879]我幼稚行为对你犯下大错\n[00:27.579]你话我唔识淋 用钱买无用饰品\n[00:30.329]你慢慢心淡觉得我对感情唔认真\n[00:33.330]要知道男人系天生的小朋友\n[00:36.329]小朋友弱点会忽略另一半感受\n[00:39.080]要改正好简单我只系欠调教\n[00:42.330]经历得多反而可以令到爱意浓厚\n[00:42.830]Vai：\n[00:44.581]志明的世界永远好动带着可爱\n[00:47.330]但有时间迷茫 爱情错过却唔可再\n[00:50.081]从开始走到结尾哪个不会变大个\n[00:53.081]但春娇想要那个你又有谁可以劝阻\n[00:55.831]等待 UFO 纵有变数\n[00:58.079]最普通慨佢哋世上遍布\n[01:01.576]爱漫春天散落每个季节慨消耗\n[01:04.325]看着花瓣跌落过程撑得过衰老\n[01:04.575]欧：\n[01:09.825]重新出发吗 huh 更渴望未来\n[01:12.825]以往这少年懂爱吗\n[01:16.328]仿佛不够\n[01:21.328]成长会进化吗 也信念自由\n[01:25.078]我爱这少年讽刺吗\n[01:28.021]这花开吗\n[01:28.521]留：\n[01:30.271]我爱你 你是唱将我做配合\n[01:32.521]但你予我这过程细致给我培训\n[01:35.524]情与爱 太过复杂 我要太多喘息\n[01:38.274]但你爱我慨以后不会太过忐忑\n[01:41.274]当拥有慨时候 又接近放手\n[01:44.024]循环播放剧情有多少个然后\n[01:46.524]如果系现实我会选择打破现实\n[01:49.274]喺你慨世界里面我会选择慢慢渐入\n[01:49.774]Vai：\n[01:52.527]志明慨世界永远好动带着可爱\n[01:55.024]佢冇时间迷茫 爱情错过却唔可再\n[01:57.774]从开始走到结尾哪个不会变大个\n[02:00.774]但春娇想要那个你又有谁可以劝阻\n[02:03.274]等待 UFO 纵有变数\n[02:06.027]最普通慨佢哋世上遍布\n[02:09.276]爱漫春天散落每个季节慨消耗\n[02:12.026]看着花瓣跌落过程撑得过衰老\n[02:13.026]欧：\n[02:18.026]重新出发吗 huh 更渴望未来\n[02:21.276]以往这少年懂爱吗\n[02:24.526]仿佛不够\n[02:29.027]成长会进化吗 也信念自由\n[02:32.777]我爱这少年讽刺吗\n[02:34.777]这花开吗\n[02:35.527]Garyu：\n[02:37.277]破碎婚姻里出身逼出佢慨硬净\n[02:40.027]佢再牺牲佢慨率真改变佢慨硬颈\n[02:42.780]戴眼镜慨佢明白波珠解决唔到逃避\n[02:45.780]要长大要负责任缩短两个人慨距离\n[02:49.479]美梦里学会感慨\n[02:51.229]你亦放肆你的爱\n[02:53.729]用力转载 越过比赛\n[02:58.729]为我掩盖 都因为爱\n[02:58.979]欧：\n[03:02.979]重新出发吗 huh 更渴望未来\n[03:06.729]以往这少年懂爱吗\n[03:09.479]仿佛不够\n[03:14.229]成长会进化吗 也信念自由\n[03:17.479]我爱这少年讽刺吗\n[03:19.223]这花开吗\n'
-    ),
-    dt: 205000,
-  };
-
-  const fn = (name, lyric, picUrl, songName, url) => {
+  const fn = ({ singer, lyric, picUrl, songName, url }) => {
     setUrl(url);
-    setName(name);
+    setName(singer);
     setSongName(songName);
     setPicUrl(picUrl);
     setLyric(lyric);
@@ -114,7 +115,7 @@ export default function UseMusic() {
     }
   };
   // 播放结束
-  const ended = () => {
+  const ended = async () => {
     setIsPlay('iconfont icon-play chc-iconfont');
     audio.current.pause();
     setCurrentTime(0);
@@ -123,22 +124,23 @@ export default function UseMusic() {
       // 顺序播放
       case 'icon-order':
         if (musicList.length > 1) {
-          let index = musicList.findIndex((item) => item.url === audio.current.src);
+          let index = musicList.findIndex(item => item.url === audio.current.id * 1);
           if (index === musicList.length - 1) {
-            const item = musicList[0];
-            return fn(item?.name, item?.lyric, item?.picUrl, item?.songName, item?.url);
+            setCurrentId(musicList[0].id);
+            const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[0]);
+            return fn({ url, picUrl, songName, singer, lyric });
           }
-          const item = musicList[index + 1];
-          fn(item?.name, item?.lyric, item?.picUrl, item?.songName, item?.url);
+          setCurrentId(musicList[index + 1].id);
+          const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[0]);
+          return fn({ url, picUrl, songName, singer, lyric });
         }
         break;
       // 随机播放
       case 'icon-random':
         const randIndex = Math.round(Math.random() * (musicList.length - 0)) + 0;
-        console.log(randIndex);
-        const item = musicList[randIndex];
-        fn(item?.name, item?.lyric, item?.picUrl, item?.songName, item?.url);
-        break;
+        setCurrentId(musicList[randIndex].id);
+        const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[randIndex]);
+        return fn({ url, picUrl, songName, singer, lyric });
       default:
         break;
     }
@@ -166,7 +168,7 @@ export default function UseMusic() {
     }
   };
   // 点击歌词指定播放位置
-  const appointNode = (item) => {
+  const appointNode = item => {
     playFunction();
     let time = (item.time / 1000).toFixed(0);
     audio.current.currentTime = time;
@@ -174,33 +176,36 @@ export default function UseMusic() {
     message.info('点击歌词后会失去滚动效果');
   };
 
-  // 下一首
-  const nextMusic = () => {
+  // 下一首 ok
+  const nextMusic = async () => {
     // 获取当前播放的歌曲索引
-    let index = musicList.findIndex((item) => item.url === audio.current.src);
+    const index = musicList.findIndex(item => item.id === audio.current.id * 1);
     if (index === musicList.length - 1) {
-      const item = musicList[0];
-      return fn(item?.name, item?.lyric, item?.picUrl, item?.songName, item?.url);
+      const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[0]);
+      setCurrentId(musicList[0].id);
+      return fn({ url, picUrl, songName, singer, lyric });
     }
-    const item = musicList[index + 1];
-    fn(item?.name, item?.lyric, item?.picUrl, item?.songName, item?.url);
+    setCurrentId(musicList[index + 1].id);
+    const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[index + 1]);
+    return fn({ url, picUrl, songName, singer, lyric });
   };
 
-  // 上一首
-  const prevMusic = () => {
+  // 上一首 ok
+  const prevMusic = async () => {
     // 获取当前播放的歌曲索引
-    let index = musicList.findIndex((item) => item.url === audio.current.src);
+    const index = musicList.findIndex(item => item.id === audio.current.id * 1);
     if (index === 0) {
       return message.info('已经是第一首了哦！');
     }
-    const item = musicList[index - 1];
-    fn(item?.name, item?.lyric, item?.picUrl, item?.songName, item?.url);
+    setCurrentId(musicList[index - 1].id);
+    const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[index - 1]);
+    return fn({ url, picUrl, songName, singer, lyric });
   };
 
   useEffect(() => {
-    const { name, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
+    const { singer, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
     setUrl(url);
-    setName(name);
+    setName(singer);
     setSongName(songName);
     setPicUrl(picUrl);
     setLyric(lyric);
@@ -213,8 +218,8 @@ export default function UseMusic() {
     }
 
     setTimeout(() => {
-      // 获取当前播放的歌曲索引
-      let index = musicList.findIndex((item) => item.url === audio.current.src);
+      // 页面初始化 获取当前播放的歌曲索引
+      let index = musicList.findIndex(item => item.id === audio.current.id * 1);
       setCurrentIndex(index);
     }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -222,11 +227,11 @@ export default function UseMusic() {
 
   store.subscribe(() => {
     if (store.getState()?.mainReducer?.id && store.getState()?.mainReducer?.id !== 6666666) {
-      const { name, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
+      const { singer, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
       setUrl(url);
-      setName(name);
-      setSongName(songName);
-      setPicUrl(picUrl ? picUrl : 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg');
+      setName(songName);
+      setSongName(singer);
+      setPicUrl(picUrl || 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg');
       setLyric(lyric);
       setMusicList(JSON.parse(localStorage.getItem('musicList')));
       setTimeout(() => {
@@ -247,42 +252,45 @@ export default function UseMusic() {
   const columns = [
     {
       title: '',
-      render: (text, record, index) => index + 1,
+      width: '15%',
+      render: (text, record, index) => index + 1
     },
     {
       title: '单曲',
-      dataIndex: 'name',
+      dataIndex: 'songName'
     },
     {
       title: '歌手',
-      dataIndex: 'singer',
+      dataIndex: 'singer'
     },
     {
       title: '',
-      render: (item) => time(item.dt),
+      width: '10%',
+      render: item => time(item.dt)
     },
     {
       title: '',
+      width: '5%',
       render: (text, item, index) => {
         return (
           item.id !== 6666666 && (
             <CloseCircleOutlined
               style={{ cursor: 'pointer' }}
-              onClick={(e) => {
+              onClick={e => {
                 delMusic(e, index);
               }}
             />
           )
         );
-      },
-    },
+      }
+    }
   ];
 
   const content = (
     <div>
       <Button
         type="dashed"
-        size={'small'}
+        size="small"
         onClick={() => {
           clearAll();
         }}
@@ -292,31 +300,30 @@ export default function UseMusic() {
       </Button>
       <Table
         size="small"
+        scroll={{ y: 300 }}
         dataSource={musicList}
         pagination={false}
         columns={columns}
-        rowKey={(record) => record.id}
-        onRow={(record) => {
+        rowKey="id"
+        onRow={record => {
           return {
             onClick: () => {
               toplay(record);
-            },
+              setCurrentId(record.id);
+            }
           };
         }}
       />
     </div>
   );
 
-  const toplay = async (record) => {
-    const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(record);
-    setUrl(url);
-    setSongName(songName);
-    setPicUrl(picUrl);
-    setLyric(lyric);
-    setName(singer);
-    setTimeout(() => {
-      playFunction();
-    }, 1500);
+  const toplay = async record => {
+    if (record.id !== 6666666) {
+      const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(record);
+      return fn({ url, picUrl, songName, singer, lyric });
+    }
+    console.log(record);
+    return fn({ url: record.url, picUrl: record.picUrl, songName: record?.songName, singer: record?.singer, lyric: record.lyric });
   };
 
   // 删除音乐
@@ -328,7 +335,7 @@ export default function UseMusic() {
     let arrList = JSON.parse(localStorage.getItem('musicList'));
     setMusicList(arrList);
     notification.success({
-      message: '已删除',
+      message: '已删除'
     });
   };
 
@@ -338,7 +345,7 @@ export default function UseMusic() {
     localStorage.setItem('musicList', JSON.stringify([initState]));
     setMusicList([]);
     notification.success({
-      message: '已清空',
+      message: '已清空'
     });
   };
 
@@ -366,7 +373,7 @@ export default function UseMusic() {
   // 改变音量
   const changeVolume = (
     <Slider
-      onChange={(value) => {
+      onChange={value => {
         Volume(value);
       }}
       max={100}
@@ -375,7 +382,7 @@ export default function UseMusic() {
     />
   );
 
-  const Volume = (value) => {
+  const Volume = value => {
     setCurrentVolume(value);
     audio.current.volume = value / 100;
     if (value === 0) {
@@ -400,8 +407,8 @@ export default function UseMusic() {
         </div>
         {/* 歌曲信息 */}
         <div className="musicinfo">
-          <span>{name}</span>
-          <span>- {songName}</span>
+          <span className="wordbreaks">{songName}</span>
+          <span className="wordbreaks">- {name}</span>
         </div>
         {/* <!-- 播放插件 --> */}
         <div className="play_plug">
@@ -475,7 +482,7 @@ export default function UseMusic() {
             </Popover>
           </div>
           <div className="hover chc-music-list" style={style}>
-            <Popover content={content} title="音乐列表" trigger="hover" overlayClassName="chc-popover-list">
+            <Popover content={content} title="音乐列表" trigger="hover" placement="topRight" overlayClassName="chc-popover-list">
               <i className="iconfont icon-24gf-playlistMusic5"></i>
             </Popover>
           </div>
@@ -499,7 +506,7 @@ export default function UseMusic() {
           tipFormatter={() => {
             return timer(currentTime);
           }}
-          onChange={(value) => {
+          onChange={value => {
             setCurrentTime(value);
             audio.current.currentTime = value;
           }}
@@ -531,7 +538,7 @@ export default function UseMusic() {
                 value={currentTime}
                 className="progress"
                 tipFormatter={null}
-                onChange={(value) => {
+                onChange={value => {
                   setCurrentTime(value);
                   audio.current.currentTime = value;
                 }}
@@ -607,6 +614,7 @@ export default function UseMusic() {
         }}
         ref={audio}
         src={url}
+        id={currentId}
         style={{ display: 'none' }}
       ></audio>
     </div>

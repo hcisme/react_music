@@ -3,11 +3,9 @@ import { handleLyric } from '../../hooks/UseMusic/tools/setLyrc';
 import { HEARFROM, CHANGE, HEARMUSICINFO } from '../constant';
 
 export const commonPlayMusicFn = async (record) => {
-  console.log(record);
   // 获取歌曲url 获取歌词
   const res = await React.$apis.getMusicUrl(record.id);
   const lyrc = await React.$apis.getlyrc(record.id);
-  console.log(res, lyrc);
 
   return {
     ...record,
@@ -18,133 +16,12 @@ export const commonPlayMusicFn = async (record) => {
     // 播放时间
     dt: res.time,
     // 歌手名
-    singer: record.singer,
+    singer: record.singer || record.song?.artists?.[0]?.name || record.artists?.[0]?.name,
     // 单曲名
     songName: record.name,
     // 海报
-    picUrl: record.picUrl,
-  };
-};
-
-// 首页音乐播放
-export const HearFromDisInfo = async (data) => {
-  let url = '';
-  let ly = '';
-
-  const {
-    id,
-    picUrl,
-    name,
-    song: { duration: dt },
-  } = data;
-  // 获取歌曲url
-  const val = await React.$apis.getMusicUrl(id);
-  url = val[0].url;
-  // 获取歌词
-  const lyrc = await React.$apis.getlyrc(id);
-  ly = lyrc.lyric;
-
-  return {
+    picUrl: record.picUrl || record?.album?.blurPicUrl || record?.album?.artist?.img1v1Url,
     type: HEARFROM,
-    id,
-    url,
-    name,
-    songName: data.song?.artists[0]?.name,
-    picUrl,
-    lyric: handleLyric(ly),
-    dt,
-  };
-};
-
-// 搜索结果音乐 歌单音乐
-export const HearFromResultInfo = async (data) => {
-  let url = '';
-  let ly = '';
-
-  const {
-    id,
-    al: { picUrl },
-    name,
-    dt,
-  } = data;
-  // 获取歌曲url
-  const val = await React.$apis.getMusicUrl(id);
-  url = val[0].url;
-  // 获取歌词
-  const lyrc = await React.$apis.getlyrc(id);
-  ly = lyrc.lyric;
-
-  return {
-    type: HEARFROM,
-    id,
-    url,
-    name,
-    songName: data.ar[0]?.name,
-    picUrl,
-    lyric: handleLyric(ly),
-    dt,
-  };
-};
-
-// 最新音乐
-export const HearFromNewSongInfo = async (data) => {
-  let url = '';
-  let ly = '';
-
-  const {
-    id,
-    album: { picUrl },
-    name,
-    duration: dt,
-  } = data;
-  // 获取歌曲url
-  const val = await React.$apis.getMusicUrl(id);
-  url = val[0].url;
-  // 获取歌词
-  const lyrc = await React.$apis.getlyrc(id);
-  ly = lyrc.lyric;
-
-  return {
-    type: HEARFROM,
-    id,
-    url,
-    name,
-    songName: data.artists[0]?.name,
-    picUrl,
-    lyric: handleLyric(ly),
-    dt,
-  };
-};
-
-// 搜索建议时提示的音乐
-export const HearFromSearchSuggestInfo = async (data) => {
-  let url = '';
-  let ly = '';
-
-  const {
-    id,
-    album: {
-      artist: { picUrl },
-    },
-    name,
-    duration: dt,
-  } = data;
-  // 获取歌曲url
-  const val = await React.$apis.getMusicUrl(id);
-  url = val[0].url;
-  // 获取歌词
-  const lyrc = await React.$apis.getlyrc(id);
-  ly = lyrc.lyric;
-
-  return {
-    type: HEARFROM,
-    id,
-    url,
-    name,
-    songName: data.artists[0]?.name,
-    picUrl,
-    lyric: handleLyric(ly),
-    dt,
   };
 };
 

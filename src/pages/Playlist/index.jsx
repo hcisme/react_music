@@ -4,7 +4,7 @@ import { Card, Avatar, Table, Tabs, Pagination, Image, message, notification, Bu
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
 import { dayjs, time, distinct3 } from '../../utils/js/timeTool.js';
 import { store } from '../../redux/store';
-import { HearFromResultInfo, statusChange, hearMusicInfo } from '../../redux/actions';
+import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
 import Commmnt from '../../hooks/UseComment';
 import './index.css';
 
@@ -138,7 +138,7 @@ export default function PlayList() {
             ></i>
             <PlusCircleOutlined
               onClick={(e) => {
-                // addMusicList(e, item);
+                addMusicList(e, item);
               }}
             />
           </div>
@@ -155,17 +155,31 @@ export default function PlayList() {
 
   const addMusicList = async (e, item) => {
     e.stopPropagation();
-    let initData = await HearFromResultInfo(item);
     let localData = JSON.parse(localStorage.getItem('musicList'));
     if (localData !== null) {
-      localData.unshift(initData);
+      localData.unshift(item);
       // 数组中 对象 查重
       let newArr = distinct3(localData);
-      localStorage.setItem('musicList', JSON.stringify(newArr));
+
+      // 单曲名 歌手名 时长 id
+      const dealMusicList = newArr.map(item => {
+        if (item.id !== 6666666) {
+          return {
+            ...item,
+            songName: item?.name,
+            singer: item.ar?.map(v => v.name).join(' / '),
+            dt: item?.dt,
+            picUrl: item?.al?.picUrl
+          };
+        }
+        return item
+      });
+
+      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
 
       if (newArr[0].id !== 6666666) {
         notification.success({
-          message: '已成功添加到音乐列表',
+          message: '已成功添加到音乐列表'
         });
       }
     }
@@ -173,7 +187,7 @@ export default function PlayList() {
   };
 
   const handlePlayMusic = async (record) => {
-    const musicInfo = await HearFromResultInfo(record);
+    const musicInfo = await commonPlayMusicFn(record);
     store.dispatch(musicInfo);
   };
 
@@ -196,24 +210,35 @@ export default function PlayList() {
   }, []);
 
   const playAllMusic = async () => {
-    message.info('只能存20首歌在播放列表');
-    for (let i = 0; i < 20; i++) {
-      let initData = await HearFromResultInfo(dataSource[i]);
       let localData = JSON.parse(localStorage.getItem('musicList'));
       if (localData !== null) {
-        localData.unshift(initData);
+        localData.unshift(...dataSource);
         // 数组中 对象 查重
         let newArr = distinct3(localData);
-        localStorage.setItem('musicList', JSON.stringify(newArr));
+
+        // 单曲名 歌手名 时长 id
+        const dealMusicList = newArr.map(item => {
+          if (item.id !== 6666666) {
+            return {
+              ...item,
+              songName: item?.name,
+              singer: item.ar?.map(v => v.name).join(' / '),
+              dt: item?.dt,
+              picUrl: item?.al?.picUrl
+            };
+          }
+          return item;
+        });
+
+        localStorage.setItem('musicList', JSON.stringify(dealMusicList));
 
         if (newArr[0].id !== 6666666) {
           notification.success({
-            message: '已成功添加到音乐列表',
+            message: '已成功添加到音乐列表'
           });
         }
       }
       store.dispatch(statusChange());
-    }
   };
 
   return (

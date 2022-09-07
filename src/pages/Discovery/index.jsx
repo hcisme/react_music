@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Carousel, Divider, Table, Image, message, notification } from 'antd';
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
 import { store } from '../../redux/store';
-import { HearFromDisInfo, statusChange, hearMusicInfo } from '../../redux/actions';
+import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
 import { distinct3 } from '../../utils/js/timeTool.js';
 import './index.css';
 // 导入处理时间的函数
@@ -42,7 +42,7 @@ export default function Discovery() {
   };
 
   const handlePlayMusic = async (record) => {
-    const musicInfo = await HearFromDisInfo(record);
+    const musicInfo = await commonPlayMusicFn(record);
     store.dispatch(musicInfo);
   };
 
@@ -124,7 +124,6 @@ export default function Discovery() {
 
   const addMusicList = async (e, item) => {
     e.stopPropagation();
-    // let initData = await HearFromDisInfo(item);
     let localData = JSON.parse(localStorage.getItem('musicList'));
     if (localData !== null) {
       localData.unshift(item);
@@ -132,14 +131,18 @@ export default function Discovery() {
       const newArr = distinct3(localData);
       // 单曲名 歌手名 时长 id
       const dealMusicList = newArr.map((item) => {
-        return {
-          ...item,
-          songName: item.name,
-          singer: item.song?.artists?.map((v) => v.name).join(' / '),
-          dt: item.song?.duration,
-          picUrl: item.picUrl,
-        };
+        if (item.id !== 6666666) {
+          return {
+            ...item,
+            songName: item.name,
+            singer: item.song?.artists?.map(v => v.name).join(' / '),
+            dt: item.song?.duration,
+            picUrl: item.picUrl
+          };
+        }
+        return item
       });
+
 
       localStorage.setItem('musicList', JSON.stringify(dealMusicList));
 

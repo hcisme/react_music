@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Input, Popover, List, Typography, Avatar, message, Spin } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import { store } from '../../../redux/store'
-import { HearFromSearchSuggestInfo } from '../../../redux/actions'
+import { commonPlayMusicFn } from '../../../redux/actions'
 import './index.css'
 
 const { Search } = Input
@@ -85,7 +85,7 @@ export default function SearchPage() {
           renderItem={(item) => (
             <List.Item
               onClick={ async () => {
-                let data = await HearFromSearchSuggestInfo(item)
+                let data = await commonPlayMusicFn(item);
                 store.dispatch(data)
               }}
               style={{ cursor: 'pointer' }}
