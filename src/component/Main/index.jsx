@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { BackTop } from 'antd';
 import { GithubOutlined } from '@ant-design/icons';
-import UseMusic from '@/hooks/UseMusic';
+import UseMusic from '../../hooks/UseMusic';
 import MenuList from '../Menu';
 import './index.css';
 
@@ -48,7 +48,7 @@ export default function Main() {
         </div>
       </div>
 
-      <UseMusic></UseMusic>
+      <UseMusic />
 
       <BackTop style={{ marginBottom: 40 }}>
         <div style={style}>UP</div>

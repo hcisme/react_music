@@ -120,7 +120,7 @@ export default function NewSongs() {
             ></i>
             <PlusCircleOutlined
               onClick={(e) => {
-                addMusicList(e, item);
+                // addMusicList(e, item);
               }}
             />
           </div>

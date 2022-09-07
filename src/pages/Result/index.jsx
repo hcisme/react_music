@@ -123,10 +123,10 @@ export default function Result() {
 
   const addMusicList = async (e, item) => {
     e.stopPropagation();
-    let initData = await HearFromResultInfo(item);
+    // let initData = await HearFromResultInfo(item);
     let localData = JSON.parse(localStorage.getItem('musicList'));
     if (localData !== null) {
-      localData.unshift(initData);
+      localData.unshift(item);
       // 数组中 对象 查重
       let newArr = distinct3(localData);
       localStorage.setItem('musicList', JSON.stringify(newArr));

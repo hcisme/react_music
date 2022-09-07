@@ -124,13 +124,24 @@ export default function Discovery() {
 
   const addMusicList = async (e, item) => {
     e.stopPropagation();
-    let initData = await HearFromDisInfo(item);
+    // let initData = await HearFromDisInfo(item);
     let localData = JSON.parse(localStorage.getItem('musicList'));
     if (localData !== null) {
-      localData.unshift(initData);
+      localData.unshift(item);
       // 数组中 对象 查重
-      let newArr = distinct3(localData);
-      localStorage.setItem('musicList', JSON.stringify(newArr));
+      const newArr = distinct3(localData);
+      // 单曲名 歌手名 时长 id
+      const dealMusicList = newArr.map((item) => {
+        return {
+          ...item,
+          songName: item.name,
+          singer: item.song?.artists?.map((v) => v.name).join(' / '),
+          dt: item.song?.duration,
+          picUrl: item.picUrl,
+        };
+      });
+
+      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
 
       if (newArr[0].id !== 6666666) {
         notification.success({

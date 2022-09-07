@@ -4,6 +4,7 @@ import { CloseCircleOutlined } from '@ant-design/icons';
 import { time, timer } from '../../utils/js/timeTool.js';
 import { handleLyric } from './tools/setLyrc.js';
 import { store } from '../../redux/store/index.js';
+import { commonPlayMusicFn } from '../../redux/actions/index.js';
 import './index.css';
 
 const style = { width: '2.188rem', height: '2.188rem', lineHeight: '2.188rem', textAlign: 'center', borderRadius: '.313rem' };
@@ -185,7 +186,7 @@ export default function UseMusic() {
     fn(item?.name, item?.lyric, item?.picUrl, item?.songName, item?.url);
   };
 
-  // 下一首
+  // 上一首
   const prevMusic = () => {
     // 获取当前播放的歌曲索引
     let index = musicList.findIndex((item) => item.url === audio.current.src);
@@ -254,7 +255,7 @@ export default function UseMusic() {
     },
     {
       title: '歌手',
-      dataIndex: 'songName',
+      dataIndex: 'singer',
     },
     {
       title: '',
@@ -290,6 +291,7 @@ export default function UseMusic() {
         Clear All
       </Button>
       <Table
+        size="small"
         dataSource={musicList}
         pagination={false}
         columns={columns}
@@ -305,12 +307,13 @@ export default function UseMusic() {
     </div>
   );
 
-  const toplay = (record) => {
-    setUrl(record.url);
-    setSongName(record.songName);
-    setPicUrl(record.picUrl);
-    setLyric(record.lyric);
-    setName(record.name);
+  const toplay = async (record) => {
+    const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(record);
+    setUrl(url);
+    setSongName(songName);
+    setPicUrl(picUrl);
+    setLyric(lyric);
+    setName(singer);
     setTimeout(() => {
       playFunction();
     }, 1500);
@@ -393,7 +396,7 @@ export default function UseMusic() {
             setVisible(true);
           }}
         >
-          <img src={picUrl ? picUrl : 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg'} alt="" />
+          <img src={picUrl || 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg'} alt="" />
         </div>
         {/* 歌曲信息 */}
         <div className="musicinfo">
@@ -502,6 +505,7 @@ export default function UseMusic() {
           }}
         />
       </div>
+
       <Drawer
         title={name}
         placement={'bottom'}
