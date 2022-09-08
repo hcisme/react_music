@@ -5,7 +5,7 @@ import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
 import { dayjs, time, distinct3 } from '../../utils/js/timeTool.js';
 import { store } from '../../redux/store';
 import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
-import Commmnt from '../../hooks/UseComment';
+import { UseComment } from '../../hooks';
 import './index.css';
 
 const { Meta } = Card;
@@ -27,20 +27,20 @@ export default function PlayList() {
   const [tabsPage, setTabsPage] = useState('music');
 
   const getTopPoster = () => {
-    React.$apis.getPlayListsTopInfo(params.id).then((val) => {
+    React.$apis.getPlayListsTopInfo(params.id).then(val => {
       setTopPoster(val);
     });
   };
 
   const getMusic = () => {
-    React.$apis.getAllMusic(params.id).then((val) => {
+    React.$apis.getAllMusic(params.id).then(val => {
       setDataSource(val);
       setIsHid(false);
     });
   };
 
   const getHotComment = () => {
-    React.$apis.gethotcomment(params.id, page, pagetime).then((val) => {
+    React.$apis.gethotcomment(params.id, page, pagetime).then(val => {
       setHotComment(val.hotComments);
       setTotal(val.total);
       setTime(val.hotComments[14]?.time);
@@ -48,7 +48,7 @@ export default function PlayList() {
   };
 
   const getNewComments = () => {
-    React.$apis.getNewComment(params.id, page, pagetime).then((val) => {
+    React.$apis.getNewComment(params.id, page, pagetime).then(val => {
       setNewComment(val.comments);
       setTotal(val.total);
       setTime(val.comments[14]?.time);
@@ -66,22 +66,22 @@ export default function PlayList() {
   const columns = [
     {
       title: '封面',
-      render: (item) => {
+      render: item => {
         return (
           <div style={{ position: 'relative', width: 50, height: 50 }}>
             <Avatar size={50} src={item.al?.picUrl} />
             <PlayCircleTwoTone className="PlayCircleTwoTone" />
           </div>
         );
-      },
+      }
     },
     {
       title: '标题',
-      render: (item) => {
+      render: item => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <span
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 play(item);
               }}
@@ -93,7 +93,7 @@ export default function PlayList() {
               <span
                 className="iconfont icon-movie-line"
                 style={{ color: 'red', padding: 3, cursor: 'pointer' }}
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   e.nativeEvent.stopImmediatePropagation();
                   navigate(`/home/mv/${item.mv}`);
@@ -105,49 +105,49 @@ export default function PlayList() {
             {item.fee === 1 ? <span className="iconfont icon-VIP" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
           </div>
         );
-      },
+      }
     },
     {
       title: '歌手',
-      render: (item) => {
-        return item.ar.map((record) => record.name);
-      },
+      render: item => {
+        return item.ar.map(record => record.name);
+      }
     },
     {
       title: '专辑',
-      render: (item) => {
+      render: item => {
         return item.al.name;
-      },
+      }
     },
     {
       title: '时长',
-      render: (item) => {
+      render: item => {
         return time(item.dt);
-      },
+      }
     },
     {
       title: '',
-      render: (item) => {
+      render: item => {
         return (
           <div style={{ display: 'flex', alignItems: 'center', columnGap: '1.25rem' }}>
             <i
               className="iconfont icon-xihuan"
-              onClick={(e) => {
+              onClick={e => {
                 isLove(e, item);
               }}
             ></i>
             <PlusCircleOutlined
-              onClick={(e) => {
+              onClick={e => {
                 addMusicList(e, item);
               }}
             />
           </div>
         );
-      },
-    },
+      }
+    }
   ];
 
-  const play = async (item) => {
+  const play = async item => {
     navigate('/home/song');
     let data = await hearMusicInfo(item);
     store.dispatch(data);
@@ -172,7 +172,7 @@ export default function PlayList() {
             picUrl: item?.al?.picUrl
           };
         }
-        return item
+        return item;
       });
 
       localStorage.setItem('musicList', JSON.stringify(dealMusicList));
@@ -186,7 +186,7 @@ export default function PlayList() {
     store.dispatch(statusChange());
   };
 
-  const handlePlayMusic = async (record) => {
+  const handlePlayMusic = async record => {
     const musicInfo = await commonPlayMusicFn(record);
     store.dispatch(musicInfo);
   };
@@ -210,35 +210,35 @@ export default function PlayList() {
   }, []);
 
   const playAllMusic = async () => {
-      let localData = JSON.parse(localStorage.getItem('musicList'));
-      if (localData !== null) {
-        localData.unshift(...dataSource);
-        // 数组中 对象 查重
-        let newArr = distinct3(localData);
+    let localData = JSON.parse(localStorage.getItem('musicList'));
+    if (localData !== null) {
+      localData.unshift(...dataSource);
+      // 数组中 对象 查重
+      let newArr = distinct3(localData);
 
-        // 单曲名 歌手名 时长 id
-        const dealMusicList = newArr.map(item => {
-          if (item.id !== 6666666) {
-            return {
-              ...item,
-              songName: item?.name,
-              singer: item.ar?.map(v => v.name).join(' / '),
-              dt: item?.dt,
-              picUrl: item?.al?.picUrl
-            };
-          }
-          return item;
-        });
-
-        localStorage.setItem('musicList', JSON.stringify(dealMusicList));
-
-        if (newArr[0].id !== 6666666) {
-          notification.success({
-            message: '已成功添加到音乐列表'
-          });
+      // 单曲名 歌手名 时长 id
+      const dealMusicList = newArr.map(item => {
+        if (item.id !== 6666666) {
+          return {
+            ...item,
+            songName: item?.name,
+            singer: item.ar?.map(v => v.name).join(' / '),
+            dt: item?.dt,
+            picUrl: item?.al?.picUrl
+          };
         }
+        return item;
+      });
+
+      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
+
+      if (newArr[0].id !== 6666666) {
+        notification.success({
+          message: '已成功添加到音乐列表'
+        });
       }
-      store.dispatch(statusChange());
+    }
+    store.dispatch(statusChange());
   };
 
   return (
@@ -269,7 +269,7 @@ export default function PlayList() {
       <Tabs
         activeKey={tabsPage}
         style={{ marginTop: 20 }}
-        onChange={(e) => {
+        onChange={e => {
           setTabsPage(e);
         }}
       >
@@ -277,16 +277,16 @@ export default function PlayList() {
           <Table
             dataSource={dataSource}
             columns={columns}
-            rowKey={(record) => record.id}
+            rowKey={record => record.id}
             loading={isHid}
             pagination={{
-              pageSize: 25,
+              pageSize: 25
             }}
-            onRow={(record) => {
+            onRow={record => {
               return {
                 onClick: () => {
                   handlePlayMusic(record);
-                }, // 点击行
+                } // 点击行
               };
             }}
           />
@@ -294,7 +294,7 @@ export default function PlayList() {
         <TabPane tab="评论" key="comment" style={{ padding: '0 10px' }}>
           <Tabs
             activeKey={key}
-            onChange={(key) => {
+            onChange={key => {
               setKey(key);
               setPage(1);
             }}
@@ -308,7 +308,7 @@ export default function PlayList() {
               }
               key="hot"
             >
-              <Commmnt comment={hotComment}></Commmnt>
+              <UseComment comment={hotComment} />
             </TabPane>
             <TabPane
               tab={
@@ -319,7 +319,7 @@ export default function PlayList() {
               }
               key="new"
             >
-              <Commmnt comment={newComment}></Commmnt>
+              <UseComment comment={newComment} />
             </TabPane>
           </Tabs>
 
@@ -328,7 +328,7 @@ export default function PlayList() {
               current={page}
               total={total}
               showSizeChanger={false}
-              onChange={(current) => {
+              onChange={current => {
                 setPage(current);
               }}
             />

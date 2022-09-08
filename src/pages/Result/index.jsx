@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Pagination, Descriptions, Table, Tabs, Skeleton, message, notification } from 'antd';
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
+import { UseCard } from '../../hooks';
 import { time } from '../../utils/js/timeTool';
 import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
 import { distinct3 } from '../../utils/js/timeTool.js';
@@ -26,7 +27,6 @@ export default function Result() {
       if (val.songs) {
         setDataSource(val.songs);
         setTotal(val.songCount);
-        setLoading(false);
       } else if (val.mvs) {
         setDataSource(val.mvs);
         setTotal(val.mvCount);
@@ -140,7 +140,7 @@ export default function Result() {
             picUrl: item?.al?.picUrl
           };
         }
-        return item
+        return item;
       });
 
       localStorage.setItem('musicList', JSON.stringify(dealMusicList));
@@ -208,29 +208,10 @@ export default function Result() {
   const renderPlaylistsLst = (
     <div className="playlists">
       {dataSource.map(item => {
+        const { id, coverImgUrl, name, creator: { nickname = '' } = {} } = item;
         return (
-          <div
-            className="item cursor"
-            key={item.id}
-            onClick={() => {
-              navigate(`/home/playlist/${item.id}`);
-            }}
-          >
-            <div className="posterImg" style={{ position: 'relative' }}>
-              <img src={item.coverImgUrl} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '100%', borderRadius: '0.75rem' }} />
-              <PlayCircleTwoTone
-                className="hover1"
-                style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }}
-              />
-            </div>
-            <div className="text" style={{ marginTop: '.5rem' }}>
-              <div className="title wordbreak" style={{ fontSize: '15px' }}>
-                {item.name}
-              </div>
-              <div className="info" style={{ fontSize: '.75rem', opacity: 0.6, marginTop: '.125rem' }}>
-                {item.creator?.nickname}
-              </div>
-            </div>
+          <div key={id}>
+            <UseCard id={id} picUrl={coverImgUrl} name={name} alg={nickname} />
           </div>
         );
       })}

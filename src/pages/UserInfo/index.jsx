@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate, useLocation, Outlet } from 'react-router-dom'
-import { Avatar, Card, Comment, Menu, Divider, BackTop, Popover, Descriptions } from 'antd'
-import { GithubOutlined } from '@ant-design/icons'
-import { time, dayjs } from '../../utils/js/timeTool'
-import { store } from '../../redux/store'
-import { HearFromHomeInfo } from '../../redux/actions'
-import UseMusic from '../../hooks/UseMusic'
-import './index.css'
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { Avatar, Card, Comment, Menu, Divider, BackTop, Popover, Descriptions } from 'antd';
+import { GithubOutlined } from '@ant-design/icons';
+import { time, dayjs } from '../../utils/js/timeTool';
+import { store } from '../../redux/store';
+import { HearFromHomeInfo } from '../../redux/actions';
+import { UseMusic } from '../../hooks';
+import './index.css';
 
-const { Meta } = Card
+const { Meta } = Card;
 const style = {
   height: 40,
   width: 40,
@@ -18,63 +18,63 @@ const style = {
   color: '#fff',
   textAlign: 'center',
   fontSize: 14,
-  marginLeft: 90,
-}
+  marginLeft: 90
+};
 
 export default function UserInfo() {
-  let location = useLocation()
-  let navigate = useNavigate()
-  const [userInfo, setUserInfo] = useState({})
-  const [lovePlaylistsInfo, setLovePlaylistsInfo] = useState({})
-  const [accountInfo, setAccountInfo] = useState({})
-  const [nearMusic, setNearMusic] = useState([])
-  const [userDetail, setUserDetail] = useState({})
+  let location = useLocation();
+  let navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({});
+  const [lovePlaylistsInfo, setLovePlaylistsInfo] = useState({});
+  const [accountInfo, setAccountInfo] = useState({});
+  const [nearMusic, setNearMusic] = useState([]);
+  const [userDetail, setUserDetail] = useState({});
 
   const getStatus = () => {
-    React.$apis.loginStatus().then((val) => {
-      setUserInfo(val)
-    })
-  }
+    React.$apis.loginStatus().then(val => {
+      setUserInfo(val);
+    });
+  };
 
   const getPlaylists = () => {
-    React.$apis.getPlaylists(localStorage.getItem('id')).then((val) => {
-      val && setLovePlaylistsInfo(val[0])
-    })
-  }
+    React.$apis.getPlaylists(localStorage.getItem('id')).then(val => {
+      val && setLovePlaylistsInfo(val[0]);
+    });
+  };
 
   const nearMusics = () => {
-    React.$apis.nearMusic().then((val) => {
-      setNearMusic(val.list)
-    })
-  }
+    React.$apis.nearMusic().then(val => {
+      setNearMusic(val.list);
+    });
+  };
 
-  const toPlay = async (record) => {
-    const info = await HearFromHomeInfo(record)
-    store.dispatch(info)
-  }
+  const toPlay = async record => {
+    const info = await HearFromHomeInfo(record);
+    store.dispatch(info);
+  };
 
-  const handleClick = (e) => {
-    navigate(e.key)
-  }
+  const handleClick = e => {
+    navigate(e.key);
+  };
 
   const getDetailInfo = async () => {
-    const val = await React.$apis.accountDetail()
-    setAccountInfo(val)
-  }
+    const val = await React.$apis.accountDetail();
+    setAccountInfo(val);
+  };
 
   const getUserDetail = async () => {
-    const val = await React.$apis.vip()
-    setUserDetail(val)
-  }
+    const val = await React.$apis.vip();
+    setUserDetail(val);
+  };
 
   useEffect(() => {
-    getStatus()
-    getPlaylists()
-    nearMusics()
-    getDetailInfo()
-    getUserDetail()
+    getStatus();
+    getPlaylists();
+    nearMusics();
+    getDetailInfo();
+    getUserDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const personInfo = (
     <Descriptions>
@@ -89,7 +89,7 @@ export default function UserInfo() {
       <Descriptions.Item label="LastLoginTime">{dayjs(accountInfo.profile?.lastLoginTime)}</Descriptions.Item>
       <Descriptions.Item label="个性签名">{accountInfo.profile?.signature}</Descriptions.Item>
     </Descriptions>
-  )
+  );
 
   return (
     <div className="userinfo">
@@ -98,19 +98,19 @@ export default function UserInfo() {
         <i
           className="iconfont icon-fl-jia"
           onClick={() => {
-            navigate('/home/discovery')
+            navigate('/home/discovery');
           }}
         ></i>
         <i
           className="iconfont icon-right"
           onClick={() => {
-            window.history.go(-1)
+            window.history.go(-1);
           }}
         ></i>
         <i
           className="iconfont icon-tubiaozhizuo--"
           onClick={() => {
-            window.history.go(1)
+            window.history.go(1);
           }}
         ></i>
       </div>
@@ -125,15 +125,19 @@ export default function UserInfo() {
           style={{ width: 250, marginRight: 30, cursor: 'pointer' }}
           cover={<img alt="example" src={lovePlaylistsInfo.coverImgUrl} />}
           onClick={() => {
-            navigate(`/home/playlist/${lovePlaylistsInfo.id}`)
+            navigate(`/home/playlist/${lovePlaylistsInfo.id}`);
           }}
         >
-          <Meta avatar={<Avatar src={lovePlaylistsInfo.creator?.avatarUrl} />} title={lovePlaylistsInfo.name} description={lovePlaylistsInfo.description ? lovePlaylistsInfo.description : '这个人很懒 什么也没留下'} />
+          <Meta
+            avatar={<Avatar src={lovePlaylistsInfo.creator?.avatarUrl} />}
+            title={lovePlaylistsInfo.name}
+            description={lovePlaylistsInfo.description ? lovePlaylistsInfo.description : '这个人很懒 什么也没留下'}
+          />
         </Card>
         <div className="near-music">
           <span>最近播放-歌曲</span>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-            {nearMusic.map((item) => {
+            {nearMusic.map(item => {
               return (
                 <Comment
                   key={item.resourceId}
@@ -142,10 +146,10 @@ export default function UserInfo() {
                   content={<p>{item.data?.ar[0]?.name}</p>}
                   datetime={<span>{time(item.data?.dt)}</span>}
                   onClick={() => {
-                    toPlay(item)
+                    toPlay(item);
                   }}
                 />
-              )
+              );
             })}
           </div>
         </div>
@@ -153,8 +157,8 @@ export default function UserInfo() {
       <Divider />
       <div className="own">
         <Menu
-          onClick={(e) => {
-            handleClick(e)
+          onClick={e => {
+            handleClick(e);
           }}
           selectedKeys={[location.pathname]}
           mode="horizontal"
@@ -198,5 +202,5 @@ export default function UserInfo() {
         <div style={style}>UP</div>
       </BackTop>
     </div>
-  )
+  );
 }

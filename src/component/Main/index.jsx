@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { BackTop } from 'antd';
 import { GithubOutlined } from '@ant-design/icons';
-import UseMusic from '../../hooks/UseMusic';
+import { UseMusic } from '../../hooks';
 import MenuList from '../Menu';
 import './index.css';
 
@@ -15,7 +15,7 @@ const style = {
   color: '#fff',
   textAlign: 'center',
   fontSize: 14,
-  marginLeft: 90,
+  marginLeft: 90
 };
 
 export default function Main() {

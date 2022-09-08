@@ -9,88 +9,27 @@
   width: 68vw;
 }
 
-#aplayer .iconfont {
-  cursor: pointer;
-  /* font-size: 1.25rem; */
-}
-
 #aplayer {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  display: grid;
   height: 3.9rem;
-  grid-template-columns: 7rem 10rem auto 17rem;
-  justify-items: center;
-  align-items: center;
   background-color: white;
   z-index: 999;
 }
 
-#aplayer .pic {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  justify-self: flex-end;
-  width: 3.8rem;
-  height: 3.8rem;
+#aplayer .iconfont {
   cursor: pointer;
-}
-
-#aplayer .pic img {
-  width: 90%;
-  height: 90%;
-  border-radius: .3rem;
-  background-color: #3c3c3c;
-  margin-top: .063rem;
-}
-
-#aplayer .musicinfo {
-  display: grid;
-  justify-self: flex-start;
-  margin-left: 1.25rem;
-  gap: .188rem;
-}
-
-#aplayer .musicinfo span {
-  font-size: small;
-}
-
-#aplayer .musicinfo span:nth-child(2) {
-  color: gray;
-}
-
-#aplayer .play_plug {
-  display: grid;
-  grid-template-columns: 2.188rem 2.188rem auto 2.5rem 2.5rem 2.188rem;
-  align-items: center;
-  justify-items: center;
-  width: 100%;
-  margin-left: 3.75rem;
-}
-
-#aplayer .play_plug .restartplay .icon-zhongxinkaishi {
-  color: #707070;
   font-size: 1.25rem;
+  opacity: 0.8;
 }
 
-#aplayer .play_plug .play_pause {
-  display: flex;
-  column-gap: 1.6rem;
-}
-
-#aplayer .play_plug .play_pause .iconfont {
-  color: #707070;
-  transition: .3s;
-  cursor: pointer;
-}
-
-#aplayer .icon-lyric .icon-bottom {
+/* #aplayer .icon-lyric .icon-bottom {
   display: inline-block;
   transition: all .5s ease;
   cursor: pointer;
-}
+} */
 
 #aplayer .progress.ant-slider {
   position: absolute;
@@ -201,30 +140,8 @@
 }
 
 @media only screen and (max-width: 500px) {
-  #aplayer {
-    grid-template-columns: 60px 150px 35px 35px;
-  }
-
-  .musicinfo {
-    margin-left: .125rem !important;
-  }
-
-  #aplayer .play_plug {
-    margin-left: .125rem !important;
-  }
-
   .lyrc-pic {
     display: block;
-  }
-
-  #aplayer .play_plug>div:nth-child(1),
-  #aplayer .play_plug>div:nth-child(2),
-  #aplayer .play_plug>.playOrder,
-  #aplayer .play_plug>.volumn,
-  #aplayer .play_plug>.chc-music-list,
-  #aplayer .play_plug>.play_pause>div:nth-child(1),
-  #aplayer .play_plug>.play_pause>div:nth-child(3) {
-    display: none;
   }
 
   .lyric-poster,
@@ -240,9 +157,5 @@
 
   #aplayer .pic {
     justify-self: flex-start !important;
-  }
-
-  #aplayer .play_plug {
-    grid-template-columns: 100%;
   }
 }

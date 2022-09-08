@@ -1,79 +1,79 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { Card, Avatar, Descriptions, Tabs, Pagination, Drawer, Badge } from 'antd'
-import { PlayCircleTwoTone } from '@ant-design/icons'
-import './index.css'
-import Commmnt from '../../hooks/UseComment'
-import { time } from '../../utils/js/timeTool.js'
-import { isAndroid, isIOS } from '../../utils/js/equipment.js'
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Card, Avatar, Descriptions, Tabs, Pagination, Drawer, Badge } from 'antd';
+import { PlayCircleTwoTone } from '@ant-design/icons';
+import './index.css';
+import { UseComment } from '../../hooks';
+import { time } from '../../utils/js/timeTool.js';
+import { isAndroid, isIOS } from '../../utils/js/equipment.js';
 
-const { Meta } = Card
-const { TabPane } = Tabs
+const { Meta } = Card;
+const { TabPane } = Tabs;
 
 export default function Mv() {
-  let params = useParams()
-  let navigate = useNavigate()
+  let params = useParams();
+  let navigate = useNavigate();
 
-  const [mvUrl, setMvUrl] = useState('')
-  const [mvInfo, setMvInfo] = useState({})
-  const [hotComments, setHotComments] = useState([])
-  const [comments, setComments] = useState([])
-  const [simiMvs, setSimiMv] = useState([])
-  const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
-  const [key, setKey] = useState('hot')
-  const [pagetime, setTime] = useState(null)
-  const [visible, setVisible] = useState(false)
-  const [qwe, setQwe] = useState(false)
+  const [mvUrl, setMvUrl] = useState('');
+  const [mvInfo, setMvInfo] = useState({});
+  const [hotComments, setHotComments] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [simiMvs, setSimiMv] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [key, setKey] = useState('hot');
+  const [pagetime, setTime] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [qwe, setQwe] = useState(false);
 
   const getMvUrl = () => {
-    React.$apis.mvurl(params.id).then((val) => {
-      setMvUrl(val)
-    })
-  }
+    React.$apis.mvurl(params.id).then(val => {
+      setMvUrl(val);
+    });
+  };
 
   const mvsInfo = () => {
-    React.$apis.mvsInfo(params.id).then((val) => {
-      setMvInfo(val)
-    })
-  }
+    React.$apis.mvsInfo(params.id).then(val => {
+      setMvInfo(val);
+    });
+  };
 
   const getComment = () => {
-    React.$apis.getMvNewComment(params.id, page, pagetime).then((val) => {
-      setHotComments(val.hotComments)
-      setComments(val.comments)
-      setTotal(val.total)
-      setTime(val.comments[14]?.time)
-    })
-  }
+    React.$apis.getMvNewComment(params.id, page, pagetime).then(val => {
+      setHotComments(val.hotComments);
+      setComments(val.comments);
+      setTotal(val.total);
+      setTime(val.comments[14]?.time);
+    });
+  };
 
   const getSimiMvs = () => {
-    React.$apis.simiMvs(params.id).then((val) => {
-      setSimiMv(val)
-    })
-  }
+    React.$apis.simiMvs(params.id).then(val => {
+      setSimiMv(val);
+    });
+  };
 
   useEffect(() => {
-    getComment()
+    getComment();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [page]);
 
   useEffect(() => {
-    getMvUrl()
-    mvsInfo()
-    getComment()
-    getSimiMvs()
+    getMvUrl();
+    mvsInfo();
+    getComment();
+    getSimiMvs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id])
+  }, [params.id]);
 
   const isVisible = () => {
-    setVisible(true)
-    const isios = isIOS()
-    const isandroid = isAndroid()
+    setVisible(true);
+    const isios = isIOS();
+    const isandroid = isAndroid();
     if (isios === true || isandroid === true) {
-      setQwe(true)
+      setQwe(true);
     }
-  }
+  };
 
   return (
     <div className="mv-container">
@@ -94,11 +94,10 @@ export default function Mv() {
         </div>
 
         <Drawer
-          className="hidden"
-          title={`${mvInfo.name}(评论)`}
+          title={`${mvInfo.name} (评论)`}
           placement={qwe === true ? 'bottom' : 'right'}
           onClose={() => {
-            setVisible(false)
+            setVisible(false);
           }}
           visible={visible}
           width={qwe === true ? '100%' : '50%'}
@@ -106,9 +105,9 @@ export default function Mv() {
         >
           <Tabs
             activeKey={key}
-            onChange={(key) => {
-              setKey(key)
-              setPage(1)
+            onChange={key => {
+              setKey(key);
+              setPage(1);
             }}
           >
             <TabPane
@@ -120,7 +119,7 @@ export default function Mv() {
               }
               key="hot"
             >
-              <Commmnt comment={hotComments}></Commmnt>
+              <UseComment comment={hotComments} />
             </TabPane>
             <TabPane
               tab={
@@ -131,15 +130,15 @@ export default function Mv() {
               }
               key="new"
             >
-              <Commmnt comment={comments}></Commmnt>
+              <UseComment comment={comments} />
 
               <div className="page" style={{ width: '100%', textAlign: 'center', marginTop: 20 }}>
                 <Pagination
                   current={page}
                   total={total}
                   showSizeChanger={false}
-                  onChange={(current) => {
-                    setPage(current)
+                  onChange={current => {
+                    setPage(current);
                   }}
                 />
               </div>
@@ -153,11 +152,11 @@ export default function Mv() {
           相关MV
         </div>
         <div className="items" style={{ display: 'flex', flexDirection: 'column' }}>
-          {simiMvs.map((item) => {
+          {simiMvs.map(item => {
             return (
               <Card
                 onClick={() => {
-                  navigate(`/home/mv/${item.id}`)
+                  navigate(`/home/mv/${item.id}`);
                 }}
                 key={item.id}
                 style={{ display: 'flex', width: '100%', marginBottom: 10, overflow: 'hidden' }}
@@ -172,10 +171,10 @@ export default function Mv() {
                 <Meta title={`播放：${item.playCount}次`} />
                 <Meta title={`时长：${time(item.duration)}`} />
               </Card>
-            )
+            );
           })}
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Drawer, message, Popover, Table, Button, notification, Slider } from 'antd';
+import { Drawer, message, Popover, Table, Button, notification, Slider, Image, Row, Col, Space } from 'antd';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { time, timer } from '../../utils/js/timeTool.js';
 import { handleLyric } from './tools/setLyrc.js';
@@ -8,6 +8,7 @@ import { commonPlayMusicFn } from '../../redux/actions/index.js';
 import './index.css';
 
 const style = { width: '2.188rem', height: '2.188rem', lineHeight: '2.188rem', textAlign: 'center', borderRadius: '.313rem' };
+const singer = { fontSize: ' small', opacity: 0.6 };
 // localStorage 初始化数据
 const initState = {
   type: 'HEARFROM',
@@ -19,7 +20,7 @@ const initState = {
   lyric: handleLyric(
     '[00:00.000] 作词 : Aline\n[00:01.000] 作曲 : Aline\n[00:02.000] 编曲 : Aline\n[00:20.330]Jcool：\n[00:22.329]有个女仔令我思想变得大过\n[00:25.029]当初\n[00:25.879]我幼稚行为对你犯下大错\n[00:27.579]你话我唔识淋 用钱买无用饰品\n[00:30.329]你慢慢心淡觉得我对感情唔认真\n[00:33.330]要知道男人系天生的小朋友\n[00:36.329]小朋友弱点会忽略另一半感受\n[00:39.080]要改正好简单我只系欠调教\n[00:42.330]经历得多反而可以令到爱意浓厚\n[00:42.830]Vai：\n[00:44.581]志明的世界永远好动带着可爱\n[00:47.330]但有时间迷茫 爱情错过却唔可再\n[00:50.081]从开始走到结尾哪个不会变大个\n[00:53.081]但春娇想要那个你又有谁可以劝阻\n[00:55.831]等待 UFO 纵有变数\n[00:58.079]最普通慨佢哋世上遍布\n[01:01.576]爱漫春天散落每个季节慨消耗\n[01:04.325]看着花瓣跌落过程撑得过衰老\n[01:04.575]欧：\n[01:09.825]重新出发吗 huh 更渴望未来\n[01:12.825]以往这少年懂爱吗\n[01:16.328]仿佛不够\n[01:21.328]成长会进化吗 也信念自由\n[01:25.078]我爱这少年讽刺吗\n[01:28.021]这花开吗\n[01:28.521]留：\n[01:30.271]我爱你 你是唱将我做配合\n[01:32.521]但你予我这过程细致给我培训\n[01:35.524]情与爱 太过复杂 我要太多喘息\n[01:38.274]但你爱我慨以后不会太过忐忑\n[01:41.274]当拥有慨时候 又接近放手\n[01:44.024]循环播放剧情有多少个然后\n[01:46.524]如果系现实我会选择打破现实\n[01:49.274]喺你慨世界里面我会选择慢慢渐入\n[01:49.774]Vai：\n[01:52.527]志明慨世界永远好动带着可爱\n[01:55.024]佢冇时间迷茫 爱情错过却唔可再\n[01:57.774]从开始走到结尾哪个不会变大个\n[02:00.774]但春娇想要那个你又有谁可以劝阻\n[02:03.274]等待 UFO 纵有变数\n[02:06.027]最普通慨佢哋世上遍布\n[02:09.276]爱漫春天散落每个季节慨消耗\n[02:12.026]看着花瓣跌落过程撑得过衰老\n[02:13.026]欧：\n[02:18.026]重新出发吗 huh 更渴望未来\n[02:21.276]以往这少年懂爱吗\n[02:24.526]仿佛不够\n[02:29.027]成长会进化吗 也信念自由\n[02:32.777]我爱这少年讽刺吗\n[02:34.777]这花开吗\n[02:35.527]Garyu：\n[02:37.277]破碎婚姻里出身逼出佢慨硬净\n[02:40.027]佢再牺牲佢慨率真改变佢慨硬颈\n[02:42.780]戴眼镜慨佢明白波珠解决唔到逃避\n[02:45.780]要长大要负责任缩短两个人慨距离\n[02:49.479]美梦里学会感慨\n[02:51.229]你亦放肆你的爱\n[02:53.729]用力转载 越过比赛\n[02:58.729]为我掩盖 都因为爱\n[02:58.979]欧：\n[03:02.979]重新出发吗 huh 更渴望未来\n[03:06.729]以往这少年懂爱吗\n[03:09.479]仿佛不够\n[03:14.229]成长会进化吗 也信念自由\n[03:17.479]我爱这少年讽刺吗\n[03:19.223]这花开吗\n'
   ),
-  dt: 205000,
+  dt: 205000
 };
 
 export default function UseMusic() {
@@ -52,7 +53,6 @@ export default function UseMusic() {
   const [colIcon, setVolIcon] = useState('iconfont icon-24gf-volumeHigh');
   // 是否播放
   const [isPlay, setIsPlay] = useState('iconfont icon-play chc-iconfont');
-  // #endregion
 
   const fn = ({ singer, lyric, picUrl, songName, url, delay = 1500 }) => {
     setUrl(url);
@@ -123,7 +123,7 @@ export default function UseMusic() {
       // 顺序播放
       case 'icon-order':
         if (musicList.length > 1) {
-          let index = musicList.findIndex((item) => item.url === audio.current.id * 1);
+          let index = musicList.findIndex(item => item.url === audio.current.id * 1);
           if (index === musicList.length - 1) {
             setCurrentId(musicList[0].id);
             const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[0]);
@@ -167,7 +167,7 @@ export default function UseMusic() {
     }
   };
   // 点击歌词指定播放位置
-  const appointNode = (item) => {
+  const appointNode = item => {
     playFunction();
     let time = (item.time / 1000).toFixed(0);
     audio.current.currentTime = time;
@@ -178,7 +178,7 @@ export default function UseMusic() {
   // 下一首 ok
   const nextMusic = async () => {
     // 获取当前播放的歌曲索引
-    const index = musicList.findIndex((item) => item.id === audio.current.id * 1);
+    const index = musicList.findIndex(item => item.id === audio.current.id * 1);
     if (index === musicList.length - 1) {
       const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[0]);
       setCurrentId(musicList[0].id);
@@ -192,7 +192,7 @@ export default function UseMusic() {
   // 上一首 ok
   const prevMusic = async () => {
     // 获取当前播放的歌曲索引
-    const index = musicList.findIndex((item) => item.id === audio.current.id * 1);
+    const index = musicList.findIndex(item => item.id === audio.current.id * 1);
     if (index === 0) {
       return message.info('已经是第一首了哦！');
     }
@@ -218,7 +218,7 @@ export default function UseMusic() {
 
     setTimeout(() => {
       // 页面初始化 获取当前播放的歌曲索引
-      let index = musicList.findIndex((item) => item.id === audio.current.id * 1);
+      let index = musicList.findIndex(item => item.id === audio.current.id * 1);
       setCurrentIndex(index);
     }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -246,20 +246,20 @@ export default function UseMusic() {
     {
       title: '',
       width: '15%',
-      render: (text, record, index) => index + 1,
+      render: (text, record, index) => index + 1
     },
     {
       title: '单曲',
-      dataIndex: 'songName',
+      dataIndex: 'songName'
     },
     {
       title: '歌手',
-      dataIndex: 'singer',
+      dataIndex: 'singer'
     },
     {
       title: '',
       width: '10%',
-      render: (item) => time(item.dt),
+      render: item => time(item.dt)
     },
     {
       title: '',
@@ -269,14 +269,14 @@ export default function UseMusic() {
           item.id !== 6666666 && (
             <CloseCircleOutlined
               style={{ cursor: 'pointer' }}
-              onClick={(e) => {
+              onClick={e => {
                 delMusic(e, index);
               }}
             />
           )
         );
-      },
-    },
+      }
+    }
   ];
 
   const content = (
@@ -298,19 +298,19 @@ export default function UseMusic() {
         pagination={false}
         columns={columns}
         rowKey="id"
-        onRow={(record) => {
+        onRow={record => {
           return {
             onClick: () => {
               toplay(record);
               setCurrentId(record.id);
-            },
+            }
           };
         }}
       />
     </div>
   );
 
-  const toplay = async (record) => {
+  const toplay = async record => {
     if (record.id !== 6666666) {
       const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(record);
       return fn({ url, picUrl, songName, singer, lyric });
@@ -328,7 +328,7 @@ export default function UseMusic() {
     let arrList = JSON.parse(localStorage.getItem('musicList'));
     setMusicList(arrList);
     notification.success({
-      message: '已删除',
+      message: '已删除'
     });
   };
 
@@ -338,7 +338,7 @@ export default function UseMusic() {
     localStorage.setItem('musicList', JSON.stringify([initState]));
     setMusicList([]);
     notification.success({
-      message: '已清空',
+      message: '已清空'
     });
   };
 
@@ -366,7 +366,7 @@ export default function UseMusic() {
   // 改变音量
   const changeVolume = (
     <Slider
-      onChange={(value) => {
+      onChange={value => {
         Volume(value);
       }}
       max={100}
@@ -375,7 +375,7 @@ export default function UseMusic() {
     />
   );
 
-  const Volume = (value) => {
+  const Volume = value => {
     setCurrentVolume(value);
     audio.current.volume = value / 100;
     if (value === 0) {
@@ -385,47 +385,62 @@ export default function UseMusic() {
       setVolIcon('iconfont icon-24gf-volumeHigh');
     }
   };
+  // #endregion
 
   return (
-    <div>
-      <div id="aplayer">
+    <>
+      <Row id="aplayer" align="middle" gutter={[8, 0]}>
         {/* <!-- 海报 --> */}
-        <div
-          className="pic"
-          onClick={() => {
-            setVisible(true);
-          }}
-        >
-          <img src={picUrl || 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg'} alt="" />
-        </div>
+        <Col span={2}>
+          <Row justify="end" align="middle">
+            <Image
+              onClick={() => {
+                setVisible(true);
+              }}
+              width="3.8rem"
+              height="3.8rem"
+              src={picUrl || 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg'}
+              preview={false}
+            />
+          </Row>
+        </Col>
         {/* 歌曲信息 */}
-        <div className="musicinfo">
-          <span className="wordbreaks">{songName}</span>
-          <span className="wordbreaks">- {name}</span>
-        </div>
+        <Col span={2}>
+          <Col span={24} className="wordbreaks">
+            {songName}
+          </Col>
+          <Col span={24} className="wordbreaks" style={singer}>
+            - {name}
+          </Col>
+        </Col>
         {/* <!-- 播放插件 --> */}
-        <div className="play_plug">
-          <div
-            className="restartplay hover"
-            style={style}
-            onClick={() => {
-              resetMusic();
-            }}
-          >
-            <i className="iconfont icon-zhongxinkaishi"></i>
-          </div>
-          {/* 喜欢按钮 */}
-          <div
-            style={style}
-            className="hover love"
-            onClick={() => {
-              isLove();
-            }}
-          >
-            <i className="iconfont icon-xihuan" style={{ fontSize: '1.25rem' }}></i>
-          </div>
-          <div className="play_pause">
-            <div
+        <Col span={2}>
+          <Space size="middle">
+            <Col
+              className="restartplay hover"
+              style={style}
+              onClick={() => {
+                resetMusic();
+              }}
+            >
+              <i className="iconfont icon-zhongxinkaishi"></i>
+            </Col>
+            {/* 喜欢按钮 */}
+            <Col
+              style={style}
+              className="hover love"
+              onClick={() => {
+                isLove();
+              }}
+            >
+              <i className="iconfont icon-xihuan" style={{ fontSize: '1.25rem' }}></i>
+            </Col>
+          </Space>
+        </Col>
+
+        <Col flex={1}>
+          <Space size="large" style={{ width: '100%', justifyContent: 'center' }}>
+            <Col
               style={style}
               className="hover"
               onClick={() => {
@@ -433,8 +448,8 @@ export default function UseMusic() {
               }}
             >
               <i className="iconfont icon-prev"></i>
-            </div>
-            <div
+            </Col>
+            <Col
               style={style}
               className="hover"
               onClick={() => {
@@ -442,9 +457,8 @@ export default function UseMusic() {
               }}
             >
               <i className={isPlay}></i>
-            </div>
-
-            <div
+            </Col>
+            <Col
               style={style}
               className="hover"
               onClick={() => {
@@ -452,44 +466,51 @@ export default function UseMusic() {
               }}
             >
               <i className="iconfont icon-next"></i>
-            </div>
-          </div>
-          <div
-            className="playOrder order hover"
-            onClick={() => {
-              changePlayType();
-            }}
-            style={style}
-          >
-            <i className={`iconfont ${playType}`} style={{ color: '#707070' }}></i>
-          </div>
-          <div className="volumn hover" style={style}>
-            <Popover content={changeVolume} title="音量" trigger="hover">
-              <i
-                className={colIcon}
-                style={{ color: '#707070', fontSize: '1.25rem' }}
-                onClick={() => {
-                  volumn();
-                }}
-              ></i>
-            </Popover>
-          </div>
-          <div className="hover chc-music-list" style={style}>
-            <Popover content={content} title="音乐列表" trigger="hover" placement="topRight" overlayClassName="chc-popover-list">
-              <i className="iconfont icon-24gf-playlistMusic5"></i>
-            </Popover>
-          </div>
-        </div>
-        {/* <!-- 歌词按钮 --> */}
-        <div
-          className="icon-lyric hover"
-          style={style}
-          onClick={() => {
-            setVisible(true);
-          }}
-        >
-          <i className="iconfont icon-bottom lyric_btn"></i>
-        </div>
+            </Col>
+          </Space>
+        </Col>
+
+        <Col span={6}>
+          <Space size="middle">
+            <Col
+              className="playOrder order hover"
+              onClick={() => {
+                changePlayType();
+              }}
+              style={style}
+            >
+              <i className={`iconfont ${playType}`} style={{ color: '#707070' }}></i>
+            </Col>
+            <Col className="volumn hover" style={style}>
+              <Popover content={changeVolume} title="音量" trigger="hover">
+                <i
+                  className={colIcon}
+                  style={{ color: '#707070', fontSize: '1.25rem' }}
+                  onClick={() => {
+                    volumn();
+                  }}
+                ></i>
+              </Popover>
+            </Col>
+            <Col className="hover chc-music-list" style={style}>
+              <Popover content={content} title="音乐列表" trigger="hover" placement="topRight" overlayClassName="chc-popover-list">
+                <i className="iconfont icon-24gf-playlistMusic5"></i>
+              </Popover>
+            </Col>
+            {/* <!-- 歌词按钮 --> */}
+            <Col
+              span={1}
+              className="icon-lyric hover"
+              style={style}
+              onClick={() => {
+                setVisible(true);
+              }}
+            >
+              <i className="iconfont icon-bottom lyric_btn"></i>
+            </Col>
+          </Space>
+        </Col>
+
         {/* <!-- 音乐进度条 --> */}
         <Slider
           max={overTime}
@@ -499,12 +520,12 @@ export default function UseMusic() {
           tipFormatter={() => {
             return timer(currentTime);
           }}
-          onChange={(value) => {
+          onChange={value => {
             setCurrentTime(value);
             audio.current.currentTime = value;
           }}
         />
-      </div>
+      </Row>
 
       <Drawer
         title={name}
@@ -531,7 +552,7 @@ export default function UseMusic() {
                 value={currentTime}
                 className="progress"
                 tipFormatter={null}
-                onChange={(value) => {
+                onChange={value => {
                   setCurrentTime(value);
                   audio.current.currentTime = value;
                 }}
@@ -610,6 +631,6 @@ export default function UseMusic() {
         id={currentId}
         style={{ display: 'none' }}
       ></audio>
-    </div>
+    </>
   );
 }
