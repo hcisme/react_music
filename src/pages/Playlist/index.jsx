@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Avatar, Table, Tabs, Pagination, Image, message, notification, Button, Tag } from 'antd';
+import { Card, Avatar, Table, Tabs, Pagination, Image, message, Button, Tag } from 'antd';
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
-import { dayjs, time, distinct3 } from '../../utils/js/timeTool.js';
+import { dayjs, time } from '../../utils/js/timeTool.js';
 import { store } from '../../redux/store';
-import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
+import { commonPlayMusicFn, hearMusicInfo } from '../../redux/actions';
 import { UseComment } from '../../hooks';
 import './index.css';
+import { addMusicListFn } from '../../utils/addMusicList/index.js';
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -138,7 +139,7 @@ export default function PlayList() {
             ></i>
             <PlusCircleOutlined
               onClick={e => {
-                addMusicList(e, item);
+                addMusicListFn({ e, record: item });
               }}
             />
           </div>
@@ -151,39 +152,6 @@ export default function PlayList() {
     navigate('/home/song');
     let data = await hearMusicInfo(item);
     store.dispatch(data);
-  };
-
-  const addMusicList = async (e, item) => {
-    e.stopPropagation();
-    let localData = JSON.parse(localStorage.getItem('musicList'));
-    if (localData !== null) {
-      localData.unshift(item);
-      // 数组中 对象 查重
-      let newArr = distinct3(localData);
-
-      // 单曲名 歌手名 时长 id
-      const dealMusicList = newArr.map(item => {
-        if (item.id !== 6666666) {
-          return {
-            ...item,
-            songName: item?.name,
-            singer: item.ar?.map(v => v.name).join(' / '),
-            dt: item?.dt,
-            picUrl: item?.al?.picUrl
-          };
-        }
-        return item;
-      });
-
-      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
-
-      if (newArr[0].id !== 6666666) {
-        notification.success({
-          message: '已成功添加到音乐列表'
-        });
-      }
-    }
-    store.dispatch(statusChange());
   };
 
   const handlePlayMusic = async record => {
@@ -209,38 +177,6 @@ export default function PlayList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const playAllMusic = async () => {
-    let localData = JSON.parse(localStorage.getItem('musicList'));
-    if (localData !== null) {
-      localData.unshift(...dataSource);
-      // 数组中 对象 查重
-      let newArr = distinct3(localData);
-
-      // 单曲名 歌手名 时长 id
-      const dealMusicList = newArr.map(item => {
-        if (item.id !== 6666666) {
-          return {
-            ...item,
-            songName: item?.name,
-            singer: item.ar?.map(v => v.name).join(' / '),
-            dt: item?.dt,
-            picUrl: item?.al?.picUrl
-          };
-        }
-        return item;
-      });
-
-      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
-
-      if (newArr[0].id !== 6666666) {
-        notification.success({
-          message: '已成功添加到音乐列表'
-        });
-      }
-    }
-    store.dispatch(statusChange());
-  };
-
   return (
     <div className="playlist">
       <Card
@@ -256,7 +192,7 @@ export default function PlayList() {
               <Button
                 type="danger"
                 onClick={() => {
-                  playAllMusic();
+                  addMusicListFn({ dataSource });
                 }}
               >
                 播放全部

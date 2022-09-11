@@ -4,7 +4,7 @@ import { Avatar, Card, Comment, Menu, Divider, BackTop, Popover, Descriptions } 
 import { GithubOutlined } from '@ant-design/icons';
 import { time, dayjs } from '../../utils/js/timeTool';
 import { store } from '../../redux/store';
-import { HearFromHomeInfo } from '../../redux/actions';
+import { commonPlayMusicFn } from '../../redux/actions';
 import { UseMusic } from '../../hooks';
 import './index.css';
 
@@ -49,7 +49,7 @@ export default function UserInfo() {
   };
 
   const toPlay = async record => {
-    const info = await HearFromHomeInfo(record);
+    const info = await commonPlayMusicFn(record);
     store.dispatch(info);
   };
 

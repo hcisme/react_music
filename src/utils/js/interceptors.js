@@ -12,7 +12,6 @@ NProgress.configure({
 });
 
 Axios.defaults.baseURL = '/api';
-// Axios.defaults.baseURL = 'http://81.68.248.232:3000';
 
 // 请求拦截器(处理请求数据)
 Axios.interceptors.request.use(

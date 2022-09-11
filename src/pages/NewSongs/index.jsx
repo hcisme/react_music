@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, Table, message, notification } from 'antd';
+import { Menu, Table, message, Row, Col } from 'antd';
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
 import { store } from '../../redux/store';
-import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
-// 查重
-import { distinct3 } from '../../utils/js/timeTool.js';
+import { commonPlayMusicFn, hearMusicInfo } from '../../redux/actions';
 // 导入处理时间的函数
 import { time } from '../../utils/js/timeTool.js';
+import { addMusicListFn } from '../../utils/addMusicList';
 import './index.css';
 
 export default function NewSongs() {
@@ -16,17 +15,17 @@ export default function NewSongs() {
   const [cat, setCat] = useState('0');
   const [dataSource, setDataSource] = useState([]);
 
-  const handleClickToggle = (e) => {
+  const handleClickToggle = e => {
     setCat(e.key);
   };
 
   const getMusicList = () => {
-    React.$apis.getLists(cat).then((val) => {
+    React.$apis.getLists(cat).then(val => {
       setDataSource(val);
     });
   };
 
-  const handlePlayMusic = async (record) => {
+  const handlePlayMusic = async record => {
     const musicInfo = await commonPlayMusicFn(record);
     store.dispatch(musicInfo);
   };
@@ -43,23 +42,23 @@ export default function NewSongs() {
     {
       title: '封面',
       align: 'center',
-      render: (item) => {
+      render: item => {
         return (
           <>
             <img className="poster" src={item.album.picUrl} alt="" />
             <PlayCircleTwoTone className="PlayCircleTwoTone" />
           </>
         );
-      },
+      }
     },
     {
       title: '音乐标题',
       align: 'center',
-      render: (item) => {
+      render: item => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <span
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 play(item);
               }}
@@ -71,7 +70,7 @@ export default function NewSongs() {
               <span
                 className="iconfont icon-movie-line"
                 style={{ color: 'red', padding: 3, cursor: 'pointer' }}
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   e.nativeEvent.stopImmediatePropagation();
                   navigate(`/home/mv/${item.mvid}`);
@@ -84,88 +83,55 @@ export default function NewSongs() {
             {item.fee === 1 ? <span className="iconfont icon-VIP" style={{ color: 'red', fontSize: 25, fontWeight: 500 }}></span> : ''}
           </div>
         );
-      },
+      }
     },
     {
       title: '歌手',
       align: 'center',
-      render: (item) => {
+      render: item => {
         return <span>{item.album.artists[0].name}</span>;
-      },
+      }
     },
     {
       title: '专辑',
       align: 'center',
-      render: (item) => {
+      render: item => {
         return <span>{item.album.name}</span>;
-      },
+      }
     },
     {
       title: '时长',
       align: 'center',
-      render: (item) => {
+      render: item => {
         return <span>{time(item.duration)}</span>;
-      },
+      }
     },
     {
       title: '',
-      render: (item) => {
+      render: item => {
         return (
           <div style={{ display: 'flex', alignItems: 'center', columnGap: '1.25rem' }}>
             <i
               className="iconfont icon-xihuan"
-              onClick={(e) => {
+              onClick={e => {
                 isLove(e, item);
               }}
             ></i>
             <PlusCircleOutlined
-              onClick={(e) => {
-                addMusicList(e, item);
+              onClick={e => {
+                addMusicListFn({ e, record: item });
               }}
             />
           </div>
         );
-      },
-    },
+      }
+    }
   ];
 
-  const play = async (item) => {
+  const play = async item => {
     navigate('/home/song');
     let data = await hearMusicInfo(item);
     store.dispatch(data);
-  };
-
-  const addMusicList = async (e, item) => {
-    e.stopPropagation();
-    let localData = JSON.parse(localStorage.getItem('musicList'));
-    if (localData !== null) {
-      localData.unshift(item);
-      // 数组中 对象 查重
-      let newArr = distinct3(localData);
-
-      // 单曲名 歌手名 时长 id
-      const dealMusicList = newArr.map(item => {
-        if (item.id !== 6666666) {
-          return {
-            ...item,
-            songName: item?.name,
-            singer: item.artists?.map(v => v.name).join(' / '),
-            dt: item?.duration,
-            picUrl: item?.album?.blurPicUrl
-          };
-        }
-        return item
-      });
-
-      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
-
-      if (newArr[0].id !== 6666666) {
-        notification.success({
-          message: '已成功添加到音乐列表'
-        });
-      }
-    }
-    store.dispatch(statusChange());
   };
 
   useEffect(() => {
@@ -174,11 +140,12 @@ export default function NewSongs() {
   }, [cat]);
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+    <Row gutter={[0, 16]}>
+      <Col span={24}>
         <Menu
+          style={{ width: '100%' }}
           mode="horizontal"
-          onSelect={(e) => {
+          onSelect={e => {
             handleClickToggle(e);
           }}
           selectedKeys={cat}
@@ -189,22 +156,24 @@ export default function NewSongs() {
           <Menu.Item key="8">日本</Menu.Item>
           <Menu.Item key="16">韩国</Menu.Item>
         </Menu>
-      </div>
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        rowKey={(item) => item.id}
-        pagination={{
-          pageSize: 25,
-        }}
-        onRow={(record) => {
-          return {
-            onClick: () => {
-              handlePlayMusic(record);
-            }, // 点击行
-          };
-        }}
-      />
-    </div>
+      </Col>
+      <Col span={24}>
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          rowKey="id"
+          pagination={{
+            pageSize: 25
+          }}
+          onRow={record => {
+            return {
+              onClick: () => {
+                handlePlayMusic(record);
+              } // 点击行
+            };
+          }}
+        />
+      </Col>
+    </Row>
   );
 }

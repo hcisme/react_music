@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PageHeader, Descriptions, Button, message } from 'antd';
+import { PageHeader, Descriptions, Button, message, Row, Col, Space } from 'antd';
 import { store } from '../../redux/store';
 import { commonPlayMusicFn } from '../../redux/actions';
 import { handleLyric } from '../../hooks/UseMusic/tools/setLyrc';
@@ -12,6 +12,7 @@ export default function MusicInfo() {
 
   const getLyric = async () => {
     const data = await React.$apis.request('get', '/lyric', { id: store.getState()?.deliverMusicInfo?.data?.id });
+    console.log(store.getState()?.deliverMusicInfo?.data);
     setMusicLyric(data);
   };
 
@@ -28,9 +29,8 @@ export default function MusicInfo() {
   // 喜欢
   const isLove = async () => {
     const res = await React.$apis.request('get', '/like', { id: musicObj.id, like: 'true' });
-    if (res.code === 200) {
-      message.success('该音乐已添加到喜欢列表');
-    }
+    if (res.code === 200) message.success('该音乐已添加到喜欢列表');
+    message.info('您的操作有误');
   };
 
   useEffect(() => {
@@ -47,45 +47,44 @@ export default function MusicInfo() {
   }, []);
 
   return (
-    <div className="singermusicinfo">
-      <div className="header">
-        <div
-          className="picyrl"
-          style={{ width: '14rem', height: '14rem', borderRadius: '50%', background: '#f5f5f5', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+    <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
+      <Col span={12}>
+        <Row justify="end">
+          <Row justify="center" align="middle" style={{ width: '14rem', height: '14rem', borderRadius: '50%', background: '#f5f5f5' }}>
+            <img
+              src={musicObj?.picUrl || musicObj?.al?.picUrl || musicObj?.album?.blurPicUrl}
+              alt=""
+              style={{ width: '10.125rem', height: '10.125rem', borderRadius: '50%' }}
+            />
+          </Row>
+        </Row>
+      </Col>
+      {/* 歌曲介绍 */}
+      <Col span={12} className="site-page-header-ghost-wrapper">
+        <PageHeader
+          ghost={false}
+          title={musicObj?.song?.name || musicObj?.name}
+          subTitle={
+            musicObj?.song?.artists[0]?.name ||
+            musicObj?.ar?.map(item => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>) ||
+            musicObj?.artists?.map(item => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>)
+          }
         >
-          <img
-            src={musicObj?.picUrl || musicObj?.al?.picUrl || musicObj?.album?.blurPicUrl}
-            alt=""
-            style={{ width: '10.125rem', height: '10.125rem', borderRadius: '50%' }}
-          />
-        </div>
-        {/* 歌曲介绍 */}
-        <div className="site-page-header-ghost-wrapper">
-          <PageHeader
-            ghost={false}
-            title={musicObj?.song?.name || musicObj?.name}
-            subTitle={
-              musicObj?.song?.artists[0]?.name ||
-              musicObj?.ar?.map(item => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>) ||
-              musicObj?.artists?.map(item => <span key={item.id}>{item.name}&nbsp;&nbsp;&nbsp;</span>)
-            }
-          >
-            <Descriptions size="small" column={3}>
-              <Descriptions.Item label="专辑" style={{ display: 'block' }}>
-                {musicObj?.song?.album.name || musicObj?.al?.name || musicObj?.album?.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="歌词翻译" style={{ display: 'block' }}>
-                {musicLyric?.transUser?.nickname ? musicLyric?.transUser?.nickname : '暂无'}
-              </Descriptions.Item>
-              <Descriptions.Item style={{ display: 'block', marginTop: '1.563rem', marginBottom: '3.125rem' }}>
+          <Descriptions size="small" column={1}>
+            <Descriptions.Item label="专辑">{musicObj?.song?.album.name || musicObj?.al?.name || musicObj?.album?.name}</Descriptions.Item>
+            <Descriptions.Item label="歌词翻译">{musicLyric?.transUser?.nickname ? musicLyric?.transUser?.nickname : '暂无'}</Descriptions.Item>
+            <Descriptions.Item>
+              <Space size="large">
                 <Button
                   type="primary"
-                  style={{ marginRight: '1.563rem' }}
                   onClick={() => {
                     play();
                   }}
                 >
-                  播放 <i className="iconfont icon-play" style={{ paddingLeft: '.375rem' }}></i>
+                  <Space align="small" size={3}>
+                    <span>播放</span>
+                    <i className="iconfont icon-play"></i>
+                  </Space>
                 </Button>
                 <Button
                   type="primary"
@@ -96,41 +95,43 @@ export default function MusicInfo() {
                 >
                   喜欢 ❤
                 </Button>
-              </Descriptions.Item>
-              <Descriptions.Item label="" style={{ display: 'block' }}>
-                {/* 歌词 */}
-                <div>
-                  {handleLyric(musicLyric?.lrc?.lyric)
-                    ?.slice(0, showRow)
-                    .map(item => {
-                      return (
-                        <div key={Math.random()} style={{ fontSize: '.938rem', padding: '.313rem' }}>
-                          {item.text}
-                        </div>
-                      );
-                    })}
-                </div>
-              </Descriptions.Item>
+              </Space>
+            </Descriptions.Item>
+            <Descriptions.Item>
+              {/* 歌词 */}
+              <Space direction="vertical">
+                {handleLyric(musicLyric?.lrc?.lyric)
+                  ?.slice(0, showRow)
+                  .map((item, index) => {
+                    return (
+                      <Col key={index} style={{ fontSize: 17 }}>
+                        {item.text}
+                      </Col>
+                    );
+                  })}
+              </Space>
+            </Descriptions.Item>
+            <Descriptions>
+              <span
+                style={{ cursor: 'pointer', color: '#40a9ff' }}
+                onClick={() => {
+                  showAllRow();
+                }}
+              >
+                {showRow === 10 ? (
+                  <div style={{ textAlign: 'center' }}>
+                    展开 <i className="iconfont icon-bottom"></i>
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center' }}>
+                    收起 <i className="iconfont icon-bottom" style={{ display: 'inline-block', transform: 'rotate(180deg)' }}></i>
+                  </div>
+                )}
+              </span>
             </Descriptions>
-          </PageHeader>
-        </div>
-      </div>
-      <span
-        style={{ cursor: 'pointer', color: '#40a9ff' }}
-        onClick={() => {
-          showAllRow();
-        }}
-      >
-        {showRow === 10 ? (
-          <div style={{ textAlign: 'center' }}>
-            展开 <i className="iconfont icon-bottom"></i>
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center' }}>
-            收起 <i className="iconfont icon-bottom" style={{ display: 'inline-block', transform: 'rotate(180deg)' }}></i>
-          </div>
-        )}
-      </span>
-    </div>
+          </Descriptions>
+        </PageHeader>
+      </Col>
+    </Row>
   );
 }

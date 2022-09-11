@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Carousel, Divider, Table, Image, message, notification } from 'antd';
+import { Carousel, Divider, Table, Image, message, Row, Col } from 'antd';
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
 import { store } from '../../redux/store';
-import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
-import { distinct3 } from '../../utils/js/timeTool.js';
+import { commonPlayMusicFn, hearMusicInfo } from '../../redux/actions';
 import { UseCard } from '../../hooks';
-import './index.css';
 // 导入处理时间的函数
 import { time } from '../../utils/js/timeTool.js';
+import { addMusicListFn } from '../../utils';
+import './index.css';
 
 export default function Discovery() {
   let navigate = useNavigate();
@@ -114,7 +114,7 @@ export default function Discovery() {
             ></i>
             <PlusCircleOutlined
               onClick={e => {
-                addMusicList(e, item);
+                addMusicListFn({ e, record: item });
               }}
             />
           </div>
@@ -122,38 +122,6 @@ export default function Discovery() {
       }
     }
   ];
-
-  const addMusicList = async (e, item) => {
-    e.stopPropagation();
-    let localData = JSON.parse(localStorage.getItem('musicList'));
-    if (localData !== null) {
-      localData.unshift(item);
-      // 数组中 对象 查重
-      const newArr = distinct3(localData);
-      // 单曲名 歌手名 时长 id
-      const dealMusicList = newArr.map(item => {
-        if (item.id !== 6666666) {
-          return {
-            ...item,
-            songName: item.name,
-            singer: item.song?.artists?.map(v => v.name).join(' / '),
-            dt: item.song?.duration,
-            picUrl: item.picUrl
-          };
-        }
-        return item;
-      });
-
-      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
-
-      if (newArr[0].id !== 6666666) {
-        notification.success({
-          message: '已成功添加到音乐列表'
-        });
-      }
-    }
-    store.dispatch(statusChange());
-  };
 
   useEffect(() => {
     getbanner();
@@ -187,13 +155,13 @@ export default function Discovery() {
       <Divider orientation="left" plain>
         发现歌单
       </Divider>
-      <div className="recommandplaylists">
+      <Row className="recommandplaylists" gutter={{ xs: 8, sm: 16, md: 24 }}>
         {playLists.map(item => (
-          <div key={item.id}>
+          <Col xs={12} sm={8} md={6} lg={4} key={item.id}>
             <UseCard id={item.id} picUrl={item.picUrl} name={item.name} alg={item.alg} />
-          </div>
+          </Col>
         ))}
-      </div>
+      </Row>
       <Divider orientation="left" plain>
         发现音乐
       </Divider>

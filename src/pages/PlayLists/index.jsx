@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Menu, Card, Image, Skeleton, Pagination } from 'antd';
+import { Menu, Card, Image, Skeleton, Pagination, Row, Col, Typography, Tag } from 'antd';
 import { UseCard } from '../../hooks';
 import './index.css';
 
 const { Meta } = Card;
+const { Paragraph } = Typography;
 
 const type = [
   { value: '全部' },
@@ -23,7 +24,6 @@ const type = [
 ];
 
 export default function PlayLists() {
-  const [loading, setLoading] = useState(true);
   const [cat, setCat] = useState('全部');
   const [topData, setTopData] = useState({});
   const [listData, setListData] = useState([]);
@@ -41,7 +41,6 @@ export default function PlayLists() {
     React.$apis.listDatas(page, cat).then(val => {
       setListData(val.playlists);
       setTotal(val.total);
-      setLoading(false);
     });
   };
 
@@ -58,29 +57,25 @@ export default function PlayLists() {
   }, [cat]);
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      getTopData();
-      setLoading(false);
-    }, 700);
+    getTopData();
     getListData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="playlists">
-      <div className="header">
+    <Row className="playlists" gutter={[0, 16]}>
+      <Col span={24}>
         <Card>
-          <Skeleton loading={loading} avatar active>
+          <Skeleton loading={false} avatar active>
             <Meta
               avatar={<Image src={topData.coverImgUrl} style={{ width: 165, height: 165, borderRadius: 5 }} alt="加载失败请重试" />}
               title={topData.name}
-              description={topData.description}
+              description={<Paragraph ellipsis={{ rows: 7, expandable: true, symbol: <Tag color="blue">展开</Tag> }}>{topData.description}</Paragraph>}
             />
           </Skeleton>
         </Card>
-      </div>
-      <div className="navigate">
+      </Col>
+      <Col span={24}>
         <Menu
           mode="horizontal"
           selectedKeys={cat}
@@ -92,15 +87,17 @@ export default function PlayLists() {
             <Menu.Item key={item.value}>{item.value}</Menu.Item>
           ))}
         </Menu>
-      </div>
-      <div className="items">
-        {listData.map(item => (
-          <div key={item.id}>
-            <UseCard id={item.id} picUrl={item.coverImgUrl} name={item.name} alg={item.creator?.nickname} />
-          </div>
-        ))}
-      </div>
-      <div className="page">
+      </Col>
+      <Col span={24}>
+        <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
+          {listData.map(item => (
+            <Col xs={12} sm={8} md={6} lg={4} key={item.id}>
+              <UseCard id={item.id} picUrl={item.coverImgUrl} name={item.name} alg={item.creator?.nickname} />
+            </Col>
+          ))}
+        </Row>
+      </Col>
+      <Col span={24} style={{ textAlign: 'center' }}>
         <Pagination
           current={page}
           total={total}
@@ -109,7 +106,7 @@ export default function PlayLists() {
             setPage(current);
           }}
         />
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 }

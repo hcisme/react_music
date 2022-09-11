@@ -1,57 +1,58 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Input, Popover, List, Typography, Avatar, message, Spin } from 'antd'
-import { SearchOutlined } from '@ant-design/icons'
-import { store } from '../../../redux/store'
-import { commonPlayMusicFn } from '../../../redux/actions'
-import './index.css'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Input, Popover, List, Typography, Avatar, message, Spin } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { store } from '../../../redux/store';
+import { commonPlayMusicFn } from '../../../redux/actions';
+import './index.css';
 
-const { Search } = Input
+const { Search } = Input;
+const { Paragraph } = Typography;
 
 export default function SearchPage() {
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
-  const [defaultWord, setDefaultWord] = useState({})
-  const [HotWord, setHotWord] = useState([])
-  const [occs, setOccs] = useState({})
-  const [isHid, setIsHid] = useState('block')
-  const [isShow, setIsShow] = useState(true)
-  const [timer, setTimer] = useState(null)
+  const [defaultWord, setDefaultWord] = useState({});
+  const [HotWord, setHotWord] = useState([]);
+  const [occs, setOccs] = useState({});
+  const [isHid, setIsHid] = useState('block');
+  const [isShow, setIsShow] = useState(true);
+  const [timer, setTimer] = useState(null);
 
-  const handleSubmit = (e) => {
-    if (e === '') return message.info('请写入搜索信息')
-    navigate(`/home/result/${e}`)
-    setIsHid('none')
-  }
+  const handleSubmit = e => {
+    if (e === '') return message.info('请写入搜索信息');
+    navigate(`/home/result/${e}`);
+    setIsHid('none');
+  };
 
   const getDefauoltword = () => {
-    React.$apis.defaultWord().then((val) => {
-      setDefaultWord(val)
-    })
-  }
+    React.$apis.defaultWord().then(val => {
+      setDefaultWord(val);
+    });
+  };
 
   const showList = () => {
-    React.$apis.hotSearch().then((val) => {
-      setHotWord(val)
-      setIsShow(false)
-    })
-  }
+    React.$apis.hotSearch().then(val => {
+      setHotWord(val);
+      setIsShow(false);
+    });
+  };
 
-  const getSuggestion = (e) => {
-    setIsShow(true)
-    setIsHid('none')
+  const getSuggestion = e => {
+    setIsShow(true);
+    setIsHid('none');
     if (e.target.value === '') {
-      setIsHid('block')
+      setIsHid('block');
     }
-    React.$apis.searchSuggest(e.target.value).then((val) => {
-      setOccs(val)
-      setIsShow(false)
-    })
-  }
+    React.$apis.searchSuggest(e.target.value).then(val => {
+      setOccs(val);
+      setIsShow(false);
+    });
+  };
 
   useEffect(() => {
-    getDefauoltword()
-  }, [])
+    getDefauoltword();
+  }, []);
 
   const content = (
     <Spin spinning={isShow}>
@@ -65,14 +66,23 @@ export default function SearchPage() {
             <span className="chc-span" style={{ padding: 5 }}>
               {index + 1}.
             </span>
-            <List.Item.Meta avatar={item.iconUrl === null ? '' : <img src={item.iconUrl} alt="" style={{ width: 27, height: 20, display: 'block' }} />} title={<a href={`/home/result/${item.searchWord}`}>{item.searchWord}</a>} description={item.content === '' ? '' : item.content} />
+            <List.Item.Meta
+              style={{ alignItems: 'center' }}
+              avatar={item.iconUrl === null ? '' : <img src={item.iconUrl} alt="" style={{ width: 30, height: 14 }} />}
+              title={<a href={`/home/result/${item.searchWord}`}>{item.searchWord}</a>}
+              description={
+                <Paragraph ellipsis={{ rows: 2, tooltip: item.content }} style={{ fontStyle: 'normal', fontSize: 13, opacity: 0.8 }}>
+                  {item.content}
+                </Paragraph>
+              }
+            />
             <div className="iconfont icon-zuixinhuodong" style={{ color: 'red' }}></div>
             <div style={{ color: '#dd5356' }}>{item.score}</div>
           </List.Item>
         )}
       />
     </Spin>
-  )
+  );
 
   const searchArticle = (
     <Spin spinning={isShow}>
@@ -82,18 +92,18 @@ export default function SearchPage() {
           header={<div>单曲</div>}
           bordered
           dataSource={occs?.songs}
-          renderItem={(item) => (
+          renderItem={item => (
             <List.Item
-              onClick={ async () => {
+              onClick={async () => {
                 let data = await commonPlayMusicFn(item);
-                store.dispatch(data)
+                store.dispatch(data);
               }}
               style={{ cursor: 'pointer' }}
             >
               <Typography.Text mark>{item.name}</Typography.Text>
               <div>
-                {item.artists?.map((record) => {
-                  return record.name
+                {item.artists?.map(record => {
+                  return record.name;
                 })}
               </div>
             </List.Item>
@@ -104,7 +114,7 @@ export default function SearchPage() {
           header={<div>歌单</div>}
           bordered
           dataSource={occs?.playlists}
-          renderItem={(item) => (
+          renderItem={item => (
             <List.Item onClick={() => navigate(`/home/playlist/${item.id}`)} style={{ cursor: 'pointer' }}>
               <Typography.Text mark>{item.name}</Typography.Text>
             </List.Item>
@@ -115,7 +125,7 @@ export default function SearchPage() {
           header={<div>歌手</div>}
           bordered
           dataSource={occs?.artists}
-          renderItem={(item) => (
+          renderItem={item => (
             <List.Item>
               <Avatar src={item.img1v1Url} />
               <Typography.Text mark>{item.name}</Typography.Text>
@@ -127,7 +137,7 @@ export default function SearchPage() {
           header={<div>专辑</div>}
           bordered
           dataSource={occs?.albums}
-          renderItem={(item) => (
+          renderItem={item => (
             <List.Item onClick={() => message.info('暂未开发')} style={{ cursor: 'pointer' }}>
               <Typography.Text mark>{item.name}</Typography.Text>
               <Avatar style={{ marginLeft: 'auto' }} src={item.artist.picUrl} />
@@ -137,33 +147,39 @@ export default function SearchPage() {
         />
       </List>
     </Spin>
-  )
+  );
 
   return (
     <div className="search">
-      <Popover className="chc-popover" placement="bottom" content={isHid === 'none' ? searchArticle : content} title={isHid === 'none' ? '猜你想搜' : '热搜'} trigger="focus">
+      <Popover
+        className="chc-popover"
+        placement="bottom"
+        content={isHid === 'none' ? searchArticle : content}
+        title={isHid === 'none' ? '猜你想搜' : '热搜'}
+        trigger="focus"
+      >
         <Search
           placeholder={defaultWord.showKeyword}
           suffix={<SearchOutlined />}
-          onSearch={(e) => {
-            handleSubmit(e)
+          onSearch={e => {
+            handleSubmit(e);
           }}
           onFocus={() => {
-            showList()
+            showList();
           }}
-          onChange={(e) => {
+          onChange={e => {
             // 防抖
             if (timer !== null) {
-              clearTimeout(timer)
+              clearTimeout(timer);
             }
             setTimer(
               setTimeout(() => {
-                getSuggestion(e)
+                getSuggestion(e);
               }, 500)
-            )
+            );
           }}
         />
       </Popover>
     </div>
-  )
+  );
 }

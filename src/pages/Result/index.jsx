@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Pagination, Descriptions, Table, Tabs, Skeleton, message, notification } from 'antd';
+import { Pagination, Descriptions, Table, Tabs, Skeleton, message, Col, Row } from 'antd';
 import { PlayCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
 import { UseCard } from '../../hooks';
 import { time } from '../../utils/js/timeTool';
-import { commonPlayMusicFn, statusChange, hearMusicInfo } from '../../redux/actions';
-import { distinct3 } from '../../utils/js/timeTool.js';
+import { commonPlayMusicFn, hearMusicInfo } from '../../redux/actions';
 import { store } from '../../redux/store';
+import { addMusicListFn } from '../../utils/addMusicList';
 import './index.css';
 
 const { TabPane } = Tabs;
@@ -112,7 +112,7 @@ export default function Result() {
             ></i>
             <PlusCircleOutlined
               onClick={e => {
-                addMusicList(e, item);
+                addMusicListFn({ e, record: item });
               }}
             />
           </div>
@@ -120,39 +120,6 @@ export default function Result() {
       }
     }
   ];
-
-  const addMusicList = async (e, item) => {
-    e.stopPropagation();
-    const localData = JSON.parse(localStorage.getItem('musicList'));
-    if (localData !== null) {
-      localData.unshift(item);
-      // 数组中 对象 查重
-      const newArr = distinct3(localData);
-
-      // 单曲名 歌手名 时长 id
-      const dealMusicList = newArr.map(item => {
-        if (item.id !== 6666666) {
-          return {
-            ...item,
-            songName: item?.name,
-            singer: item.ar?.map(v => v.name).join(' / '),
-            dt: item?.dt,
-            picUrl: item?.al?.picUrl
-          };
-        }
-        return item;
-      });
-
-      localStorage.setItem('musicList', JSON.stringify(dealMusicList));
-
-      if (newArr[0].id !== 6666666) {
-        notification.success({
-          message: '已成功添加到音乐列表'
-        });
-      }
-    }
-    store.dispatch(statusChange());
-  };
 
   useEffect(() => {
     getSearchResult();
@@ -206,16 +173,16 @@ export default function Result() {
 
   // playlists
   const renderPlaylistsLst = (
-    <div className="playlists">
+    <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
       {dataSource.map(item => {
         const { id, coverImgUrl, name, creator: { nickname = '' } = {} } = item;
         return (
-          <div key={id}>
+          <Col xs={12} sm={8} md={6} lg={4} key={item.id}>
             <UseCard id={id} picUrl={coverImgUrl} name={name} alg={nickname} />
-          </div>
+          </Col>
         );
       })}
-    </div>
+    </Row>
   );
 
   const play = async item => {

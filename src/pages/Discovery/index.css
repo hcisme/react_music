@@ -11,12 +11,12 @@
   height: 30% !important;
 }
 
-.discovery .recommandplaylists {
+/* .discovery .recommandplaylists {
   display: grid;
   grid-template-columns: repeat(auto-fill, 210px);
   justify-content: space-between;
   gap: 44px 34px;
-}
+} */
 
 .discovery .recommandplaylists .item:hover .anticon-play-circle {
   opacity: 0.6 !important;
@@ -49,23 +49,4 @@
 
 .discovery .recommandmusic .ant-table-row:hover .coverImg .PlayCircleTwoTone {
   opacity: 1;
-}
-
-@media screen and (max-width: 450px) {
-  .discovery .recommandplaylists {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 160px);
-    justify-content: space-around;
-    justify-items: center;
-    gap: .625rem;
-  }
-
-  .discovery .recommandmvs .item .anticon-play-circle,
-    .discovery .recommandplaylists .item .anticon-play-circle {
-    opacity: 0.6 !important;
-  }
-
-  .discovery .recommandmvs {
-    justify-content: center;
-  }
 }

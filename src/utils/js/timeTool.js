@@ -50,20 +50,7 @@ export const playCount = (playcount = 12312312313) => {
   }
 };
 
-// 数组中 对象 查重
-// export function distinct3(arr) {
-//   for (let i = 0; i < arr.length; i++) {
-//     for (let j = i + 1; j < arr.length; j++) {
-//       if (arr[i].id === arr[j].id) {
-//         arr.splice(j, 1);
-//         j = j - 1;
-//       }
-//     }
-//   }
-//   return arr;
-// }
-
-export function distinct3(arr) {
+export function distinct(arr) {
   let ids = [];
   return arr.filter((item) => {
     if (ids.indexOf(item.id) === -1) {

@@ -4,7 +4,8 @@ import { CloseCircleOutlined } from '@ant-design/icons';
 import { time, timer } from '../../utils/js/timeTool.js';
 import { handleLyric } from './tools/setLyrc.js';
 import { store } from '../../redux/store/index.js';
-import { commonPlayMusicFn } from '../../redux/actions/index.js';
+import { commonPlayMusicFn } from '../../redux/actions';
+import { HEARFROM, CHANGE } from '../../redux/constant';
 import './index.css';
 
 const style = { width: '2.188rem', height: '2.188rem', lineHeight: '2.188rem', textAlign: 'center', borderRadius: '.313rem' };
@@ -40,8 +41,6 @@ export default function UseMusic() {
   const [picUrl, setPicUrl] = useState('https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg');
   const [lyric, setLyric] = useState([]);
   const [musicList, setMusicList] = useState([]);
-  // 引起音乐列表更新的值
-  const [num, setNum] = useState(0);
   // 播放类型
   const [playType, setPlayType] = useState('icon-order');
   // 获取当前播放的歌曲索引
@@ -225,21 +224,14 @@ export default function UseMusic() {
   }, []);
 
   store.subscribe(() => {
-    if (store.getState()?.mainReducer?.id && store.getState()?.mainReducer?.id !== 6666666) {
+    if (store.getState()?.mainReducer?.type === HEARFROM) {
       const { singer, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
-      const newPicUrl = picUrl || 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg';
       setMusicList(JSON.parse(localStorage.getItem('musicList')));
-      fn({ url, picUrl: newPicUrl, songName, singer, lyric, delay: 1000 });
-    } else {
-      setNum(store.getState()?.mainReducer.num);
+      fn({ url, picUrl: picUrl || 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg', songName, singer, lyric, delay: 1000 });
+    } else if (store.getState()?.mainReducer?.type === CHANGE) {
+      setMusicList(JSON.parse(localStorage.getItem('musicList')));
     }
   });
-
-  useEffect(() => {
-    if (num !== 0) {
-      setMusicList(JSON.parse(localStorage.getItem('musicList')));
-    }
-  }, [num]);
 
   // 音乐列表
   const columns = [
@@ -627,10 +619,10 @@ export default function UseMusic() {
           ended();
         }}
         ref={audio}
-        src={url}
+        src={`https:${url.split(':')[1]}`}
         id={currentId}
         style={{ display: 'none' }}
-      ></audio>
+      />
     </>
   );
 }
