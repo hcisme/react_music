@@ -1,20 +1,8 @@
 .top {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  /* position: fixed;
-  top: 0;
-  left: 0;
-  right: 0; */
-  width: 100%;
-  height: 55px;
+  height: 60px;
   background-color: #e6f7ff;
   backdrop-filter: saturate(180%) blur(20px);
   z-index: 999;
-}
-
-.top .direction {
-  margin-left: 50px;
 }
 
 .top .direction i {
@@ -22,40 +10,16 @@
   border-radius: 50%;
   font-size: 20px;
   padding: 3px;
+  transition: .4s;
 }
 
 .top .direction i:hover {
   background-color: #59adea;
 }
 
-.top .sign {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-left: 35px;
-}
-
-.top .sign img {
-  width: 100%;
-  height: 100%;
-}
-
-.top .search {
-  width: 290px;
-  margin-left: 30px;
-}
-
 .top .login {
-  margin-left: auto;
   font-size: 15px;
   cursor: pointer;
-  margin-right: 35px;
-}
-
-.top .chc-avatar {
-  margin-left: auto;
-  cursor: pointer;
-  margin-right: 35px;
 }
 
 @media screen and (max-width: 450px) {

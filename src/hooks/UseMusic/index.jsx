@@ -6,10 +6,11 @@ import { handleLyric } from './tools/setLyrc.js';
 import { store } from '../../redux/store/index.js';
 import { commonPlayMusicFn } from '../../redux/actions';
 import { HEARFROM, CHANGE } from '../../redux/constant';
+import { setLocalStorage, getLocalStorage, removeLocalStorage } from '../../utils';
 import './index.css';
 
 const style = { width: '2.188rem', height: '2.188rem', lineHeight: '2.188rem', textAlign: 'center', borderRadius: '.313rem' };
-const singer = { fontSize: ' small', opacity: 0.6 };
+const playerSinger = { fontSize: ' small', opacity: 0.6 };
 // localStorage 初始化数据
 const initState = {
   type: 'HEARFROM',
@@ -36,7 +37,7 @@ export default function UseMusic() {
   const [visible, setVisible] = useState(false);
 
   const [url, setUrl] = useState('');
-  const [name, setName] = useState('');
+  const [singer, setSinger] = useState('');
   const [songName, setSongName] = useState('');
   const [picUrl, setPicUrl] = useState('https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg');
   const [lyric, setLyric] = useState([]);
@@ -55,7 +56,7 @@ export default function UseMusic() {
 
   const fn = ({ singer, lyric, picUrl, songName, url, delay = 1500 }) => {
     setUrl(url);
-    setName(singer);
+    setSinger(singer);
     setSongName(songName);
     setPicUrl(picUrl);
     setLyric(lyric);
@@ -90,6 +91,7 @@ export default function UseMusic() {
   };
   // 音频时间更新
   const timeUpdate = () => {
+    setLocalStorage({ key: 'currentPlayMusic', value: { singer, lyric, picUrl, songName, url, currentPlayTime: parseInt(audio.current.currentTime) } });
     // 每个歌词块
     const ap = document.querySelectorAll('.chc-lyrc');
     setCurrentTime(parseInt(audio.current.currentTime)); // 当前播放器当前时间
@@ -201,18 +203,28 @@ export default function UseMusic() {
   };
 
   useEffect(() => {
-    const { singer, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
-    setUrl(url);
-    setName(singer);
-    setSongName(songName);
-    setPicUrl(picUrl);
-    setLyric(lyric);
+    if (getLocalStorage('currentPlayMusic')) {
+      const { singer, lyric, picUrl, songName, url } = getLocalStorage('currentPlayMusic');
+      setUrl(url);
+      setSinger(singer);
+      setSongName(songName);
+      setPicUrl(picUrl);
+      setLyric(lyric);
+    } else {
+      const { singer, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
+      setUrl(url);
+      setSinger(singer);
+      setSongName(songName);
+      setPicUrl(picUrl);
+      setLyric(lyric);
+    }
 
-    setMusicList(JSON.parse(localStorage.getItem('musicList')));
+    setMusicList(getLocalStorage('musicList'));
 
-    if (!localStorage.getItem('musicList')) {
-      localStorage.setItem('musicList', JSON.stringify([initState]));
-      setMusicList(JSON.parse(localStorage.getItem('musicList')));
+    if (!getLocalStorage('musicList')) {
+      // localStorage.setItem('musicList', JSON.stringify([initState]));
+      setLocalStorage({ key: 'musicList', value: [initState] });
+      setMusicList(getLocalStorage('musicList'));
     }
 
     setTimeout(() => {
@@ -225,11 +237,12 @@ export default function UseMusic() {
 
   store.subscribe(() => {
     if (store.getState()?.mainReducer?.type === HEARFROM) {
-      const { singer, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
-      setMusicList(JSON.parse(localStorage.getItem('musicList')));
+      const { singer, lyric, picUrl, songName, url, id } = store.getState()?.mainReducer;
+      setMusicList(getLocalStorage('musicList'));
+      setCurrentId(id);
       fn({ url, picUrl: picUrl || 'https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg', songName, singer, lyric, delay: 1000 });
     } else if (store.getState()?.mainReducer?.type === CHANGE) {
-      setMusicList(JSON.parse(localStorage.getItem('musicList')));
+      setMusicList(getLocalStorage('musicList'));
     }
   });
 
@@ -314,11 +327,10 @@ export default function UseMusic() {
   // 删除音乐
   const delMusic = (e, index) => {
     e.stopPropagation();
-    let arr = JSON.parse(localStorage.getItem('musicList'));
+    let arr = setMusicList(getLocalStorage('musicList'));
     arr.splice(index, 1);
-    localStorage.setItem('musicList', JSON.stringify(arr));
-    let arrList = JSON.parse(localStorage.getItem('musicList'));
-    setMusicList(arrList);
+    setLocalStorage({ key: 'musicList', value: arr });
+    setMusicList(getLocalStorage('musicList'));
     notification.success({
       message: '已删除'
     });
@@ -326,8 +338,8 @@ export default function UseMusic() {
 
   // 清空播放列表
   const clearAll = () => {
-    localStorage.removeItem('musicList');
-    localStorage.setItem('musicList', JSON.stringify([initState]));
+    removeLocalStorage('musicList');
+    setLocalStorage({ key: 'musicList', value: [initState] });
     setMusicList([]);
     notification.success({
       message: '已清空'
@@ -401,8 +413,8 @@ export default function UseMusic() {
           <Col span={24} className="wordbreaks">
             {songName}
           </Col>
-          <Col span={24} className="wordbreaks" style={singer}>
-            - {name}
+          <Col span={24} className="wordbreaks" style={playerSinger}>
+            - {singer}
           </Col>
         </Col>
         {/* <!-- 播放插件 --> */}
@@ -520,7 +532,7 @@ export default function UseMusic() {
       </Row>
 
       <Drawer
-        title={name}
+        title={singer}
         placement={'bottom'}
         height="100%"
         forceRender={true}
@@ -534,7 +546,7 @@ export default function UseMusic() {
           <div className="lyric-poster">
             <img src={picUrl} alt="https://p2.music.126.net/wjuaGcB2k4I6PqY-cPHCFQ==/109951166889767357.jpg" style={{ borderRadius: '.313rem', objectFit: 'cover' }} />
             <span style={{ fontSize: '.938rem' }}>
-              {name} - <span style={{ fontSize: '.75rem' }}>{songName}</span>
+              {singer} - <span style={{ fontSize: '.75rem' }}>{songName}</span>
             </span>
             <div className="miniplugin">
               <span>{timer(currentTime)}</span>

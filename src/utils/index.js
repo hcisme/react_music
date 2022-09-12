@@ -1,2 +1,3 @@
-export { getLocalStorage, setLocalStorage, getSessionStorage, setSessionStorage } from './application'
+// export { getLocalStorage, setLocalStorage, getSessionStorage, setSessionStorage, removeLocalStorage, removeSessionStorage } from './application'
+export * from './application'
 export { addMusicListFn } from './addMusicList'

@@ -18,6 +18,14 @@ const setLocalStorage = ({ key, value }) => {
  * 
  * @param {string} key
  */
+const removeLocalStorage = (key) => {
+  return localStorage.removeItem(key);
+}
+
+/**
+ * 
+ * @param {string} key
+ */
 const getSessionStorage = (key) => {
   return JSON.parse(sessionStorage.getItem(key))
 }
@@ -30,4 +38,12 @@ const setSessionStorage = ({ key, value }) => {
   return sessionStorage.setItem(key, JSON.stringify(value))
 }
 
-export { getLocalStorage, setLocalStorage, getSessionStorage, setSessionStorage }
+/**
+ * 
+ * @param {string} key
+ */
+const removeSessionStorage = (key) => {
+  return sessionStorage.removeItem(key)
+}
+
+export { getLocalStorage, setLocalStorage, getSessionStorage, setSessionStorage, removeLocalStorage, removeSessionStorage }

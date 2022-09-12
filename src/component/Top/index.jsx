@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Avatar, Dropdown, Menu, message, Tooltip, Tabs } from 'antd';
+import { Modal, Avatar, Dropdown, Menu, message, Tooltip, Tabs, Col, Row, Space } from 'antd';
 import { ImportOutlined, GithubOutlined } from '@ant-design/icons';
 import './index.css';
 import Search from './Search';
@@ -115,20 +115,21 @@ export default function Top() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoginVisible]);
 
-  function callback(key) {
-    setLoginType(key);
-  }
-
   return (
-    <div className="top">
-      <div className="sign">
+    <Row align="middle" gutter={[8, 0]} className="top" wrap={false}>
+      <Col span={1} offset={1}>
         <Tooltip title={<span style={{ fontSize: 12, fontWeight: 400 }}>点我返回首页</span>} color={'#2db7f5'} placement="bottomRight">
-          <img src="http://chcmusic.cloud/images/Cat.svg" alt="" onClick={() => navigate('/home/discovery')} style={{ cursor: 'pointer' }} />
+          <img
+            src="http://chcmusic.cloud/images/Cat.svg"
+            alt=""
+            onClick={() => navigate('/home/discovery')}
+            style={{ cursor: 'pointer', width: '100%', height: '100%' }}
+          />
         </Tooltip>
-      </div>
+      </Col>
 
       {/* 前进后退路由 */}
-      <div className="direction">
+      <Col span={2} offset={1} className="direction">
         <i
           className="iconfont icon-right"
           onClick={() => {
@@ -141,13 +142,15 @@ export default function Top() {
             window.history.go(1);
           }}
         ></i>
-      </div>
+      </Col>
 
-      <div className="search">
+      <Col span={5}>
         <Search></Search>
-      </div>
+      </Col>
 
-      <div
+      <Col
+        flex={1}
+        offset={12}
         className="login"
         onClick={() => {
           setIsLoginVisible(true);
@@ -156,46 +159,50 @@ export default function Top() {
       >
         <span>登录 </span>
         <ImportOutlined />
-      </div>
+      </Col>
 
       {/* 登录成功后显示的头像 */}
-      <div style={{ display: displayAvatar }} className="chc-avatar">
-        <div style={{ display: 'flex', alignItems: 'end', gap: '0 5px' }}>
+      <Col flex={1} offset={10} style={{ display: displayAvatar }}>
+        <Space align="end">
           <Dropdown overlay={menu}>
             <Avatar size={'large'} src={userInfo.profile?.avatarUrl} />
           </Dropdown>
           <div className="chc-name">{userInfo.profile?.nickname}</div>
-        </div>
-      </div>
+        </Space>
+      </Col>
 
       {/* 登录模态框 */}
       <Modal
         title="登录"
         visible={isLoginVisible}
         onCancel={() => {
+          setLoginType('phone');
           setIsLoginVisible(false);
         }}
-        mask={false}
         footer={null}
         destroyOnClose={true}
       >
-        <Tabs activeKey={loginType} onChange={callback}>
+        <Tabs activeKey={loginType} onChange={key => setLoginType(key)}>
           <TabPane tab="手机号登录" key="phone">
-            <LoginModal getBool={getChildBool}></LoginModal>
+            <LoginModal getBool={getChildBool} />
           </TabPane>
           <TabPane tab="二维码登录" key="qr">
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', rowGap: '1.25rem' }}>
-              <div className="qr" style={{ width: '12.5rem', height: '12.5rem' }}>
-                <img src={qrurl} alt="" style={{ width: '100%' }} />
-              </div>
-              <div className="logininfo" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                <span>{text}</span>
-                <span>请使用网易云App扫码登录</span>
-              </div>
-            </div>
+            <Row justify="center">
+              <Col span={24}>
+                <Row align="middle" justify="center">
+                  <img src={qrurl} alt="" style={{ width: 200 }} />
+                </Row>
+              </Col>
+              <Col span={24}>
+                <Row justify="center">
+                  <a>{text}</a>----
+                  <span>请使用网易云App扫码登录</span>
+                </Row>
+              </Col>
+            </Row>
           </TabPane>
         </Tabs>
       </Modal>
-    </div>
+    </Row>
   );
 }
