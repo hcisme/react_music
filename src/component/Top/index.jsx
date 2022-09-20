@@ -119,12 +119,7 @@ export default function Top() {
     <Row align="middle" gutter={[8, 0]} className="top" wrap={false}>
       <Col span={1} offset={1}>
         <Tooltip title={<span style={{ fontSize: 12, fontWeight: 400 }}>点我返回首页</span>} color={'#2db7f5'} placement="bottomRight">
-          <img
-            src="http://chcmusic.cloud/images/Cat.svg"
-            alt=""
-            onClick={() => navigate('/home/discovery')}
-            style={{ cursor: 'pointer', width: '100%', height: '100%' }}
-          />
+          <img src="http://chcmusic.cloud/images/Cat.svg" alt="" onClick={() => navigate('/home/discovery')} style={{ cursor: 'pointer', width: '80%', height: '80%' }} />
         </Tooltip>
       </Col>
 

@@ -124,14 +124,14 @@ export default function UseMusic() {
       // 顺序播放
       case 'icon-order':
         if (musicList.length > 1) {
-          let index = musicList.findIndex(item => item.url === audio.current.id * 1);
+          let index = musicList.findIndex(item => item.id === audio.current.id * 1);
           if (index === musicList.length - 1) {
             setCurrentId(musicList[0].id);
             const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[0]);
             return fn({ url, picUrl, songName, singer, lyric });
           }
           setCurrentId(musicList[index + 1].id);
-          const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[0]);
+          const { url, picUrl, songName, singer, lyric } = await commonPlayMusicFn(musicList[index + 1]);
           return fn({ url, picUrl, songName, singer, lyric });
         }
         break;
@@ -203,21 +203,21 @@ export default function UseMusic() {
   };
 
   useEffect(() => {
-    if (getLocalStorage('currentPlayMusic')) {
-      const { singer, lyric, picUrl, songName, url } = getLocalStorage('currentPlayMusic');
-      setUrl(url);
-      setSinger(singer);
-      setSongName(songName);
-      setPicUrl(picUrl);
-      setLyric(lyric);
-    } else {
-      const { singer, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
-      setUrl(url);
-      setSinger(singer);
-      setSongName(songName);
-      setPicUrl(picUrl);
-      setLyric(lyric);
-    }
+    // if (getLocalStorage('currentPlayMusic')) {
+    //   const { singer, lyric, picUrl, songName, url } = getLocalStorage('currentPlayMusic');
+    //   setUrl(url);
+    //   setSinger(singer);
+    //   setSongName(songName);
+    //   setPicUrl(picUrl);
+    //   setLyric(lyric);
+    // } else {
+    const { singer, lyric, picUrl, songName, url } = store.getState()?.mainReducer;
+    setUrl(url);
+    setSinger(singer);
+    setSongName(songName);
+    setPicUrl(picUrl);
+    setLyric(lyric);
+    // }
 
     setMusicList(getLocalStorage('musicList'));
 
@@ -504,8 +504,8 @@ export default function UseMusic() {
             {/* <!-- 歌词按钮 --> */}
             <Col
               span={1}
+              style={{ ...style, maxWidth: 'none' }}
               className="icon-lyric hover"
-              style={style}
               onClick={() => {
                 setVisible(true);
               }}
