@@ -1,53 +1,52 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Menu, Skeleton, Pagination } from 'antd'
-import { PlayCircleTwoTone } from '@ant-design/icons'
-import './index.css'
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Menu, Skeleton, Pagination } from 'antd';
+import { PlayCircleTwoTone } from '@ant-design/icons';
+import './index.css';
 
 export default function Mvs() {
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
-  const [area, setArea] = useState('全部')
-  const [type, setType] = useState('全部')
-  const [order, setOrder] = useState('上升最快')
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(null)
-  const [source, setSource] = useState([])
+  const [area, setArea] = useState('全部');
+  const [type, setType] = useState('全部');
+  const [order, setOrder] = useState('上升最快');
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(null);
+  const [source, setSource] = useState([]);
 
   const getMvList = () => {
-    React.$apis.getMvLists(area, type, order, page).then((val) => {
-      setSource(val.data)
-      setLoading(false)
-    })
-  }
+    React.$apis.getMvLists(area, type, order, page).then(val => {
+      setSource(val.data);
+      setLoading(false);
+    });
+  };
 
   const getMvCount = () => {
-    React.$apis.getMvLists(area, type, order, page).then((val) => {
-      setTotal(val.count)
-    })
-  }
+    React.$apis.getMvLists(area, type, order, page).then(val => {
+      setTotal(val.count);
+    });
+  };
 
   useEffect(() => {
-    getMvCount()
+    getMvCount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   useEffect(() => {
-    setLoading(true)
-    getMvList()
+    setLoading(true);
+    getMvList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [area, type, order, page, total])
+  }, [area, type, order, page, total]);
 
   return (
     <div className="mvs">
       <div style={{ marginBottom: '30px' }}>
         <Menu
           mode="horizontal"
-          onSelect={(e) => {
-            setArea(e.key)
-            setPage(1)
+          onSelect={e => {
+            setArea(e.key);
+            setPage(1);
           }}
           selectedKeys={area}
         >
@@ -60,9 +59,9 @@ export default function Mvs() {
         </Menu>
         <Menu
           mode="horizontal"
-          onSelect={(e) => {
-            setType(e.key)
-            setPage(1)
+          onSelect={e => {
+            setType(e.key);
+            setPage(1);
           }}
           selectedKeys={type}
         >
@@ -74,9 +73,9 @@ export default function Mvs() {
         </Menu>
         <Menu
           mode="horizontal"
-          onSelect={(e) => {
-            setOrder(e.key)
-            setPage(1)
+          onSelect={e => {
+            setOrder(e.key);
+            setPage(1);
           }}
           selectedKeys={order}
         >
@@ -87,18 +86,21 @@ export default function Mvs() {
       </div>
 
       <div className="items">
-        {source.map((item) => {
+        {source.map(item => {
           return (
             <Skeleton style={{ width: 300 }} loading={loading} avatar active key={item.id}>
               <div
                 className="item cursor"
                 onClick={() => {
-                  navigate(`/home/mv/${item.id}`)
+                  navigate(`/home/mv/${item.id}`);
                 }}
               >
                 <div className="posterImg" style={{ position: 'relative' }}>
-                  <img src={item.cover} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '9.688rem', borderRadius: '0.75rem' }} />
-                  <PlayCircleTwoTone className="hover1" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }} />
+                  <img src={item.cover} alt="" style={{ width: '100%', height: '9.688rem', borderRadius: '0.75rem' }} />
+                  <PlayCircleTwoTone
+                    className="hover1"
+                    style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }}
+                  />
                 </div>
                 <div className="text" style={{ marginTop: '.5rem' }}>
                   <div className="title wordbreak" style={{ fontSize: '15px' }}>
@@ -110,7 +112,7 @@ export default function Mvs() {
                 </div>
               </div>
             </Skeleton>
-          )
+          );
         })}
       </div>
 
@@ -119,11 +121,11 @@ export default function Mvs() {
           current={page}
           total={total}
           showSizeChanger={false}
-          onChange={(current) => {
-            setPage(current)
+          onChange={current => {
+            setPage(current);
           }}
         />
       </div>
     </div>
-  )
+  );
 }

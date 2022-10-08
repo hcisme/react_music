@@ -15,7 +15,7 @@ const playerSinger = { fontSize: ' small', opacity: 0.6 };
 const initState = {
   type: 'HEARFROM',
   id: 6666666,
-  url: 'https://chcmusic.cloud/images/%E6%98%A5%E5%A8%87%E4%B8%8E%E5%BF%97%E6%98%8E.mp3',
+  url: 'https://chcblogs.com/lib/images/%E6%98%A5%E5%A8%87%E4%B8%8E%E5%BF%97%E6%98%8E.mp3',
   songName: '春娇与志明',
   singer: '街道办GOC',
   picUrl: 'https://p2.music.126.net/0KC-cAFqdJHDomIl3dSv4Q==/109951166676094043.jpg',

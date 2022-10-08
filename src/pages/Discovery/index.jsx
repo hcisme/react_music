@@ -146,7 +146,7 @@ export default function Discovery() {
                 //   store.dispatch(data)
                 // }}
               >
-                <Image src={item.imageUrl} fallback="http://chcmusic.cloud/images/error.png" />
+                <Image src={item.imageUrl} fallback="http://chcblogs.com/lib/images/error.png" />
               </div>
             );
           })}
@@ -194,7 +194,7 @@ export default function Discovery() {
               }}
             >
               <div className="posterImg" style={{ position: 'relative' }}>
-                <img src={item.picUrl} alt="https://chcmusic.cloud/images/error.png" style={{ width: '100%', height: '9.688rem', borderRadius: '0.75rem' }} />
+                <img src={item.picUrl} alt="" style={{ width: '100%', height: '9.688rem', borderRadius: '0.75rem' }} />
                 <PlayCircleTwoTone
                   className="hover1"
                   style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0, fontSize: '1.65rem' }}

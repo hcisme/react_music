@@ -181,7 +181,7 @@ export default function PlayList() {
     <div className="playlist">
       <Card
         style={{ display: 'flex', alignItems: 'center', width: '100%', height: '240px' }}
-        cover={<Image width={240} height={240} src={topPoster.coverImgUrl} fallback="http://chcmusic.cloud/images/error.png" />}
+        cover={<Image width={240} height={240} src={topPoster.coverImgUrl} fallback="http://chcblogs.com/lib/images/error.png" />}
       >
         <div>{topPoster.name}</div>
         <Meta avatar={<Avatar src={topPoster.creator?.avatarUrl} />} title={topPoster.creator?.nickname} description={`创建时间：${dayjs(topPoster.createTime)}`} />
