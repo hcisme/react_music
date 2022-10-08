@@ -1,6 +1,5 @@
 // 处理歌词
-export const handleLyric = (lyric) => {
-  if (!lyric) return []
+export const handleLyric = (lyric=[]) => {
   const res = []
   const arr = lyric.split('\n').filter(item => item)
   for (const str of arr) {
