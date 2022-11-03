@@ -195,6 +195,7 @@ export default function Top() {
               </Col>
               <Col span={24}>
                 <Row justify="center">
+                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                   <a>{text}</a>----
                   <span>请使用网易云App扫码登录</span>
                 </Row>
