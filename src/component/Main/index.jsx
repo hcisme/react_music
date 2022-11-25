@@ -27,22 +27,16 @@ export default function Main() {
       <div className="mainArticle">
         <Outlet />
 
-        <div className="thanks" style={{ display: 'flex', justifyContent: 'center', paddingTop: 10 }}>
+        <div className="thanks" style={{ display: 'flex', justifyContent: 'center', paddingTop: 10, gap: 16 }}>
           <div>
-            <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_black">
-              辽ICP备2021010497号-2
+            <a href="https://beian.miit.gov.cn/" target="_black">
+              辽ICP备 2021010497号-2
             </a>
           </div>
           <div>
             <a href="https://github.com/Binaryify/NeteaseCloudMusicApi" target="_black">
               感谢 <GithubOutlined />
               @binaryify
-            </a>
-          </div>
-          <div>
-            <a href="https://github.com/DIYgod/APlayer" target="_black">
-              感谢 <GithubOutlined />
-              @DIYgod
             </a>
           </div>
         </div>
