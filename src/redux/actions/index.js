@@ -22,11 +22,11 @@ export const commonPlayMusicFn = async (record) => {
     // 播放时间
     dt: res.time,
     // 歌手名
-    singer: record.singer || record.song?.artists?.[0]?.name || record.artists?.[0]?.name || record.data?.al?.name,
+    singer: record.singer || record.song?.artists?.[0]?.name || record.ar?.map((item) => item.name)?.join('/') || record?.al?.name,
     // 单曲名
-    songName: record.name || record.data?.ar?.[0]?.name,
+    songName: record.name || record?.ar?.map((item) => item.name)?.join('/'),
     // 海报
-    picUrl: record.picUrl || record?.album?.blurPicUrl || record?.album?.artist?.img1v1Url || record.data?.al?.picUrl,
+    picUrl: record.picUrl || record?.album?.blurPicUrl || record?.album?.artist?.img1v1Url || record?.al?.picUrl,
     type: HEARFROM,
   };
 };

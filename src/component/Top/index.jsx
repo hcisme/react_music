@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Modal, Avatar, Dropdown, Menu, message, Tooltip, Tabs, Col, Row, Space } from 'antd';
+import { Modal, Avatar, Dropdown, Menu, message, Tabs, Col, Row, Space } from 'antd';
 import { ImportOutlined, GithubOutlined } from '@ant-design/icons';
 import './index.css';
 import Search from './Search';
@@ -118,14 +118,12 @@ export default function Top() {
   return (
     <Row align="middle" gutter={[8, 0]} className="top" wrap={false}>
       <Col span={1} offset={1}>
-        <Tooltip title={<span style={{ fontSize: 12, fontWeight: 400 }}>点我返回首页</span>} color={'#2db7f5'} placement="bottomRight">
-          <img
-            src="http://chcblogs.com/lib/images/Cat.svg"
-            alt=""
-            onClick={() => navigate('/home/discovery')}
-            style={{ cursor: 'pointer', width: '80%', height: '80%' }}
-          />
-        </Tooltip>
+        <img
+          src="http://chcblogs.com/lib/images/Cat.svg"
+          alt=""
+          onClick={() => navigate('/home/discovery')}
+          style={{ cursor: 'pointer', width: 50, height: 55 }}
+        />
       </Col>
 
       {/* 前进后退路由 */}
@@ -182,7 +180,7 @@ export default function Top() {
         footer={null}
         destroyOnClose={true}
       >
-        <Tabs activeKey={loginType} onChange={key => setLoginType(key)}>
+        <Tabs activeKey={loginType} onChange={(key) => setLoginType(key)}>
           <TabPane tab="手机号登录" key="phone">
             <LoginModal getBool={getChildBool} />
           </TabPane>
